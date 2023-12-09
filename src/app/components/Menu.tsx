@@ -1,11 +1,31 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useConnectors } from "@starknet-react/core";
+import { connectors } from "../conf";
 
 export default function Menu({ children }: { children: React.ReactNode }) {
+	const { available, connect, refresh } = useConnectors();
+	const { address } = useAccount();
+
+	const handleConnect = async (connector: any) => {
+		try {
+			connect(connector);
+		} catch (error) {
+			alert(`Please install ${connector.id()} wallet!`);
+		}
+		// const isWalletConnected = available.find(
+		// 	(availableConnector) => availableConnector.id === connector.id
+		// );
+
+		// isWalletConnected
+		// 	? connect(connector)
+		// 	: alert(`Please install ${connector.id()} wallet!`);
+	};
+
 	return (
 		<div className="h-full w-full overflow-hidden flex justify-stretch">
-			<div className="w-[240px] bg-[#1A1C24] flex flex-col justify-between border-r border-solid	border-r-[#2D313E] text-[#C6C6C6]">
+			<div className="w-[240px] bg-[#1A1C24]  hidden lg:flex flex-col justify-between border-r border-solid	border-r-[#2D313E] text-[#C6C6C6]">
 				<div>
 					<Image
 						className="p-6"
@@ -89,11 +109,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 											Airdrop List
 										</Link>
 									</li>
-									<li className="p-3">
-										<Link href="/your-pool" rel="noreferrer">
+									{/* <li className="p-3">
+										<Link href="/your-pools" rel="noreferrer">
 											Your Pool
 										</Link>
-									</li>
+									</li> */}
 								</ul>
 								{/* <ul>
 												<li>
@@ -256,28 +276,322 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 				</div>
 			</div>
 			<div className="flex-1 text-[#C6C6C6]">
-				<div className="flex justify-end ">
-					<button className="btn flex items-center bg-[#232631] gap-2 rounded-2xl border-0	">
-						<Image
-							width={30}
-							height={30}
-							src="/wallets/starknet.png"
-							alt="github"
-						/>
-						<div className="text-xl font-bold text-[#F1F1F1]">Starknet</div>
-					</button>
+				<div className="flex justify-between lg:justify-end px-8 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]">
+					<div className="flex items-center gap-2">
+						<Link href={"/"} passHref className="block lg:hidden ">
+							<div className="w-[48px] h-[48px] relative">
+								{/* <Image
+								src="/logo-w-text.png"
+								alt="logo"
+								fill
+								className="hidden md:block"
+							/> */}
+								<Image
+									src="/logo.png"
+									alt="logo"
+									fill
+									// className="sm:block md:hidden"
+								/>
+							</div>
+						</Link>
+						<div className="font-bold text-2xl hidden md:block lg:hidden">
+							Starkfinance
+						</div>
+					</div>
+					<div className="flex gap-6">
+						<button className="btn flex items-center bg-[#232631] gap-2 rounded-2xl border-0	">
+							<Image
+								width={30}
+								height={30}
+								src="/wallets/starknet.png"
+								alt="logo"
+							/>
+							<div className="text-xl font-bold text-[#F1F1F1] hidden md:block">
+								Starknet
+							</div>
+						</button>
 
-					<button className="btn flex items-center bg-[linear-gradient(135deg, #24C3BC 0%, #ADFFFB 100%)] gap-2 rounded-2xl border-0	">
-						<Image
-							width={30}
-							height={30}
-							src="/wallets/starknet.png"
-							alt="github"
-						/>
-						<div className="text-xl font-bold text-[#F1F1F1]">Starknet</div>
-					</button>
+						<button className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-2 rounded-2xl border-0">
+							<Image
+								width={30}
+								height={30}
+								src="/svg/connect-wallet.svg"
+								alt="connect-wallet"
+							/>
+							<div
+								className="text-xl font-bold text-[#1A1C24]"
+								onClick={() => handleConnect(connectors[1])}
+							>
+								{address
+									? `${address.slice(0, 4)}...${address.slice(-3)}`
+									: "Connect Wallet"}
+							</div>
+						</button>
+					</div>
 				</div>
-				<div>{children}</div>
+				<div className="px-6 py-6 h-[calc(100vh-200px)]   lg:h-[calc(100vh-90px)] overflow-y-scroll">
+					{children}
+				</div>
+				<div className="relative grid lg:hidden grid-cols-6 place-items-center justify-between px-8 py-6 bg-[#1A1C24] border-t border-t-[#2D313E]">
+					<Link href="/" rel="noreferrer">
+						<div className="text-center w-[30px] h-[30px] relative">
+							<Image fill src="/svg/home.svg" alt="home" />
+						</div>
+					</Link>
+
+					<div className="drawer">
+						<input
+							id="exchange-drawer"
+							type="checkbox"
+							className="drawer-toggle"
+						/>
+						<div className="drawer-content flex justify-center">
+							<label
+								htmlFor="exchange-drawer"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+							>
+								<div className="text-center w-[30px] h-[30px] relative">
+									<Image fill src="/svg/exchange.svg" alt="exchange" />
+								</div>
+							</label>
+						</div>
+						<div className="drawer-side">
+							<label
+								htmlFor="exchange-drawer"
+								aria-label="close sidebar"
+								className="drawer-overlay"
+							></label>
+							<ul className="menu absolute left-0 bottom-[100px] right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+								<li>
+									<a
+										href="https://exchange.starksport.finance/swap"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Swap
+									</a>
+								</li>
+								<li>
+									<a
+										href="https://exchange.starksport.finance/liquidity"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Liquidity
+									</a>
+								</li>
+								<li>
+									<a
+										href="https://exchange.starksport.finance"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Overview
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+
+					<div className="drawer">
+						<input
+							id="launchpad-drawer"
+							type="checkbox"
+							className="drawer-toggle"
+						/>
+						<div className="drawer-content flex justify-center">
+							<label
+								htmlFor="launchpad-drawer"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+							>
+								<div className="text-center w-[30px] h-[30px] relative">
+									<Image fill src="/svg/launchpad.svg" alt="launchpad" />
+								</div>
+							</label>
+						</div>
+						<div className="drawer-side">
+							<label
+								htmlFor="launchpad-drawer"
+								aria-label="close sidebar"
+								className="drawer-overlay"
+							></label>
+							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+								<li>
+									<Link className="p-3" href="/launchpad-list" rel="noreferrer">
+										Launchpad List
+									</Link>
+								</li>
+								<li>
+									<Link className="p-3" href="/airdrop-list" rel="noreferrer">
+										Airdrop List
+									</Link>
+								</li>
+								{/* <li>
+									<Link className="p-3" href="/your-pools" rel="noreferrer">
+										Your Pool
+									</Link>
+								</li> */}
+							</ul>
+						</div>
+					</div>
+
+					<div className="drawer">
+						<input
+							id="market-drawer"
+							type="checkbox"
+							className="drawer-toggle"
+						/>
+						<div className="drawer-content flex justify-center">
+							<label
+								htmlFor="market-drawer"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+							>
+								<div className="text-center w-[30px] h-[30px] relative">
+									<Image fill src="/svg/market.svg" alt="market" />
+								</div>
+							</label>
+						</div>
+						<div className="drawer-side">
+							<label
+								htmlFor="market-drawer"
+								aria-label="close sidebar"
+								className="drawer-overlay"
+							></label>
+							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+								<li>
+									<a
+										href="https://marketplace.starksport.finance/top_volume"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Collections
+									</a>
+								</li>
+								<li>
+									<a
+										href="https://marketplace.starksport.finance/activity"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Activity
+									</a>
+								</li>
+								<li>
+									<a
+										href="https://marketplace.starksport.finance/events"
+										rel="noreferrer"
+										className="p-3"
+									>
+										Events
+									</a>
+								</li>
+								{/* {address && (
+            <a
+              href={`https://marketplace.starksport.finance/account/${address}`}
+              rel="noreferrer"
+              className="p-3"
+            >
+              Profile
+            </a>
+        </li>
+          )} */}
+							</ul>
+						</div>
+					</div>
+
+					<Link href="/" rel="noreferrer">
+						<div className="text-center w-[30px] h-[30px] relative">
+							<Image fill src="/svg/documentation.svg" alt="documentation" />
+						</div>
+					</Link>
+
+					<div className="drawer">
+						<input
+							id="socials-drawer"
+							type="checkbox"
+							className="drawer-toggle"
+						/>
+						<div className="drawer-content flex justify-center">
+							<label
+								htmlFor="socials-drawer"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+							>
+								<div className="text-center w-[30px] h-[30px] relative">
+									<Image fill src="/svg/socials.svg" alt="socials" />
+								</div>
+							</label>
+						</div>
+						<div className="drawer-side">
+							<label
+								htmlFor="socials-drawer"
+								aria-label="close sidebar"
+								className="drawer-overlay"
+							></label>
+							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+								<li>
+									<a href="#" rel="noreferrer" className="p-3">
+										<div className="flex items-center">
+											<Image
+												width={30}
+												height={30}
+												src="/svg/telegram.svg"
+												alt="telegram"
+											/>
+											<div className="font-bold ml-1.5">Telegram</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="#" rel="noreferrer" className="p-3">
+										<div className="flex items-center">
+											<Image
+												width={30}
+												height={30}
+												src="/svg/discord.svg"
+												alt="discord"
+											/>
+											<div className="font-bold ml-1.5">Discord</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="#" rel="noreferrer" className="p-3">
+										<div className="flex items-center">
+											<Image width={30} height={30} src="/svg/x.svg" alt="x" />
+											<div className="font-bold ml-1.5">X.com</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="#" rel="noreferrer" className="p-3">
+										<div className="flex items-center">
+											<Image
+												width={30}
+												height={30}
+												src="/svg/medium.svg"
+												alt="medium"
+											/>
+											<div className="font-bold ml-1.5">Medium</div>
+										</div>
+									</a>
+								</li>
+								<li>
+									<a href="#" rel="noreferrer" className="p-3">
+										<div className="flex items-center">
+											<Image
+												width={30}
+												height={30}
+												src="/svg/github.svg"
+												alt="github"
+											/>
+											<div className="font-bold ml-1.5">Github</div>
+										</div>
+									</a>
+								</li>
+							</ul>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	);
