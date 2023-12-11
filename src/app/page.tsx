@@ -8,7 +8,7 @@ export default function Home() {
 			<div className="flex justify-center">
 				<div className="flex flex-col gap-12 flex-1 max-w-[1080px]">
 					{/* title and filters */}
-					<div className="text-[32px] lg:text-[42px] font-bold">
+					<div className="text-[24px] md:text-[32px] lg:text-[42px] font-bold">
 						Welcome to Starkfinance Launchpad
 					</div>
 

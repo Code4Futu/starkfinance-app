@@ -276,7 +276,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 				</div>
 			</div>
 			<div className="flex-1 text-[#C6C6C6]">
-				<div className="flex justify-between lg:justify-end px-8 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]">
+				<div className="flex justify-between lg:justify-end px-6 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]">
 					<div className="flex items-center gap-2">
 						<Link href={"/"} passHref className="block lg:hidden ">
 							<div className="w-[48px] h-[48px] relative">
@@ -294,32 +294,31 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								/>
 							</div>
 						</Link>
-						<div className="font-bold text-2xl hidden md:block lg:hidden">
+						{/* <div className="font-bold text-2xl hidden md:block lg:hidden">
 							Starkfinance
-						</div>
+						</div> */}
 					</div>
 					<div className="flex gap-6">
-						<button className="btn flex items-center bg-[#232631] gap-2 rounded-2xl border-0	">
-							<Image
-								width={30}
-								height={30}
-								src="/wallets/starknet.png"
-								alt="logo"
-							/>
+						<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-2 rounded-2xl border-0">
+							<div className="w-[30px] h-[30px] relative">
+								<Image src="/wallets/starknet.png" alt="network" fill />
+							</div>
+
 							<div className="text-xl font-bold text-[#F1F1F1] hidden md:block">
 								Starknet
 							</div>
-						</button>
+						</div>
 
 						<button className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-2 rounded-2xl border-0">
-							<Image
-								width={30}
-								height={30}
-								src="/svg/connect-wallet.svg"
-								alt="connect-wallet"
-							/>
+							<div className="w-[24px] h-[24px] relative">
+								<Image
+									src="/svg/connect-wallet.svg"
+									fill
+									alt="connect-wallet"
+								/>
+							</div>
 							<div
-								className="text-xl font-bold text-[#1A1C24]"
+								className="hidden md:block text-xl font-bold text-[#1A1C24]"
 								onClick={() => handleConnect(connectors[1])}
 							>
 								{address
@@ -329,10 +328,12 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						</button>
 					</div>
 				</div>
-				<div className="px-6 py-6 h-[calc(100vh-200px)]   lg:h-[calc(100vh-90px)] overflow-y-scroll">
-					{children}
+				<div className="md:mt-0">
+					<div className="px-2 py-2 md:px-6 md:py-6 h-[calc(100vh-200px)] md:h-[calc(100vh-200px)] lg:h-[calc(100vh-90px)] overflow-y-scroll">
+						{children}
+					</div>
 				</div>
-				<div className="relative grid lg:hidden grid-cols-6 place-items-center justify-between px-8 py-6 bg-[#1A1C24] border-t border-t-[#2D313E]">
+				<div className="relative grid lg:hidden z-[999] grid-cols-6 place-items-center justify-between px-8 py-6 bg-[#1A1C24] border-t border-t-[#2D313E]">
 					<Link href="/" rel="noreferrer">
 						<div className="text-center w-[30px] h-[30px] relative">
 							<Image fill src="/svg/home.svg" alt="home" />
