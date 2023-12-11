@@ -32,7 +32,13 @@ export const launchpadMocks = [
 			github: undefined,
 		},
 		introVideo: undefined,
-		desc: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+		desc: `
+		Starkfinance is an all-in-one Incubation Hub with a full stack DeFi platform across blockchain networks. We provide exclusive services including IDO Launchpad, NFT Auction, Marketplace, and Exchange.
+
+		We have plans to combine these outstanding features together to promote the development of web3 industry to everyone. In the future, we will expand on multichain and build a Starkfinance ecosystem.Starkfinance is an all-in-one Incubation Hub with a full stack DeFi platform across blockchain networks. We provide exclusive services including IDO Launchpad, NFT Auction, Marketplace, and Exchange.
+
+		We have plans to combine these outstanding features together to promote the development of web3 industry to everyone. In the future, we will expand on multichain and build a Starkfinance ecosystem.
+		`,
 	},
 ];
 

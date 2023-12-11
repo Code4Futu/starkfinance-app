@@ -22,7 +22,7 @@ export const typedData: TypedData = {
 	},
 	primaryType: "Message",
 	domain: {
-		name: "StarkSport", // put the name of your dapp to ensure that the signatures will not be used by other DAPP
+		name: "StarkFinance", // put the name of your dapp to ensure that the signatures will not be used by other DAPP
 		version: "0.0.1",
 		chainId: shortString.encodeShortString("SN_MAIN"), // shortString of 'SN_GOERLI' (or 'SN_MAIN' or 'SN_GOERLI2'), to be sure that signature can't be used by other network.
 	},

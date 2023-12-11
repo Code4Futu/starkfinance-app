@@ -6,7 +6,7 @@ import LatestAirdrop from "./components/LatestAirdrop";
 export default function LaunchpadList() {
 	return (
 		<div>
-			<div className="breadcrumbs fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[240px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
+			<div className="breadcrumbs fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
 				<ul>
 					<li>
 						<div className="flex items-center">

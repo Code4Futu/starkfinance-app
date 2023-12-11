@@ -25,15 +25,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div className="h-full w-full overflow-hidden flex justify-stretch">
-			<div className="w-[240px] bg-[#1A1C24]  hidden lg:flex flex-col justify-between border-r border-solid	border-r-[#2D313E] text-[#C6C6C6]">
+			<div className="w-[288px] bg-[#1A1C24]  hidden lg:flex flex-col justify-between border-r border-solid	border-r-[#2D313E] text-[#C6C6C6]">
 				<div>
-					<Image
-						className="p-6"
-						src="/logo-w-text.png"
-						alt="logo"
-						width={213}
-						height={48}
-					/>
+					<div className="w-[212px] h-[48px] relative m-6">
+						<Image src="/logo-w-text.png" alt="logo" fill />
+					</div>
 
 					<div className="m-4">
 						<Link href="/" rel="noreferrer">
@@ -59,7 +55,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
 										<a
-											href="https://exchange.starksport.finance/swap"
+											href="https://exchange.starkfinance.finance/swap"
 											rel="noreferrer"
 										>
 											Swap
@@ -67,7 +63,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://exchange.starksport.finance/liquidity"
+											href="https://exchange.starkfinance.finance/liquidity"
 											rel="noreferrer"
 										>
 											Liquidity
@@ -75,7 +71,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://exchange.starksport.finance"
+											href="https://exchange.starkfinance.finance"
 											rel="noreferrer"
 										>
 											Overview
@@ -145,7 +141,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
 										<a
-											href="https://marketplace.starksport.finance/top_volume"
+											href="https://marketplace.starkfinance.finance/top_volume"
 											rel="noreferrer"
 										>
 											Collections
@@ -153,7 +149,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://marketplace.starksport.finance/activity"
+											href="https://marketplace.starkfinance.finance/activity"
 											rel="noreferrer"
 										>
 											Activity
@@ -161,7 +157,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://marketplace.starksport.finance/events"
+											href="https://marketplace.starkfinance.finance/events"
 											rel="noreferrer"
 										>
 											Events
@@ -170,7 +166,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									<li className="p-3">
 										{/* {address && (
 											<a
-												href={`https://marketplace.starksport.finance/account/${address}`}
+												href={`https://marketplace.starkfinance.finance/account/${address}`}
 												rel="noreferrer"
 											>
 												Profile
@@ -298,19 +294,19 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							Starkfinance
 						</div> */}
 					</div>
-					<div className="flex gap-6">
-						<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-2 rounded-2xl border-0">
-							<div className="w-[30px] h-[30px] relative">
+					<div className="flex gap-3">
+						<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-0 lg:gap-2 rounded-2xl border-0">
+							<div className="w-[24px] h-[24px] relative">
 								<Image src="/wallets/starknet.png" alt="network" fill />
 							</div>
 
-							<div className="text-xl font-bold text-[#F1F1F1] hidden md:block">
+							<div className="text-xl font-bold text-[#F1F1F1] hidden lg:block">
 								Starknet
 							</div>
 						</div>
 
-						<button className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-2 rounded-2xl border-0">
-							<div className="w-[24px] h-[24px] relative">
+						<button className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-1 rounded-2xl border-0">
+							<div className="w-[24px] h-[24px] relative hidden lg:block ">
 								<Image
 									src="/svg/connect-wallet.svg"
 									fill
@@ -318,7 +314,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								/>
 							</div>
 							<div
-								className="hidden md:block text-xl font-bold text-[#1A1C24]"
+								className="text-md font-bold text-[#1A1C24]"
 								onClick={() => handleConnect(connectors[1])}
 							>
 								{address
@@ -328,12 +324,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						</button>
 					</div>
 				</div>
-				<div className="md:mt-0">
-					<div className="px-2 py-2 md:px-6 md:py-6 h-[calc(100vh-200px)] md:h-[calc(100vh-200px)] lg:h-[calc(100vh-90px)] overflow-y-scroll">
-						{children}
-					</div>
+				<div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
+					{children}
 				</div>
-				<div className="relative grid lg:hidden z-[999] grid-cols-6 place-items-center justify-between px-8 py-6 bg-[#1A1C24] border-t border-t-[#2D313E]">
+				<div className="fixed bottom-0 left-0 right-0 grid lg:hidden z-[999] grid-cols-6 place-items-center px-3 md:px-12 py-3 bg-[#1A1C24] border-t border-t-[#2D313E]">
 					<Link href="/" rel="noreferrer">
 						<div className="text-center w-[30px] h-[30px] relative">
 							<Image fill src="/svg/home.svg" alt="home" />
@@ -349,7 +343,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						<div className="drawer-content flex justify-center">
 							<label
 								htmlFor="exchange-drawer"
-								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-2xl"
 							>
 								<div className="text-center w-[30px] h-[30px] relative">
 									<Image fill src="/svg/exchange.svg" alt="exchange" />
@@ -362,10 +356,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute left-0 bottom-[100px] right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute left-0 bottom-[80px] right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a
-										href="https://exchange.starksport.finance/swap"
+										href="https://exchange.starkfinance.finance/swap"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -374,7 +368,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://exchange.starksport.finance/liquidity"
+										href="https://exchange.starkfinance.finance/liquidity"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -383,7 +377,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://exchange.starksport.finance"
+										href="https://exchange.starkfinance.finance"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -403,7 +397,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						<div className="drawer-content flex justify-center">
 							<label
 								htmlFor="launchpad-drawer"
-								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-2xl"
 							>
 								<div className="text-center w-[30px] h-[30px] relative">
 									<Image fill src="/svg/launchpad.svg" alt="launchpad" />
@@ -416,7 +410,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<Link className="p-3" href="/launchpad-list" rel="noreferrer">
 										Launchpad List
@@ -445,7 +439,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						<div className="drawer-content flex justify-center">
 							<label
 								htmlFor="market-drawer"
-								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-2xl"
 							>
 								<div className="text-center w-[30px] h-[30px] relative">
 									<Image fill src="/svg/market.svg" alt="market" />
@@ -458,10 +452,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a
-										href="https://marketplace.starksport.finance/top_volume"
+										href="https://marketplace.starkfinance.finance/top_volume"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -470,7 +464,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://marketplace.starksport.finance/activity"
+										href="https://marketplace.starkfinance.finance/activity"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -479,7 +473,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://marketplace.starksport.finance/events"
+										href="https://marketplace.starkfinance.finance/events"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -488,7 +482,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								{/* {address && (
             <a
-              href={`https://marketplace.starksport.finance/account/${address}`}
+              href={`https://marketplace.starkfinance.finance/account/${address}`}
               rel="noreferrer"
               className="p-3"
             >
@@ -515,7 +509,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 						<div className="drawer-content flex justify-center">
 							<label
 								htmlFor="socials-drawer"
-								className="p-3 hover:bg-[#232631] cursor-pointer rounded-xl"
+								className="p-3 hover:bg-[#232631] cursor-pointer rounded-2xl"
 							>
 								<div className="text-center w-[30px] h-[30px] relative">
 									<Image fill src="/svg/socials.svg" alt="socials" />
@@ -528,7 +522,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[100px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">

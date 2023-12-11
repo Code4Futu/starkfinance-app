@@ -20,9 +20,8 @@ const LatestAirdrop = () => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			const now = Date.now();
-			const time = timeDiff(Date.now(), launchpad.start * 1000);
-			const status = timeStatus(
-				now,
+			const time = timeDiff(
+				Date.now(),
 				launchpad.start * 1000,
 				launchpad.end * 1000
 			);
@@ -39,7 +38,7 @@ const LatestAirdrop = () => {
 					<Image alt="image" src="/logo80x80.png" fill />
 				</div>
 				<div className="flex-1 flex flex-col justify-between">
-					<div className="text-3xl font-bold line-clamp-2">
+					<div className="text-3xl font-bold line-clamp-1">
 						{launchpad.name}
 					</div>
 					<div className="flex flex-wrap items-center gap-3">
@@ -69,7 +68,7 @@ const LatestAirdrop = () => {
 							<Image src="/logo.png" alt="token" width={8} height={8} />
 							<div className="font-bold text-[14px] text-[#F1F1F1]">SFN</div>
 						</div>
-						<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl font-bold text-[14px] text-[#F1F1F1] uppercase">
+						<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl font-bold text-[14px] text-[#F1F1F1] capitalize">
 							{launchpad.type}
 						</div>
 					</div>
@@ -80,7 +79,7 @@ const LatestAirdrop = () => {
 				<div className="w-full lg:w-[400px] h-[200px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
 
-					<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] text-[#F1F1F1]">
+					<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
 						<div className="text-[36px]">22</div>
 						<div>Nov</div>
 					</div>
@@ -135,7 +134,7 @@ const LatestAirdrop = () => {
 
 			<div>
 				<Link
-					href={`/airdrops/${launchpad.airdropAddress}`}
+					href={`/airdrops/${launchpad.address}`}
 					className="py-3 px-6 text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold rounded-2xl"
 				>
 					Go to Airdrop Now

@@ -6,39 +6,39 @@ export default function Home() {
 	return (
 		<div>
 			<div className="flex justify-center">
-				<div className="flex flex-col gap-12 flex-1 max-w-[1080px]">
+				<div className="flex flex-col gap-6 flex-1 max-w-[1080px]">
 					{/* title and filters */}
-					<div className="text-[24px] md:text-[32px] lg:text-[42px] font-bold">
+					<div className="text-[26px] md:text-[32px] lg:text-[42px] font-bold">
 						Welcome to Starkfinance Launchpad
 					</div>
 
 					{/* latest launchpad */}
 					<LatestLaunchpad />
 
-					<div className="flex flex-wrap gap-2">
-						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-2 px-4 rounded-2xl">
+					<div className="flex flex-wrap gap-1 md:gap-4">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24]  rounded-2xl">
 							Buy SFN token
 						</div>
-						<div className="bg-[#F1F1F1] font-bold text-[#1A1C24] py-2 px-4 rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24]  rounded-2xl">
 							Apply for Launchpad
 						</div>
-						<div className="bg-[#F1F1F1] font-bold text-[#1A1C24] py-2 px-4 rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24]  rounded-2xl">
 							Apply for Airdrop
 						</div>
 
-						<div className="border-solid border-2 font-bold text-[#F1F1F1] py-2 px-4 rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
 							Launchpad List
 						</div>
-						<div className="border-solid border-2 font-bold text-[#F1F1F1] py-2 px-4 rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
 							Airdrop List
 						</div>
-						<div className="border-solid border-2 font-bold text-[#F1F1F1] py-2 px-4 rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
 							Your Pools
 						</div>
 					</div>
 
 					<div>
-						<div className="text-[32px] lg:text-[42px] font-bold">
+						<div className="text-[26px] lg:text-[42px] font-bold">
 							How to Participate in IDO
 						</div>
 
@@ -65,7 +65,7 @@ export default function Home() {
 								</div>
 								<div className="text-[14px] text-center">
 									IDO pool will be opened on 3 days (72 hours) and you can
-									commit SFN tokens on it, you can also stake your Starksport
+									commit SFN tokens on it, you can also stake your StarkFinance
 									NFT to boost your allocation.
 								</div>
 							</div>
@@ -117,7 +117,7 @@ export default function Home() {
 								<div className="w-[60px] h-[60px] relative">
 									<Image alt="image" src="/svg/launchpad-blue.svg" fill />
 								</div>
-								<div className="flex-1 flex flex-col justify-between">
+								<div className="flex-1">
 									<div className="font-bold text-[24px]">1</div>
 									<div className="text-[14px] text-[#C6C6C6]">
 										Projects Launched
@@ -129,7 +129,7 @@ export default function Home() {
 								<div className="w-[60px] h-[60px] relative">
 									<Image alt="image" src="/svg/total-raise.svg" fill />
 								</div>
-								<div className="flex-1 flex flex-col justify-between">
+								<div className="flex-1">
 									<div className="font-bold text-[24px]">$ 0</div>
 									<div className="text-[14px] text-[#C6C6C6]">Funds Raised</div>
 								</div>
@@ -139,11 +139,9 @@ export default function Home() {
 								<div className="w-[60px] h-[60px] relative">
 									<Image alt="image" src="/svg/user.svg" fill />
 								</div>
-								<div className="flex-1 flex flex-col justify-between">
+								<div className="flex-1">
 									<div className="font-bold text-[24px]">0</div>
-									<div className="text-[14px] text-[#C6C6C6]">
-										All-time Unique Participants
-									</div>
+									<div className="text-[14px] text-[#C6C6C6]">Participants</div>
 								</div>
 							</div>
 						</div>
@@ -158,8 +156,8 @@ export default function Home() {
 						</div>
 					</div>
 
-					<div className="flex flex-col gap-6 rounded-3xl bg-[#1A1C24] p-6">
-						<div className="text-[24px] font-bold">Features</div>
+					<div className="flex flex-col rounded-3xl bg-[#1A1C24] px-3 md:px-6 py-6">
+						<div className="text-[24px] font-bold mb-6">Features</div>
 
 						<div className="grid grid-cols-1 md:grid-cols-2 gap-3">
 							<div className="w-full p-6 flex gap-2 bg-[#0D0E12] border-[#2D313E] rounded-2xl">
@@ -167,7 +165,7 @@ export default function Home() {
 									<div className="text-[20px] font-bold text-[#FFFFFF] mb-2.5">
 										Public / Private Sale
 									</div>
-									<div className="text-[14px] text-[#C6C6C6]">
+									<div className="text-[14px] text-[#C6C6C6] font-[400]">
 										Commit your funds to get IDO tokens from projects
 									</div>
 								</div>

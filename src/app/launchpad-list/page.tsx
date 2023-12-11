@@ -6,7 +6,7 @@ import LatestLaunchpad from "./components/LatestLaunchpad";
 export default function LaunchpadList() {
 	return (
 		<div>
-			<div className="breadcrumbs fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[240px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
+			<div className="breadcrumbs z-[999] fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
 				<ul>
 					<li>
 						<div className="flex items-center">
@@ -16,7 +16,7 @@ export default function LaunchpadList() {
 								src="/svg/launchpad.svg"
 								alt="launchpad"
 							/>
-							<div className="font-bold ml-1.5">Launchpad</div>
+							<div className="hidden font-bold ml-1.5">Launchpad</div>
 						</div>
 					</li>
 					<li>
@@ -125,29 +125,18 @@ export default function LaunchpadList() {
 
 							<label
 								htmlFor="filters"
-								className="flex lg:hidden btn rounded-2xl border-[#2D313E]"
+								className="p-3 lg:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
 							>
-								<Image
-									src="/svg/filter.svg"
-									alt="filter"
-									width={24}
-									height={24}
-								/>
+								<div className="w-[24px] h-[24px] relative">
+									<Image src="/svg/filter.svg" alt="filter" fill />
+								</div>
 							</label>
 
 							{/* Put this part before </body> tag */}
-							<input type="checkbox" id="filters" className="modal-toggle" />
+							{/* <input type="checkbox" id="filters" className="modal-toggle" />
 							<div className="modal" role="dialog">
-								<div className="modal-box">
-									<h3 className="text-lg font-bold">Hello!</h3>
-									<p className="py-4">
-										This modal works with a hidden checkbox!
-									</p>
-								</div>
-								<label className="modal-backdrop" htmlFor="filters">
-									Close
-								</label>
-							</div>
+								<div>TODO filters</div>
+							</div> */}
 
 							<Link
 								href="/your-pools"
@@ -162,7 +151,7 @@ export default function LaunchpadList() {
 					<LatestLaunchpad />
 
 					{/* list launchpad */}
-					<div className="grid grid-cols-3 gap-6 mt-6">
+					<div className="grid grid-cols-1 gap-6 mt-6">
 						{new Array(0).fill("").map((e, idx) => (
 							<LaunchpadItem key={idx} />
 						))}

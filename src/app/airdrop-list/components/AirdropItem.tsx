@@ -6,7 +6,7 @@ const AirdropItem = () => {
 			<div className="w-full h-[200px] relative">
 				<Image alt="image" src="/mocks/banner.png" fill />
 
-				<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] text-[#F1F1F1]">
+				<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
 					<div className="text-[36px]">22</div>
 					<div>Nov</div>
 				</div>
@@ -22,7 +22,7 @@ const AirdropItem = () => {
 					<Image alt="image" src="/logo80x80.png" fill />
 				</div>
 				<div className="flex-1 flex flex-col justify-between">
-					<div className="text-xl font-bold line-clamp-2">
+					<div className="text-xl font-bold line-clamp-1">
 						Promote Launchpad
 					</div>
 					<div className="flex flex-wrap items-center gap-2">

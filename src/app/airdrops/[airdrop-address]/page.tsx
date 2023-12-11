@@ -17,7 +17,11 @@ const LaunchpadPage = () => {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const time = timeDiff(Date.now(), airdrop.start * 1000);
+			const time = timeDiff(
+				Date.now(),
+				airdrop.start * 1000,
+				airdrop.end * 1000
+			);
 			setTimeStartDiff(time);
 		}, 1000);
 
@@ -26,7 +30,7 @@ const LaunchpadPage = () => {
 
 	return (
 		<div>
-			<div className="z-[999] breadcrumbs fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[240px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
+			<div className="z-[999] breadcrumbs fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
 				<ul>
 					<li>
 						<div className="flex items-center">
@@ -59,7 +63,7 @@ const LaunchpadPage = () => {
 					</div>
 
 					<div className="flex-1 flex flex-col justify-between">
-						<div className="text-3xl font-bold line-clamp-2">
+						<div className="text-3xl font-bold line-clamp-1">
 							{airdrop.name}
 						</div>
 						<div className="flex flex-wrap items-center gap-3">
@@ -89,7 +93,7 @@ const LaunchpadPage = () => {
 								<Image src="/logo.png" alt="token" width={8} height={8} />
 								<div className="font-bold text-[14px] text-[#F1F1F1]">SFN</div>
 							</div>
-							<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl font-bold text-[14px] text-[#F1F1F1] uppercase">
+							<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl font-bold text-[14px] text-[#F1F1F1] capitalize">
 								{airdrop.type}
 							</div>
 						</div>
