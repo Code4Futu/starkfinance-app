@@ -3,7 +3,7 @@
 	"version": "0.1.0",
 	"private": true,
 	"scripts": {
-		"dev": "next dev -p 3089",
+		"dev": "next dev -p 3000",
 		"build": "next build",
 		"start": "next start -p 3089",
 		"lint": "next lint",
@@ -19,7 +19,8 @@
 		"react": "^18",
 		"react-dom": "^18",
 		"sharp": "^0.32.6",
-		"starknet": "^5.19.5"
+		"starknet": "^5.19.5",
+		"swr": "^2.2.4"
 	},
 	"devDependencies": {
 		"@types/node": "^20",

@@ -10,6 +10,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 
 	const handleConnect = async (connector: any) => {
 		try {
+			console.log("1");
 			connect(connector);
 		} catch (error) {
 			alert(`Please install ${connector.id()} wallet!`);
@@ -314,7 +315,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								/>
 							</div>
 							<div
-								className="text-md font-bold text-[#1A1C24]"
+								className="text-md font-bold text-[#1A1C24] cursor-pointer"
 								onClick={() => handleConnect(connectors[1])}
 							>
 								{address

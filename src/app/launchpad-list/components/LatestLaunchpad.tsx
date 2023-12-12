@@ -15,13 +15,13 @@ const LatestLaunchpad = () => {
 		h: number;
 		m: number;
 		s: number;
-		status: LAUNCHPAD_STATUS;
+		status: undefined | LAUNCHPAD_STATUS;
 	}>({
 		d: 0,
 		h: 0,
 		m: 0,
 		s: 0,
-		status: LAUNCHPAD_STATUS.UPCOMING,
+		status: undefined,
 	});
 
 	useEffect(() => {

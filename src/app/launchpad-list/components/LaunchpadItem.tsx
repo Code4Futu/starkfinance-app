@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-const LaunchpadItem = () => {
+const LaunchpadItem = ({ launchpad }: { launchpad: any }) => {
 	return (
 		<div className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] cursor-pointer">
 			<div className="w-full h-[200px] relative">
