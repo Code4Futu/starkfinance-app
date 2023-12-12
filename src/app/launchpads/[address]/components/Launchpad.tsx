@@ -1,11 +1,15 @@
 "use client";
-import { LAUNCHPAD_STATUS } from "@/app/constants";
+import {
+	BASE_API,
+	LAUNCHPAD_STATUS,
+	StarknetRpcProvider,
+} from "@/app/constants";
 import { numberWithCommas, timeDiff } from "@/app/utils";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CallData, cairo } from "starknet";
+import { CallData, cairo, num } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import dayjs from "dayjs";
 import useSWR from "swr";
@@ -17,20 +21,24 @@ export default function Launchpad({ launchpad }: any) {
 		participants: string;
 		committed: string;
 	}>(
-		`https://launchpad-api.starkfinance.co/launchpads/${launchpad.address}/statistics`,
-		(url: string) => fetch(url).then((r) => r.json())
+		`${BASE_API}/launchpads/${launchpad.address}/statistics`,
+		(url: string) => fetch(url).then((r) => r.json()),
+		{ refreshInterval: 60 }
 	);
 
 	const { data: accountStatistics } = useSWR<{
 		committed: string;
 		claimed: string;
 	}>(
-		`https://launchpad-api.starkfinance.co/launchpads/${launchpad.address}/${address}/statistics`,
-		(url: string) => fetch(url).then((r) => r.json())
+		`${BASE_API}/launchpads/${launchpad.address}/${address}/statistics`,
+		(url: string) => fetch(url).then((r) => r.json()),
+		{ refreshInterval: 60 }
 	);
 
-	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<number>(0);
-	const [commitAmount, setCommitAmount] = useState<number>(0);
+	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<string>();
+	const [commitAmount, setCommitAmount] = useState<string>("");
+	const [refresh, setRefresh] = useState<boolean>(false);
+	const [committing, setCommitting] = useState<boolean>(false);
 
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
@@ -59,43 +67,48 @@ export default function Launchpad({ launchpad }: any) {
 		return () => clearInterval(interval);
 	}, [launchpad.start, launchpad.end]);
 
-	// useEffect(() => {
-	// 	if (account) {
+	const getBalance = useCallback(async () => {
+		try {
+			if (!account || !address) return;
+			const res = await StarknetRpcProvider.callContract({
+				contractAddress: launchpad.tokenRaise.address,
+				entrypoint: "balanceOf",
+				calldata: [address],
+			});
+			setTokenRaiseBalance(num.hexToDecimalString(res.result[0]));
+		} catch (error) {
+			console.log(error);
+		}
+	}, [account, launchpad.tokenRaise, refresh]);
 
-	// 	}
-
-	//   const getBalance = async () {
-	//     const balance = await account.callContract({
-	// 			contractAddress: launchpad.tokenRaise.address,
-	// 			entrypoint: "balanceOf",
-	// 		});
-	// 		console.log(balance);
-	//   }
-
-	// 	return;
-	// }, [account, launchpad.tokenRaise]);
+	useEffect(() => {
+		getBalance();
+	}, [account, launchpad.tokenRaise, refresh]);
 
 	const handleCommit = useCallback(async () => {
 		if (!account) return alert("Connect wallet first");
 		try {
-			if (!commitAmount || isNaN(commitAmount))
+			if (!commitAmount || isNaN(+commitAmount))
 				return alert("Invalid commit amount");
-			const amount = ethers.formatUnits(
+			const amount = ethers.parseUnits(
 				commitAmount,
-				launchpad.tokenRaise.decimal
+				launchpad.tokenRaise.decimals
 			);
 
-			if (+amount < +launchpad.minCommit)
-				return alert("Must greater MIN commit");
-
+			if (
+				amount < BigInt(launchpad.minCommit) ||
+				amount > BigInt(launchpad.maxCommit)
+			)
+				return alert("Must in range MIN/MAX commit");
+			setCommitting(true);
 			const calls = [
-				{
-					contractAddress: launchpad.tokenRaise.address,
-					entrypoint: "mint",
-					calldata: CallData.compile({
-						amount: cairo.uint256(amount),
-					}),
-				},
+				// {
+				// 	contractAddress: launchpad.tokenRaise.address,
+				// 	entrypoint: "mint",
+				// 	calldata: CallData.compile({
+				// 		amount: cairo.uint256(amount),
+				// 	}),
+				// },
 				{
 					contractAddress: launchpad.tokenRaise.address,
 					entrypoint: "approve",
@@ -120,15 +133,22 @@ export default function Launchpad({ launchpad }: any) {
 				// },
 			];
 
-			const res = await account.execute(calls);
-			console.log(res);
-			alert("Commit success");
+			const tx = await account.execute(calls);
+
+			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
+
+			alert(`Commit success. TxHash is ${tx.transaction_hash}`);
+
+			setCommitAmount("");
+			setCommitting(false);
+			setRefresh((pre) => !pre);
 		} catch (error) {
+			setCommitting(false);
 			console.log(error);
 		}
 
 		// const nft = await launchpadContract.commit();
-	}, [account]);
+	}, [account, commitAmount]);
 
 	return (
 		<div>
@@ -286,7 +306,7 @@ export default function Launchpad({ launchpad }: any) {
 										{numberWithCommas(
 											ethers.formatUnits(
 												launchpad.totalRaise,
-												launchpad.tokenRaise.decimal
+												launchpad.tokenRaise.decimals
 											)
 										)}
 									</div>
@@ -297,7 +317,7 @@ export default function Launchpad({ launchpad }: any) {
 										{numberWithCommas(
 											ethers.formatUnits(
 												launchpad.totalSale,
-												launchpad.tokenSale.decimal
+												launchpad.tokenSale.decimals
 											)
 										)}
 									</div>
@@ -310,14 +330,14 @@ export default function Launchpad({ launchpad }: any) {
 										{numberWithCommas(
 											ethers.formatUnits(
 												launchpad.minCommit,
-												launchpad.tokenRaise.decimal
+												launchpad.tokenRaise.decimals
 											)
 										)}{" "}
 										/{" "}
 										{numberWithCommas(
 											ethers.formatUnits(
 												launchpad.maxCommit,
-												launchpad.tokenRaise.decimal
+												launchpad.tokenRaise.decimals
 											)
 										)}{" "}
 										{launchpad.tokenRaise.symbol}
@@ -340,7 +360,7 @@ export default function Launchpad({ launchpad }: any) {
 											{numberWithCommas(
 												ethers.formatUnits(
 													launchpadStatistics?.committed ?? "0",
-													launchpad.tokenRaise.decimal
+													launchpad.tokenRaise.decimals
 												)
 											)}{" "}
 											{launchpad.tokenRaise.symbol}
@@ -371,27 +391,41 @@ export default function Launchpad({ launchpad }: any) {
 									<div className="py-3">
 										<div className="flex justify-between">
 											<div className="text-[12px] text-[#C6C6C6]">
-												SFN balance:
+												{launchpad.tokenRaise.symbol} balance:
 											</div>
-											<div className="text-[14px] text-[#C6C6C6]">0</div>
+											<div className="text-[14px] text-[#C6C6C6]">
+												{" "}
+												{numberWithCommas(
+													ethers.formatUnits(
+														tokenRaiseBalance ?? "0",
+														launchpad.tokenRaise.decimals
+													)
+												)}
+											</div>
 										</div>
 
 										<input
 											type="text"
 											value={commitAmount}
-											onChange={(e) => setCommitAmount(+e.target.value)}
+											onChange={(e) => setCommitAmount(e.target.value)}
 											className="input w-full focus:outline-none bg-[#0D0E12] border-[#2D313E] rounded-2xl focus-within:border-[#2D313E] focus:border-[#2D313E]"
 										/>
 
 										<div className="flex justify-between gap-5 mt-6">
 											<div
 												onClick={handleCommit}
-												className="cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
+												className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
 											>
-												Commit
+												{committing && (
+													<span className="loading loading-spinner loading-xl"></span>
+												)}
+												<span>Commit</span>
 											</div>
-											<div className="cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-[#F1F1F1] rounded-2xl">
-												Stark NFT
+											<div className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-[#F1F1F1] rounded-2xl">
+												{/* {committing && (
+													<span className="loading loading-spinner loading-xl"></span>
+												)} */}
+												<span>Stark NFT</span>
 											</div>
 										</div>
 									</div>
@@ -416,7 +450,7 @@ export default function Launchpad({ launchpad }: any) {
 											{numberWithCommas(
 												ethers.formatUnits(
 													launchpadStatistics?.committed ?? "0",
-													launchpad.tokenRaise.decimal
+													launchpad.tokenRaise.decimals
 												)
 											)}{" "}
 											{launchpad.tokenRaise.symbol}
@@ -431,7 +465,7 @@ export default function Launchpad({ launchpad }: any) {
 											{numberWithCommas(
 												ethers.formatUnits(
 													accountStatistics?.committed ?? "0",
-													launchpad.tokenRaise.decimal
+													launchpad.tokenRaise.decimals
 												)
 											)}{" "}
 											{launchpad.tokenRaise.symbol}
@@ -444,7 +478,7 @@ export default function Launchpad({ launchpad }: any) {
 											{numberWithCommas(
 												ethers.formatUnits(
 													accountStatistics?.claimed ?? "0",
-													launchpad.tokenRaise.decimal
+													launchpad.tokenRaise.decimals
 												)
 											)}{" "}
 											{launchpad.tokenRaise.symbol}

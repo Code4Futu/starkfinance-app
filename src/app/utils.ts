@@ -1,4 +1,5 @@
 import { LAUNCHPAD_STATUS } from "./constants";
+import { RpcProvider } from "starknet";
 
 export function numberWithCommas(x: number | string) {
 	return x

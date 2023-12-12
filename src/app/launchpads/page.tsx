@@ -2,9 +2,11 @@ import Link from "next/link";
 import Image from "next/image";
 import LaunchpadItem from "./components/LaunchpadItem";
 import LatestLaunchpad from "./components/LatestLaunchpad";
+import { ILaunchpad } from "../types";
+import { BASE_API } from "../constants";
 
-async function getLaunchpads() {
-	const res = await fetch(`https://launchpad-api.starkfinance.co/launchpads/`, {
+async function getLaunchpads(): Promise<ILaunchpad[]> {
+	const res = await fetch(`${BASE_API}/launchpads/`, {
 		next: { revalidate: 60 },
 	});
 	return res.json();
@@ -13,11 +15,9 @@ async function getLaunchpads() {
 export default async function LaunchpadList() {
 	const launchpads = await getLaunchpads();
 
-	console.log(launchpads);
-
 	return (
 		<div>
-			<div className="breadcrumbs z-[999] fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
+			<div className="breadcrumbs z-[999] fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 lg:right-[360px] px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
 				<ul>
 					<li>
 						<div className="flex items-center">
@@ -159,13 +159,13 @@ export default async function LaunchpadList() {
 					</div>
 
 					{/* latest launchpad */}
-					<LatestLaunchpad />
+					<LatestLaunchpad launchpad={launchpads[0]} />
 
 					{/* list launchpad */}
-					<div className="grid grid-cols-1 gap-6 mt-6">
-						{/* {launchpads.slice(1).map((launchpad: any, idx: number) => (
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
+						{launchpads.slice(1).map((launchpad: any, idx: number) => (
 							<LaunchpadItem launchpad={launchpad} key={idx} />
-						))} */}
+						))}
 					</div>
 				</div>
 			</div>

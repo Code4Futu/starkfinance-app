@@ -1,8 +1,13 @@
+import { ILaunchpad } from "@/app/types";
 import Image from "next/image";
+import Link from "next/link";
 
-const LaunchpadItem = ({ launchpad }: { launchpad: any }) => {
+const LaunchpadItem = ({ launchpad }: { launchpad: ILaunchpad }) => {
 	return (
-		<div className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] cursor-pointer">
+		<Link
+			href={`/launchpads/${launchpad.address}`}
+			className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] cursor-pointer"
+		>
 			<div className="w-full h-[200px] relative">
 				<Image alt="image" src="/mocks/banner.png" fill />
 
@@ -22,9 +27,7 @@ const LaunchpadItem = ({ launchpad }: { launchpad: any }) => {
 					<Image alt="image" src="/logo80x80.png" fill />
 				</div>
 				<div className="flex-1 flex flex-col justify-between">
-					<div className="text-xl font-bold line-clamp-1">
-						Promote Launchpad
-					</div>
+					<div className="text-xl font-bold line-clamp-1">{launchpad.name}</div>
 					<div className="flex flex-wrap items-center gap-2">
 						<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-2 rounded-2xl">
 							<Image
@@ -33,16 +36,18 @@ const LaunchpadItem = ({ launchpad }: { launchpad: any }) => {
 								width={18}
 								height={18}
 							/>
-							<div className="font-bold text-[12px] text-[#F1F1F1]">
-								Starknet
+							<div className="font-bold text-[12px] text-[#F1F1F1] capitalize">
+								{launchpad.chainKey}
 							</div>
 						</div>
 						<div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-2 rounded-2xl">
 							<Image src="/logo.png" alt="token" width={8} height={8} />
-							<div className="font-bold text-[12px] text-[#F1F1F1]">SFN</div>
+							<div className="font-bold text-[12px] text-[#F1F1F1]">
+								{launchpad.tokenRaise.symbol}
+							</div>
 						</div>
-						<div className="bg-[#3E73FC] py-1.5 px-2 rounded-2xl font-bold text-[12px] text-[#F1F1F1]">
-							PUBLIC
+						<div className="bg-[#3E73FC] py-1.5 px-2 rounded-2xl font-bold text-[12px] text-[#F1F1F1] uppercase">
+							{launchpad.type}
 						</div>
 					</div>
 				</div>
@@ -99,7 +104,7 @@ const LaunchpadItem = ({ launchpad }: { launchpad: any }) => {
 					</div>
 				</div>
 			</div>
-		</div>
+		</Link>
 	);
 };
 

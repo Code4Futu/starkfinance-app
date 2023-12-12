@@ -10,13 +10,13 @@ export const launchpadMocks = [
 			symbol: "SFN",
 			address:
 				"0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
-			decimal: 18,
+			decimals: 18,
 		},
 		tokenSale: {
 			symbol: "TEST",
 			address:
 				"0x362cb503715420a537c16419001174476bf44b4728eec14117763481ffaa06f",
-			decimal: 18,
+			decimals: 18,
 		},
 		type: "public",
 		start: 1702393200,
@@ -51,13 +51,13 @@ export const launchpadMocks = [
 			symbol: "SFN",
 			address:
 				"0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
-			decimal: 18,
+			decimals: 18,
 		},
 		tokenSale: {
 			symbol: "TEST",
 			address:
 				"0x362cb503715420a537c16419001174476bf44b4728eec14117763481ffaa06f",
-			decimal: 18,
+			decimals: 18,
 		},
 		type: "public",
 		start: 1702288800,
@@ -91,13 +91,13 @@ export const launchpadMocks = [
 			symbol: "SFN",
 			address:
 				"0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
-			decimal: 18,
+			decimals: 18,
 		},
 		tokenSale: {
 			symbol: "TEST",
 			address:
 				"0x362cb503715420a537c16419001174476bf44b4728eec14117763481ffaa06f",
-			decimal: 18,
+			decimals: 18,
 		},
 		type: "public",
 		start: 1701414000,
@@ -135,7 +135,7 @@ export const airdropMocks = [
 		tokenAirdrop: {
 			symbol: "SFN",
 			address: "0x12344",
-			decimal: 18,
+			decimals: 18,
 		},
 		totalAirdrop: 100000000,
 		airdropPerUser: 1000,

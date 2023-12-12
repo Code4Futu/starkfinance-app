@@ -1,15 +1,13 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { launchpadMocks } from "@/app/mock";
 import { numberWithCommas, timeDiff } from "@/app/utils";
 import { useEffect, useState } from "react";
 import { LAUNCHPAD_STATUS } from "@/app/constants";
 import { ethers } from "ethers";
+import { ILaunchpad } from "@/app/types";
 
-const LatestLaunchpad = () => {
-	const launchpad = launchpadMocks[0];
-
+const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -69,13 +67,13 @@ const LatestLaunchpad = () => {
 						<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 							<div className="w-[18px] h-[18px] relative">
 								<Image
-									src={`/wallets/${launchpad.chain}.png`}
+									src={`/wallets/${launchpad.chainKey}.png`}
 									alt="starknet"
 									fill
 								/>
 							</div>
 							<div className="font-[500] text-[12px] text-[#F1F1F1] capitalize">
-								{launchpad.chain}
+								{launchpad.chainKey}
 							</div>
 						</div>
 						<div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
@@ -107,7 +105,7 @@ const LatestLaunchpad = () => {
 									ethers
 										.formatUnits(
 											launchpad.totalRaise,
-											launchpad.tokenRaise.decimal
+											launchpad.tokenRaise.decimals
 										)
 										.toString()
 								)}{" "}
@@ -121,7 +119,7 @@ const LatestLaunchpad = () => {
 									ethers
 										.formatUnits(
 											launchpad.totalSale,
-											launchpad.tokenSale.decimal
+											launchpad.tokenSale.decimals
 										)
 										.toString()
 								)}{" "}
@@ -135,11 +133,11 @@ const LatestLaunchpad = () => {
 								1 {launchpad.tokenRaise.symbol} ={" "}
 								{+ethers.formatUnits(
 									launchpad.totalSale,
-									launchpad.tokenSale.decimal
+									launchpad.tokenSale.decimals
 								) /
 									+ethers.formatUnits(
 										launchpad.totalRaise,
-										launchpad.tokenRaise.decimal
+										launchpad.tokenRaise.decimals
 									)}
 								{launchpad.tokenSale.symbol}
 							</div>

@@ -1,8 +1,19 @@
 import Image from "next/image";
-import LatestLaunchpad from "./launchpad-list/components/LatestLaunchpad";
+import LatestLaunchpad from "./launchpads/components/LatestLaunchpad";
 import Link from "next/link";
+import { ILaunchpad } from "./types";
+import { BASE_API } from "./constants";
 
-export default function Home() {
+async function getLaunchpads(): Promise<ILaunchpad[]> {
+	const res = await fetch(`${BASE_API}/launchpads/`, {
+		next: { revalidate: 60 },
+	});
+	return res.json();
+}
+
+export default async function Home() {
+	const launchpads = await getLaunchpads();
+
 	return (
 		<div>
 			<div className="flex justify-center">
@@ -13,7 +24,7 @@ export default function Home() {
 					</div>
 
 					{/* latest launchpad */}
-					<LatestLaunchpad />
+					<LatestLaunchpad launchpad={launchpads[0]} />
 
 					<div className="flex flex-wrap gap-1 md:gap-4">
 						<div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24]  rounded-2xl">

@@ -10,7 +10,6 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 
 	const handleConnect = async (connector: any) => {
 		try {
-			console.log("1");
 			connect(connector);
 		} catch (error) {
 			alert(`Please install ${connector.id()} wallet!`);
@@ -28,14 +27,18 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 		<div className="h-full w-full overflow-hidden flex justify-stretch">
 			<div className="w-[288px] bg-[#1A1C24]  hidden lg:flex flex-col justify-between border-r border-solid	border-r-[#2D313E] text-[#C6C6C6]">
 				<div>
-					<div className="w-[212px] h-[48px] relative m-6">
-						<Image src="/logo-w-text.png" alt="logo" fill />
-					</div>
+					<Link href="/" rel="noreferrer">
+						<div className="w-[212px] h-[48px] relative m-6">
+							<Image src="/logo-w-text.png" alt="logo" fill />
+						</div>
+					</Link>
 
 					<div className="m-4">
 						<Link href="/" rel="noreferrer">
 							<div className="flex items-center p-4">
-								<Image width={30} height={30} src="/svg/home.svg" alt="home" />
+								<div className="w-[30px] h-[30px] relative">
+									<Image src="/svg/home.svg" alt="home" fill sizes="30px" />
+								</div>
 								<div className="font-bold ml-1.5">Home</div>
 							</div>
 						</Link>
@@ -43,12 +46,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<input type="radio" name="my-accordion-1" />
 							<div className="collapse-title">
 								<div className="flex items-center">
-									<Image
-										width={30}
-										height={30}
-										src="/svg/exchange.svg"
-										alt="exchange"
-									/>
+									<div className="w-[30px] h-[30px] relative">
+										<Image
+											src="/svg/exchange.svg"
+											alt="exchange"
+											fill
+											sizes="30px"
+										/>
+									</div>
 									<div className="font-bold ml-1.5">Exchange</div>
 								</div>
 							</div>
@@ -97,12 +102,12 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<Link href="/launchpad-list" rel="noreferrer">
+										<Link href="/launchpads" rel="noreferrer">
 											Launchpad List
 										</Link>
 									</li>
 									<li className="p-3">
-										<Link href="/airdrop-list" rel="noreferrer">
+										<Link href="/airdrops" rel="noreferrer">
 											Airdrop List
 										</Link>
 									</li>
@@ -413,12 +418,12 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							></label>
 							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
-									<Link className="p-3" href="/launchpad-list" rel="noreferrer">
+									<Link className="p-3" href="/launchpads" rel="noreferrer">
 										Launchpad List
 									</Link>
 								</li>
 								<li>
-									<Link className="p-3" href="/airdrop-list" rel="noreferrer">
+									<Link className="p-3" href="/airdrops" rel="noreferrer">
 										Airdrop List
 									</Link>
 								</li>
