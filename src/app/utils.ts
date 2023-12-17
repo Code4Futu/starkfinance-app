@@ -12,7 +12,7 @@ export function numberWithCommas(x: number | string) {
 export function timeDiff(current: number, start: number, end: number) {
 	let status = LAUNCHPAD_STATUS.END;
 	if (current < start) status = LAUNCHPAD_STATUS.UPCOMING;
-	if (current < end) status = LAUNCHPAD_STATUS.LIVE;
+	if (current < end) status = LAUNCHPAD_STATUS.INPROGRESS;
 
 	const diff =
 		status === LAUNCHPAD_STATUS.UPCOMING ? start - current : end - current;
@@ -27,3 +27,16 @@ export function timeDiff(current: number, start: number, end: number) {
 
 	return { d, h, m, s, status };
 }
+
+export const statusToText = (status: LAUNCHPAD_STATUS | undefined) => {
+	switch (status) {
+		case LAUNCHPAD_STATUS.UPCOMING:
+			return "open in:";
+
+		case LAUNCHPAD_STATUS.INPROGRESS:
+			return "end after:";
+
+		default:
+			return "";
+	}
+};

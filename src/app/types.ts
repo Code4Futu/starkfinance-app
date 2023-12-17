@@ -39,6 +39,10 @@ export interface ILaunchpad {
 
 	maxCommit: string;
 
+	vestingTime: number[];
+
+	vestingPercent: number[];
+
 	logo: string;
 
 	banner: string;

@@ -46,7 +46,7 @@ const LaunchpadPage = () => {
 					<li>
 						<Link
 							className="font-bold hover:no-underline"
-							href="/airdrop-list"
+							href="/airdrops"
 							rel="noreferrer"
 						>
 							Airdrop List

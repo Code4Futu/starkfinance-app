@@ -60,26 +60,20 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<a
-											href="https://exchange.starkfinance.finance/swap"
-											rel="noreferrer"
-										>
+										<a href="https://exchange.starkfinance.co" rel="noreferrer">
 											Swap
 										</a>
 									</li>
 									<li className="p-3">
 										<a
-											href="https://exchange.starkfinance.finance/liquidity"
+											href="https://exchange.starkfinance.co/liquidity"
 											rel="noreferrer"
 										>
 											Liquidity
 										</a>
 									</li>
 									<li className="p-3">
-										<a
-											href="https://exchange.starkfinance.finance"
-											rel="noreferrer"
-										>
+										<a href="https://exchange.starkfinance.co" rel="noreferrer">
 											Overview
 										</a>
 									</li>
@@ -90,12 +84,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<input type="radio" name="my-accordion-1" />
 							<div className="collapse-title">
 								<div className="flex items-center">
-									<Image
-										width={30}
-										height={30}
-										src="/svg/launchpad.svg"
-										alt="launchpad"
-									/>
+									<div className="w-[30px] h-[30px] relative">
+										<Image src="/svg/launchpad.svg" alt="launchpad" fill />
+									</div>
+
 									<div className="font-bold ml-1.5">Launchpad</div>
 								</div>
 							</div>
@@ -106,28 +98,17 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 											Launchpad List
 										</Link>
 									</li>
-									<li className="p-3">
+									{/* <li className="p-3">
 										<Link href="/airdrops" rel="noreferrer">
 											Airdrop List
 										</Link>
 									</li>
-									{/* <li className="p-3">
-										<Link href="/your-pools" rel="noreferrer">
-											Your Pool
+									<li className="p-3">
+										<Link href="/launchpads/your-pools" rel="noreferrer">
+											Your Pools
 										</Link>
 									</li> */}
 								</ul>
-								{/* <ul>
-												<li>
-													<a>Launchpad List</a>
-												</li>
-												<li>
-													<a>Airdrop List</a>
-												</li>
-												<li>
-													<a>Your Pool</a>
-												</li>
-											</ul> */}
 							</div>
 						</div>
 						<div className="collapse collapse-arrow">
@@ -147,7 +128,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
 										<a
-											href="https://marketplace.starkfinance.finance/top_volume"
+											href="https://marketplace.starkfinance.co/top_volume"
 											rel="noreferrer"
 										>
 											Collections
@@ -155,7 +136,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://marketplace.starkfinance.finance/activity"
+											href="https://marketplace.starkfinance.co/activity"
 											rel="noreferrer"
 										>
 											Activity
@@ -163,7 +144,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</li>
 									<li className="p-3">
 										<a
-											href="https://marketplace.starkfinance.finance/events"
+											href="https://marketplace.starkfinance.co/events"
 											rel="noreferrer"
 										>
 											Events
@@ -172,12 +153,37 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									<li className="p-3">
 										{/* {address && (
 											<a
-												href={`https://marketplace.starkfinance.finance/account/${address}`}
+												href={`https://marketplace.starkfinance.co/account/${address}`}
 												rel="noreferrer"
 											>
 												Profile
 											</a>
 										)} */}
+									</li>
+								</ul>
+							</div>
+						</div>
+						<div className="collapse collapse-arrow">
+							<input type="radio" name="my-accordion-1" />
+							<div className="collapse-title">
+								<div className="flex items-center">
+									<div className="w-[30px] h-[30px] relative">
+										<Image src="/svg/market.svg" alt="market" fill />
+									</div>
+									<div className="font-bold ml-1.5">Locking</div>
+								</div>
+							</div>
+							<div className="collapse-content">
+								<ul className="pl-2 font-bold">
+									<li className="p-3">
+										<a href="/locks/create" rel="noreferrer">
+											Create Lock
+										</a>
+									</li>
+									<li className="p-3">
+										<a href="/locks" rel="noreferrer">
+											My Lock
+										</a>
 									</li>
 								</ul>
 							</div>
@@ -365,7 +371,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<ul className="menu absolute left-0 bottom-[80px] right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a
-										href="https://exchange.starkfinance.finance/swap"
+										href="https://exchange.starkfinance.co"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -374,7 +380,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://exchange.starkfinance.finance/liquidity"
+										href="https://exchange.starkfinance.co/liquidity"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -383,7 +389,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://exchange.starkfinance.finance"
+										href="https://exchange.starkfinance.co"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -428,7 +434,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</Link>
 								</li>
 								{/* <li>
-									<Link className="p-3" href="/your-pools" rel="noreferrer">
+									<Link className="p-3" href="/launchpads/your-pools" rel="noreferrer">
 										Your Pool
 									</Link>
 								</li> */}
@@ -461,7 +467,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a
-										href="https://marketplace.starkfinance.finance/top_volume"
+										href="https://marketplace.starkfinance.co/top_volume"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -470,7 +476,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://marketplace.starkfinance.finance/activity"
+										href="https://marketplace.starkfinance.co/activity"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -479,7 +485,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								<li>
 									<a
-										href="https://marketplace.starkfinance.finance/events"
+										href="https://marketplace.starkfinance.co/events"
 										rel="noreferrer"
 										className="p-3"
 									>
@@ -488,7 +494,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</li>
 								{/* {address && (
             <a
-              href={`https://marketplace.starkfinance.finance/account/${address}`}
+              href={`https://marketplace.starkfinance.co/account/${address}`}
               rel="noreferrer"
               className="p-3"
             >

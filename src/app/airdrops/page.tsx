@@ -22,7 +22,7 @@ export default function LaunchpadList() {
 					<li>
 						<Link
 							className="font-bold hover:no-underline"
-							href="/airdrop-list"
+							href="/airdrops"
 							rel="noreferrer"
 						>
 							Airdrop List
@@ -150,10 +150,10 @@ export default function LaunchpadList() {
 							</div>
 
 							<Link
-								href="/your-pools"
+								href="/launchpads/your-pools"
 								className="hidden md:block border rounded-2xl border-[#2D313E] py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
 							>
-								My pools
+								Your Pools
 							</Link>
 						</div>
 					</div>
