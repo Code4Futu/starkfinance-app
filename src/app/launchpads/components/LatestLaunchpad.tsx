@@ -45,8 +45,8 @@ const LatestLaunchpad = ({
 	if (!launchpad) return null;
 
 	return (
-		<div className="flex flex-col gap-6 p-3 md:p-6 border rounded-3xl border-[#24C3BC] bg-[#1A1C24]">
-			<div className="block lg:hidden w-full h-[160px] md:h-[336px] relative">
+		<div className="flex flex-col gap-6 p-3 md:p-6 border rounded-3xl border-[#24C3BC] bg-[#1A1C24] ">
+			<div className="block lg:hidden w-full pt-[50%] relative rounded-2xl overflow-hidden">
 				<Image alt="image" src="/mocks/banner.png" fill />
 				<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] ">
 					<div className="text-2xl text-[#F1F1F1] font-bold">
@@ -125,7 +125,7 @@ const LatestLaunchpad = ({
 			</div>
 
 			<div className="flex gap-6 flex-col lg:flex-row">
-				<div className="hidden lg:block w-[400px] h-[200px] relative">
+				<div className="hidden lg:block w-[360px] h-[180px] 2xl:w-[400px] 2xl:h-[200px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
 					<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
 						<div className="text-[36px]">
@@ -185,7 +185,7 @@ const LatestLaunchpad = ({
 						</div>
 					</div>
 					{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-						<div className="border-t border-b-[#2D313E] pt-3">
+						<div className="border-t border-t-[#2D313E] pt-3">
 							<div className="mb-2.5">
 								Launchpad {statusToText(timeStartDiff.status)}
 							</div>

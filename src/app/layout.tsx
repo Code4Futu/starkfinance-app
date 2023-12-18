@@ -7,8 +7,6 @@ import Link from "next/link";
 import Menu from "./components/Menu";
 import Head from "next/head";
 
-const inter = Inter({ subsets: ["latin"] });
-
 export const metadata: Metadata = {
 	title: "StarkFinance Launchpad",
 	icons: [
@@ -45,7 +43,7 @@ export default function RootLayout({
 				/>
 				<link rel="manifest" href="/site.webmanifest" />
 			</head>
-			<body className={inter.className}>
+			<body>
 				<StarknetProvider>
 					<Menu>{children}</Menu>
 				</StarknetProvider>

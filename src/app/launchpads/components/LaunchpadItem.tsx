@@ -44,9 +44,9 @@ export default function LaunchpadItem({
 	return (
 		<Link
 			href={`/launchpads/${launchpad.address}`}
-			className="flex flex-col gap-6 p-3 md:p-6 border rounded-3xl border-[#24C3BC] bg-[#1A1C24]"
+			className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] bg-[#1A1C24]"
 		>
-			<div className="w-full h-[160px] relative">
+			<div className="w-full pt-[50%] relative rounded-2xl overflow-hidden">
 				<Image alt="image" src="/mocks/banner.png" fill />
 				<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] ">
 					<div className="text-2xl text-[#F1F1F1] font-bold">
@@ -87,11 +87,11 @@ export default function LaunchpadItem({
 			</div>
 
 			<div className="flex justify-stretch gap-3">
-				<div className="w-[60px] h-[60px] md:w-[66px] md:h-[66px] relative">
+				<div className="w-[60px] h-[60px] relative">
 					<Image alt="image" src="/logo80x80.png" fill />
 				</div>
 				<div className="flex-1 flex flex-col justify-between gap-2">
-					<div className="text-2xl font-bold line-clamp-1">
+					<div className="text-[20px] font-bold line-clamp-1">
 						{launchpad.name}
 					</div>
 					<div className="flex flex-wrap items-center gap-2">
@@ -172,43 +172,41 @@ export default function LaunchpadItem({
 					</div>
 				</div>
 
-				{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-					<div className="border-t border-b-[#2D313E] pt-3">
-						<div className="mb-2.5">
-							Launchpad {statusToText(timeStartDiff.status)}
+				<div className="border-t border-b-[#2D313E] pt-3">
+					<div className="mb-2.5">
+						Launchpad {statusToText(timeStartDiff.status)}
+					</div>
+					<div className="flex justify-between">
+						<div>
+							<span className="countdown font-bold text-md">
+								{/* @ts-expect-error */}
+								<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
+							</span>
+							days
 						</div>
-						<div className="flex justify-between">
-							<div>
-								<span className="countdown font-bold text-md">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
-								</span>
-								days
-							</div>
-							<div>
-								<span className="countdown font-bold text-md">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
-								</span>
-								hrs
-							</div>
-							<div>
-								<span className="countdown font-bold text-md">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
-								</span>
-								mins
-							</div>
-							<div>
-								<span className="countdown font-bold text-md">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
-								</span>
-								secs
-							</div>
+						<div>
+							<span className="countdown font-bold text-md">
+								{/* @ts-expect-error */}
+								<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
+							</span>
+							hrs
+						</div>
+						<div>
+							<span className="countdown font-bold text-md">
+								{/* @ts-expect-error */}
+								<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
+							</span>
+							mins
+						</div>
+						<div>
+							<span className="countdown font-bold text-md">
+								{/* @ts-expect-error */}
+								<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
+							</span>
+							secs
 						</div>
 					</div>
-				)}
+				</div>
 			</div>
 		</Link>
 	);

@@ -15,7 +15,11 @@ export function timeDiff(current: number, start: number, end: number) {
 	if (current < end) status = LAUNCHPAD_STATUS.INPROGRESS;
 
 	const diff =
-		status === LAUNCHPAD_STATUS.UPCOMING ? start - current : end - current;
+		status === LAUNCHPAD_STATUS.UPCOMING
+			? start - current
+			: status === LAUNCHPAD_STATUS.INPROGRESS
+			? end - current
+			: current - end;
 	let msec = diff;
 	const d = Math.floor(msec / 1000 / 24 / 60 / 60);
 	msec -= d * 1000 * 24 * 60 * 60;
@@ -35,6 +39,9 @@ export const statusToText = (status: LAUNCHPAD_STATUS | undefined) => {
 
 		case LAUNCHPAD_STATUS.INPROGRESS:
 			return "end after:";
+
+		case LAUNCHPAD_STATUS.END:
+			return "end from:";
 
 		default:
 			return "";

@@ -208,7 +208,7 @@ export default async function LaunchpadList() {
 
 					{/* list launchpad */}
 					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-						{launchpads.slice(1).map((launchpad: any, idx: number) => (
+						{launchpads.slice(1, 2).map((launchpad: any, idx: number) => (
 							<LaunchpadItem launchpad={launchpad} key={idx} />
 						))}
 					</div>
