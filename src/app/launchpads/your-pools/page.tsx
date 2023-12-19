@@ -166,11 +166,30 @@ export default function LaunchpadList() {
 						</div>
 					</div>
 
-					<div className="hidden md:block flex-col gap-3 justify-stretch"></div>
-
-					<div className="flex flex-col gap-6 md:hidden">
+					<div className="flex flex-col gap-6 bg-[#1A1C24] rounded-3xl p-9">
+						<div className="hidden md:grid grid-cols-7 bg-[#0D0E12] rounded-2xl p-6">
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2">
+								Pool name
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Status
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								NFT Stake
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Allocation
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Total committed
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Claimed
+							</div>
+							<div className="w-full text-center">Claimable</div>
+						</div>
 						{new Array(3).fill("").map((_, idx) => (
-							<Pool />
+							<Pool index={idx} />
 						))}
 					</div>
 				</div>

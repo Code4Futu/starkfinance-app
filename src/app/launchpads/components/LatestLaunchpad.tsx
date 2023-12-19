@@ -184,43 +184,41 @@ const LatestLaunchpad = ({
 							</div>
 						</div>
 					</div>
-					{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-						<div className="border-t border-t-[#2D313E] pt-3">
-							<div className="mb-2.5">
-								Launchpad {statusToText(timeStartDiff.status)}
+					<div className="border-t border-t-[#2D313E] pt-3">
+						<div className="mb-2.5">
+							Launchpad {statusToText(timeStartDiff.status)}
+						</div>
+						<div className="flex justify-between md:justify-start gap-4">
+							<div>
+								<span className="countdown font-bold text-md">
+									{/* @ts-expect-error */}
+									<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
+								</span>
+								days
 							</div>
-							<div className="flex justify-between md:justify-start gap-4">
-								<div>
-									<span className="countdown font-bold text-md">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
-									</span>
-									days
-								</div>
-								<div>
-									<span className="countdown font-bold text-md">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
-									</span>
-									hrs
-								</div>
-								<div>
-									<span className="countdown font-bold text-md">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
-									</span>
-									mins
-								</div>
-								<div>
-									<span className="countdown font-bold text-md">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
-									</span>
-									secs
-								</div>
+							<div>
+								<span className="countdown font-bold text-md">
+									{/* @ts-expect-error */}
+									<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
+								</span>
+								hrs
+							</div>
+							<div>
+								<span className="countdown font-bold text-md">
+									{/* @ts-expect-error */}
+									<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
+								</span>
+								mins
+							</div>
+							<div>
+								<span className="countdown font-bold text-md">
+									{/* @ts-expect-error */}
+									<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
+								</span>
+								secs
 							</div>
 						</div>
-					)}
+					</div>
 				</div>
 			</div>
 			<Link

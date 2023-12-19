@@ -59,3 +59,43 @@ export interface ILaunchpad {
 
 	desc: string;
 }
+
+export interface IAirdrop {
+	chainKey: string;
+
+	address: string;
+
+	name: string;
+
+	tokenAirdrop: Token;
+
+	type: String;
+
+	start: number;
+
+	end: number;
+
+	totalAirdrop: string;
+
+	totalAirdropAmount: string;
+
+	vestingTime: number[];
+
+	vestingPercent: number[];
+
+	logo: string;
+
+	banner: string;
+
+	socials_x: string;
+
+	socials_telegram: string;
+
+	socials_discord: string;
+
+	socials_medium: string;
+
+	socials_github: string;
+
+	desc: string;
+}

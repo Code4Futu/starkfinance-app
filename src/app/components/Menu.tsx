@@ -98,7 +98,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 											Launchpad List
 										</Link>
 									</li>
-									{/* <li className="p-3">
+									<li className="p-3">
 										<Link href="/airdrops" rel="noreferrer">
 											Airdrop List
 										</Link>
@@ -107,7 +107,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 										<Link href="/launchpads/your-pools" rel="noreferrer">
 											Your Pools
 										</Link>
-									</li> */}
+									</li>
 								</ul>
 							</div>
 						</div>
@@ -115,12 +115,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<input type="radio" name="my-accordion-1" />
 							<div className="collapse-title">
 								<div className="flex items-center">
-									<Image
-										width={30}
-										height={30}
-										src="/svg/market.svg"
-										alt="market"
-									/>
+									<div className="w-[30px] h-[30px] relative">
+										<Image
+											src="/svg/market.svg"
+											alt="market"
+											fill
+											sizes="30px"
+										/>
+									</div>
 									<div className="font-bold ml-1.5">Market</div>
 								</div>
 							</div>
@@ -192,12 +194,15 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<input type="radio" name="my-accordion-1" />
 							<div className="collapse-title">
 								<div className="flex items-center">
-									<Image
-										width={30}
-										height={30}
-										src="/svg/documentation.svg"
-										alt="documentation"
-									/>
+									<div className="w-[30px] h-[30px] relative">
+										<Image
+											src="/svg/documentation.svg"
+											alt="documentation"
+											fill
+											sizes="30px"
+										/>
+									</div>
+
 									<div className="font-bold ml-1.5">Documentation</div>
 								</div>
 							</div>
@@ -208,12 +213,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					<input type="radio" name="my-accordion-1" />
 					<div className="collapse-title">
 						<div className="flex items-center">
-							<Image
-								width={30}
-								height={30}
-								src="/svg/socials.svg"
-								alt="socials"
-							/>
+							<div className="w-[30px] h-[30px] relative">
+								<Image src="/svg/socials.svg" alt="socials" fill sizes="30px" />
+							</div>
+
 							<div className="font-bold ml-1.5">Socials</div>
 						</div>
 					</div>
@@ -222,12 +225,15 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<li className="p-3">
 								<a href="#" rel="noreferrer">
 									<div className="flex items-center">
-										<Image
-											width={30}
-											height={30}
-											src="/svg/telegram.svg"
-											alt="telegram"
-										/>
+										<div className="w-[30px] h-[30px] relative">
+											<Image
+												src="/svg/telegram.svg"
+												alt="telegram"
+												fill
+												sizes="30px"
+											/>
+										</div>
+
 										<div className="font-bold ml-1.5">Telegram</div>
 									</div>
 								</a>
@@ -235,12 +241,15 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<li className="p-3">
 								<a href="#" rel="noreferrer">
 									<div className="flex items-center">
-										<Image
-											width={30}
-											height={30}
-											src="/svg/discord.svg"
-											alt="discord"
-										/>
+										<div className="w-[30px] h-[30px] relative">
+											<Image
+												src="/svg/discord.svg"
+												alt="discord"
+												fill
+												sizes="30px"
+											/>
+										</div>
+
 										<div className="font-bold ml-1.5">Discord</div>
 									</div>
 								</a>
@@ -248,7 +257,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<li className="p-3">
 								<a href="#" rel="noreferrer">
 									<div className="flex items-center">
-										<Image width={30} height={30} src="/svg/x.svg" alt="x" />
+										<div className="w-[30px] h-[30px] relative">
+											<Image src="/svg/x.svg" alt="x" fill sizes="30px" />
+										</div>
+
 										<div className="font-bold ml-1.5">X.com</div>
 									</div>
 								</a>
@@ -256,12 +268,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<li className="p-3">
 								<a href="#" rel="noreferrer">
 									<div className="flex items-center">
-										<Image
-											width={30}
-											height={30}
-											src="/svg/medium.svg"
-											alt="medium"
-										/>
+										<div className="w-[30px] h-[30px] relative">
+											<Image
+												src="/svg/medium.svg"
+												alt="medium"
+												fill
+												sizes="30px"
+											/>
+										</div>
 										<div className="font-bold ml-1.5">Medium</div>
 									</div>
 								</a>
@@ -269,12 +283,15 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<li className="p-3">
 								<a href="#" rel="noreferrer">
 									<div className="flex items-center">
-										<Image
-											width={30}
-											height={30}
-											src="/svg/github.svg"
-											alt="github"
-										/>
+										<div className="w-[30px] h-[30px] relative">
+											<Image
+												src="/svg/github.svg"
+												alt="github"
+												fill
+												sizes="30px"
+											/>
+										</div>
+
 										<div className="font-bold ml-1.5">Github</div>
 									</div>
 								</a>
@@ -298,6 +315,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									src="/logo.png"
 									alt="logo"
 									fill
+									sizes="48px"
 									// className="sm:block md:hidden"
 								/>
 							</div>
@@ -309,7 +327,12 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					<div className="flex gap-3">
 						<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-0 lg:gap-2 rounded-2xl border-0">
 							<div className="w-[24px] h-[24px] relative">
-								<Image src="/wallets/starknet.png" alt="network" fill />
+								<Image
+									src="/wallets/starknet.png"
+									alt="network"
+									fill
+									sizes="24px"
+								/>
 							</div>
 
 							<div className="text-xl font-bold text-[#F1F1F1] hidden lg:block">
@@ -538,12 +561,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">
-											<Image
-												width={30}
-												height={30}
-												src="/svg/telegram.svg"
-												alt="telegram"
-											/>
+											<div className="w-[30px] h-[30px] relative">
+												<Image
+													src="/svg/telegram.svg"
+													alt="telegram"
+													fill
+													sizes="30px"
+												/>
+											</div>
 											<div className="font-bold ml-1.5">Telegram</div>
 										</div>
 									</a>
@@ -551,12 +576,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">
-											<Image
-												width={30}
-												height={30}
-												src="/svg/discord.svg"
-												alt="discord"
-											/>
+											<div className="w-[30px] h-[30px] relative">
+												<Image
+													src="/svg/discord.svg"
+													alt="discord"
+													fill
+													sizes="30px"
+												/>
+											</div>
 											<div className="font-bold ml-1.5">Discord</div>
 										</div>
 									</a>
@@ -564,7 +591,9 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">
-											<Image width={30} height={30} src="/svg/x.svg" alt="x" />
+											<div className="w-[30px] h-[30px] relative">
+												<Image src="/svg/x.svg" alt="x" fill sizes="30px" />
+											</div>
 											<div className="font-bold ml-1.5">X.com</div>
 										</div>
 									</a>
@@ -572,12 +601,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">
-											<Image
-												width={30}
-												height={30}
-												src="/svg/medium.svg"
-												alt="medium"
-											/>
+											<div className="w-[30px] h-[30px] relative">
+												<Image
+													src="/svg/medium.svg"
+													alt="medium"
+													fill
+													sizes="30px"
+												/>
+											</div>
 											<div className="font-bold ml-1.5">Medium</div>
 										</div>
 									</a>
@@ -585,12 +616,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<a href="#" rel="noreferrer" className="p-3">
 										<div className="flex items-center">
-											<Image
-												width={30}
-												height={30}
-												src="/svg/github.svg"
-												alt="github"
-											/>
+											<div className="w-[30px] h-[30px] relative">
+												<Image
+													src="/svg/github.svg"
+													alt="github"
+													fill
+													sizes="30px"
+												/>
+											</div>
 											<div className="font-bold ml-1.5">Github</div>
 										</div>
 									</a>
