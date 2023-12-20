@@ -14,16 +14,16 @@ import { useAccount } from "@starknet-react/core";
 import dayjs from "dayjs";
 import useSWR from "swr";
 import clsx from "clsx";
-import { ILaunchpad } from "@/app/types";
+import { IAirdrop } from "@/app/types";
 
-export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
+export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 	const { account, address } = useAccount();
 
-	const { data: launchpadStatistics } = useSWR<{
+	const { data: airdropStatistics } = useSWR<{
 		participants: string;
 		committed: string;
 	}>(
-		`${BASE_API}/launchpads/${launchpad.address}/statistics`,
+		`${BASE_API}/airdrops/${airdrop.address}/statistics`,
 		(url: string) => fetch(url).then((r) => r.json()),
 		{ refreshInterval: 300 }
 	);
@@ -32,7 +32,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		committed: string;
 		claimed: string;
 	}>(
-		`${BASE_API}/launchpads/${launchpad.address}/${address}/statistics`,
+		`${BASE_API}/airdrops/${airdrop.address}/${address}/statistics`,
 		(url: string) => fetch(url).then((r) => r.json()),
 		{ refreshInterval: 300 }
 	);
@@ -40,7 +40,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<string>();
 	const [commitAmount, setCommitAmount] = useState<string>("");
 	const [refresh, setRefresh] = useState<boolean>(false);
-	const [committing, setCommitting] = useState<boolean>(false);
+	const [submitting, setSubmitting] = useState<boolean>(false);
 	const [allocation, setAllocation] = useState<{
 		allocation: string | undefined;
 		deducted: string | undefined;
@@ -69,109 +69,72 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		const interval = setInterval(() => {
 			const time = timeDiff(
 				Date.now(),
-				launchpad.start * 1000,
-				launchpad.end * 1000
+				airdrop.start * 1000,
+				airdrop.end * 1000
 			);
 			setTimeStartDiff(time);
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [launchpad.start, launchpad.end]);
+	}, [airdrop.start, airdrop.end]);
 
-	const getBalance = useCallback(async () => {
-		try {
-			if (!account || !address || !launchpad.tokenRaise || !launchpad.address)
-				return;
-			const [resBalance, resAllocation] = await Promise.all([
-				StarknetRpcProvider.callContract({
-					contractAddress: launchpad.tokenRaise.address,
-					entrypoint: "balanceOf",
-					calldata: [address],
-				}),
-				StarknetRpcProvider.callContract({
-					contractAddress: launchpad.address,
-					entrypoint: "get_allocation",
-					calldata: [address],
-				}),
-			]);
-			setAllocation({
-				allocation: num.hexToDecimalString(resAllocation.result[0]),
-				deducted: num.hexToDecimalString(resAllocation.result[2]),
-				remaining: num.hexToDecimalString(resAllocation.result[4]),
-			});
-			setTokenRaiseBalance(num.hexToDecimalString(resBalance.result[0]));
-		} catch (error) {
-			console.log(error);
-		}
-	}, [account, launchpad.tokenRaise, refresh, launchpad.address]);
+	// const getBalance = useCallback(async () => {
+	// 	try {
+	// 		if (!account || !address || !airdrop.tokenRaise || !airdrop.address)
+	// 			return;
+	// 		const [resBalance, resAllocation] = await Promise.all([
+	// 			StarknetRpcProvider.callContract({
+	// 				contractAddress: airdrop.tokenRaise.address,
+	// 				entrypoint: "balanceOf",
+	// 				calldata: [address],
+	// 			}),
+	// 			StarknetRpcProvider.callContract({
+	// 				contractAddress: airdrop.address,
+	// 				entrypoint: "get_allocation",
+	// 				calldata: [address],
+	// 			}),
+	// 		]);
+	// 		setAllocation({
+	// 			allocation: num.hexToDecimalString(resAllocation.result[0]),
+	// 			deducted: num.hexToDecimalString(resAllocation.result[2]),
+	// 			remaining: num.hexToDecimalString(resAllocation.result[4]),
+	// 		});
+	// 		setTokenRaiseBalance(num.hexToDecimalString(resBalance.result[0]));
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// }, [account, airdrop.tokenRaise, refresh, airdrop.address]);
 
-	useEffect(() => {
-		getBalance();
-	}, [account, launchpad.tokenRaise, refresh]);
+	// useEffect(() => {
+	// 	getBalance();
+	// }, [account, airdrop.tokenRaise, refresh]);
 
-	const handleCommit = useCallback(async () => {
+	const handleClaim = useCallback(async () => {
 		if (!account) return alert("Connect wallet first");
 		try {
 			if (!commitAmount || isNaN(+commitAmount))
 				return alert("Invalid commit amount");
-			const amount = ethers.parseUnits(
-				commitAmount,
-				launchpad.tokenRaise.decimals
-			);
 
-			if (
-				amount < BigInt(launchpad.minCommit) ||
-				amount > BigInt(launchpad.maxCommit)
-			)
-				return alert("Must in range MIN/MAX commit");
-			setCommitting(true);
+			setSubmitting(true);
 			const calls = [
-				// {
-				// 	contractAddress: launchpad.tokenRaise.address,
-				// 	entrypoint: "mint",
-				// 	calldata: CallData.compile({
-				// 		amount: cairo.uint256(amount),
-				// 	}),
-				// },
 				{
-					contractAddress: launchpad.tokenRaise.address,
-					entrypoint: "approve",
-					calldata: CallData.compile({
-						spender: launchpad.address,
-						amount: cairo.uint256(amount),
-					}),
+					contractAddress: airdrop.address,
+					entrypoint: "claim",
 				},
-				{
-					contractAddress: launchpad.address,
-					entrypoint: "commit",
-					calldata: CallData.compile({
-						commit_token_raise: cairo.uint256(amount),
-					}),
-				},
-				// {
-				// 	contractAddress: launchpad.address,
-				// 	entrypoint: "stake_nft",
-				// 	calldata: CallData.compile({
-				// 		nft_id: cairo.uint256(0),
-				// 	}),
-				// },
 			];
 
 			const tx = await account.execute(calls);
-
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 
 			alert(`Commit success. TxHash is ${tx.transaction_hash}`);
 
 			setCommitAmount("");
-			setCommitting(false);
+			setSubmitting(false);
 			setRefresh((pre) => !pre);
 		} catch (error) {
-			setCommitting(false);
+			setSubmitting(false);
 			console.log(error);
 		}
-
-		// const nft = await launchpadContract.commit();
 	}, [account, commitAmount]);
 
 	return (
@@ -181,7 +144,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					<li>
 						<div className="flex items-center ">
 							<div className="w-[24px] h-[24px] relative">
-								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
+								<Image src="/svg/airdrop.svg" alt="airdrop" fill />
 							</div>
 							<div className="hidden ml-1.5  text-[14px]">Launchpad</div>
 						</div>
@@ -189,13 +152,13 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					<li>
 						<Link
 							className="hover:no-underline text-[#C6C6C6] text-[14px]"
-							href="/launchpads"
+							href="/airdrops"
 							rel="noreferrer"
 						>
 							Launchpad
 						</Link>
 					</li>
-					<li className="font-bold text-[14px]">{launchpad.name}</li>
+					<li className="font-bold text-[14px]">{airdrop.name}</li>
 				</ul>
 			</div>
 
@@ -211,7 +174,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 						</div>
 						<div className="flex-1">
 							<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
-								{launchpad.name}
+								{airdrop.name}
 							</div>
 							<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
 								{timeStartDiff.status && (
@@ -248,13 +211,13 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 									<div className="w-[18px] h-[18px] relative">
 										<Image
-											src={`/wallets/${launchpad.chainKey}.png`}
+											src={`/wallets/${airdrop.chainKey}.png`}
 											alt="starknet"
 											fill
 										/>
 									</div>
 									<div className="text-[12px] text-[#F1F1F1] capitalize">
-										{launchpad.chainKey}
+										{airdrop.chainKey}
 									</div>
 								</div>
 								{/* <div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
@@ -264,7 +227,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 									</div>
 								</div> */}
 								<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] capitalize">
-									{launchpad.type}
+									{airdrop.type}
 								</div>
 							</div>
 						</div>
@@ -334,33 +297,35 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">Start time</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
-										{dayjs(launchpad.start * 1000).format("HH:mm DD MMM YYYY")}
+										{dayjs(airdrop.start * 1000).format("HH:mm DD MMM YYYY")}
 									</div>
 								</div>
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">End time</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
-										{dayjs(launchpad.end * 1000).format("HH:mm DD MMM YYYY")}
+										{dayjs(airdrop.end * 1000).format("HH:mm DD MMM YYYY")}
 									</div>
 								</div>
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-									<div className="text-[12px] text-[#C6C6C6]">Total raise</div>
+									<div className="text-[12px] text-[#C6C6C6]">
+										Total airdrop
+									</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
 										{numberWithCommas(
 											ethers.formatUnits(
-												launchpad.totalRaise,
-												launchpad.tokenRaise.decimals
+												airdrop.totalAirdropAmount,
+												airdrop.tokenAirdrop.decimals
 											)
 										)}
 									</div>
 								</div>
-								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								{/* <div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">Total sales</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
 										{numberWithCommas(
 											ethers.formatUnits(
-												launchpad.totalSale,
-												launchpad.tokenSale.decimals
+												airdrop.totalSale,
+												airdrop.tokenSale.decimals
 											)
 										)}
 									</div>
@@ -372,18 +337,18 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
 										{numberWithCommas(
 											ethers.formatUnits(
-												launchpad.minCommit,
-												launchpad.tokenRaise.decimals
+												airdrop.minCommit,
+												airdrop.tokenRaise.decimals
 											)
 										)}{" "}
 										/{" "}
 										{numberWithCommas(
 											ethers.formatUnits(
-												launchpad.maxCommit,
-												launchpad.tokenRaise.decimals
+												airdrop.maxCommit,
+												airdrop.tokenRaise.decimals
 											)
 										)}{" "}
-										{launchpad.tokenRaise.symbol}
+										{airdrop.tokenRaise.symbol}
 									</div>
 								</div>
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
@@ -391,7 +356,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										Total participles
 									</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
-										{numberWithCommas(launchpadStatistics?.participants ?? 0)}
+										{numberWithCommas(airdropStatistics?.participants ?? 0)}
 									</div>
 								</div>
 								<div className="py-3 border-b border-b-[#2D313E]">
@@ -402,11 +367,11 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<div className="text-[14px] text-[#F1F1F1] font-bold">
 											{numberWithCommas(
 												ethers.formatUnits(
-													launchpadStatistics?.committed ?? "0",
-													launchpad.tokenRaise.decimals
+													airdropStatistics?.committed ?? "0",
+													airdrop.tokenRaise.decimals
 												)
 											)}{" "}
-											{launchpad.tokenRaise.symbol}
+											{airdrop.tokenRaise.symbol}
 										</div>
 									</div>
 
@@ -414,69 +379,26 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<progress
 											className="progress progress-accent"
 											value={
-												+(launchpadStatistics?.committed ?? "0") /
-												+launchpad.totalRaise
+												+(airdropStatistics?.committed ?? "0") /
+												+airdrop.totalRaise
 											}
 											max="100"
 										></progress>
 										<div className="flex justify-between">
 											<div className="text-[12px] text-[#C6C6C6]">Process</div>
 											<div className="text-[12px] text-[#C6C6C6]">
-												{+(launchpadStatistics?.committed ?? "0") /
-													+launchpad.totalRaise}
+												{+(airdropStatistics?.committed ?? "0") /
+													+airdrop.totalRaise}
 												%
 											</div>
 										</div>
 									</div>
-								</div>
-
-								{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-									<div className="py-3">
-										<div className="flex justify-between">
-											<div className="text-[12px] text-[#C6C6C6]">
-												{launchpad.tokenRaise.symbol} balance:
-											</div>
-											<div className="text-[14px] text-[#C6C6C6]">
-												{numberWithCommas(
-													ethers.formatUnits(
-														tokenRaiseBalance ?? "0",
-														launchpad.tokenRaise.decimals
-													)
-												)}
-											</div>
-										</div>
-
-										<input
-											type="text"
-											value={commitAmount}
-											onChange={(e) => setCommitAmount(e.target.value)}
-											className="input w-full focus:outline-none bg-[#0D0E12] border-[#2D313E] rounded-2xl focus-within:border-[#2D313E] focus:border-[#2D313E]"
-										/>
-
-										<div className="flex justify-between gap-5 mt-6">
-											<div
-												onClick={handleCommit}
-												className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
-											>
-												{committing && (
-													<span className="loading loading-spinner loading-xl"></span>
-												)}
-												<span>Commit</span>
-											</div>
-											<div className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-[#F1F1F1] rounded-2xl">
-												{/* {committing && (
-													<span className="loading loading-spinner loading-xl"></span>
-												)} */}
-												<span>Stark NFT</span>
-											</div>
-										</div>
-									</div>
-								)}
+								</div> */}
 							</div>
 						</div>
 
 						<div className="flex-1 flex flex-col gap-6">
-							{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
+							{/* {timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
 								<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 									<div className="text-xl font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
 										Your Allocation
@@ -490,11 +412,11 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
-														launchpadStatistics?.committed ?? "0",
-														launchpad.tokenRaise.decimals
+														airdropStatistics?.committed ?? "0",
+														airdrop.tokenRaise.decimals
 													)
 												)}{" "}
-												{launchpad.tokenRaise.symbol}
+												{airdrop.tokenRaise.symbol}
 											</div>
 										</div>
 
@@ -506,10 +428,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												{numberWithCommas(
 													ethers.formatUnits(
 														accountStatistics?.committed ?? "0",
-														launchpad.tokenSale.decimals
+														airdrop.tokenSale.decimals
 													)
 												)}{" "}
-												{launchpad.tokenSale.symbol}
+												{airdrop.tokenSale.symbol}
 											</div>
 										</div>
 
@@ -519,10 +441,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												{numberWithCommas(
 													ethers.formatUnits(
 														accountStatistics?.claimed ?? "0",
-														launchpad.tokenRaise.decimals
+														airdrop.tokenRaise.decimals
 													)
 												)}{" "}
-												{launchpad.tokenRaise.symbol}
+												{airdrop.tokenRaise.symbol}
 											</div>
 										</div>
 
@@ -531,7 +453,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												Claimable
 											</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(0)} {launchpad.tokenRaise.symbol}
+												{numberWithCommas(0)} {airdrop.tokenRaise.symbol}
 											</div>
 										</div>
 
@@ -562,10 +484,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												{numberWithCommas(
 													ethers.formatUnits(
 														allocation?.deducted ?? "0",
-														launchpad.tokenRaise.decimals
+														airdrop.tokenRaise.decimals
 													)
 												)}{" "}
-												{launchpad.tokenRaise.symbol}
+												{airdrop.tokenRaise.symbol}
 											</div>
 										</div>
 
@@ -577,10 +499,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												{numberWithCommas(
 													ethers.formatUnits(
 														allocation?.remaining ?? "0",
-														launchpad.tokenRaise.decimals
+														airdrop.tokenRaise.decimals
 													)
 												)}{" "}
-												{launchpad.tokenRaise.symbol}
+												{airdrop.tokenRaise.symbol}
 											</div>
 										</div>
 
@@ -589,9 +511,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												Time to unlock
 											</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{dayjs(launchpad.end * 1000).format(
-													"HH:mm DD MMM YYYY"
-												)}
+												{dayjs(airdrop.end * 1000).format("HH:mm DD MMM YYYY")}
 											</div>
 										</div>
 
@@ -613,7 +533,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										</div>
 									</div>
 								</div>
-							)}
+							)} */}
 
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 								<div className="text-xl font-bold text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
@@ -621,15 +541,15 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 
 								<ul className="steps steps-vertical">
-									{launchpad.vestingTime.map((time: number, idx: number) => (
+									{airdrop.vestingTime.map((time: number, idx: number) => (
 										<li key={idx} data-content="" className="step">
 											<div>
 												<div className="flex gap-3 items-center">
 													<div className="py-1 px-3 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] text-[12px] text-[#0D0E12] rounded-xl text-center">
-														{launchpad.vestingPercent[idx] / 1000}%
+														{airdrop.vestingPercent[idx] / 1000}%
 													</div>
 													<div className="text-[12px] text-[#C6C6C6]">
-														{dayjs((launchpad.end + time) * 1000).format(
+														{dayjs((airdrop.end + time) * 1000).format(
 															"HH:mm DD MMM YYYY"
 														)}
 													</div>
@@ -680,7 +600,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 								<div
 									className="text-[#C6C6C6]"
-									dangerouslySetInnerHTML={{ __html: launchpad.desc }}
+									dangerouslySetInnerHTML={{ __html: airdrop.desc }}
 								/>
 							</div>
 						</div>

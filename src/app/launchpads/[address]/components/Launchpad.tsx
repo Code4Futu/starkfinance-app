@@ -40,7 +40,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<string>();
 	const [commitAmount, setCommitAmount] = useState<string>("");
 	const [refresh, setRefresh] = useState<boolean>(false);
-	const [committing, setCommitting] = useState<boolean>(false);
+	const [submitting, setSubmitting] = useState<boolean>(false);
 	const [allocation, setAllocation] = useState<{
 		allocation: string | undefined;
 		deducted: string | undefined;
@@ -124,7 +124,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				amount > BigInt(launchpad.maxCommit)
 			)
 				return alert("Must in range MIN/MAX commit");
-			setCommitting(true);
+			setSubmitting(true);
 			const calls = [
 				// {
 				// 	contractAddress: launchpad.tokenRaise.address,
@@ -158,16 +158,15 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			];
 
 			const tx = await account.execute(calls);
-
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 
 			alert(`Commit success. TxHash is ${tx.transaction_hash}`);
 
 			setCommitAmount("");
-			setCommitting(false);
+			setSubmitting(false);
 			setRefresh((pre) => !pre);
 		} catch (error) {
-			setCommitting(false);
+			setSubmitting(false);
 			console.log(error);
 		}
 
@@ -458,13 +457,13 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												onClick={handleCommit}
 												className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
 											>
-												{committing && (
+												{submitting && (
 													<span className="loading loading-spinner loading-xl"></span>
 												)}
 												<span>Commit</span>
 											</div>
 											<div className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-[#F1F1F1] rounded-2xl">
-												{/* {committing && (
+												{/* {submitting && (
 													<span className="loading loading-spinner loading-xl"></span>
 												)} */}
 												<span>Stark NFT</span>
