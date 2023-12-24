@@ -28,14 +28,37 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		{ refreshInterval: 300 }
 	);
 
-	const { data: accountStatistics } = useSWR<{
+	const { data: accountStatistics, error } = useSWR<{
 		committed: string;
+		allocation: string;
+		deducted: string;
+		remaining: string;
 		claimed: string;
-	}>(
-		`${BASE_API}/launchpads/${launchpad.address}/${address}/statistics`,
-		(url: string) => fetch(url).then((r) => r.json()),
-		{ refreshInterval: 300 }
-	);
+	}>([launchpad.address, address], async () => {
+		try {
+			const allocation = await StarknetRpcProvider.callContract({
+				contractAddress: launchpad.address,
+				entrypoint: "get_allocation",
+				calldata: [address!],
+			});
+
+			return {
+				committed: num.hexToDecimalString(allocation.result[1]),
+				allocation: num.hexToDecimalString(allocation.result[3]),
+				deducted: num.hexToDecimalString(allocation.result[5]),
+				remaining: num.hexToDecimalString(allocation.result[7]),
+				claimed: num.hexToDecimalString(allocation.result[9]),
+			};
+		} catch (error) {
+			return {
+				committed: "0",
+				allocation: "0",
+				deducted: "0",
+				remaining: "0",
+				claimed: "0",
+			};
+		}
+	});
 
 	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<string>();
 	const [commitAmount, setCommitAmount] = useState<string>("");
@@ -171,7 +194,44 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		}
 
 		// const nft = await launchpadContract.commit();
-	}, [account, commitAmount]);
+	}, [account, launchpad.address, launchpad.tokenRaise.address, commitAmount]);
+
+	const claimable = useMemo(() => {
+		if (
+			typeof accountStatistics?.allocation === "undefined" ||
+			typeof accountStatistics?.allocation === "undefined" ||
+			BigInt(accountStatistics.allocation) < BigInt(accountStatistics.claimed)
+		)
+			return false;
+
+		return true;
+	}, [accountStatistics?.allocation, accountStatistics?.claimed]);
+
+	const handleClaim = useCallback(async () => {
+		if (!account) return alert("Connect wallet first");
+		try {
+			if (!claimable) return alert("Nothing to claim");
+
+			setSubmitting(true);
+			const calls = [
+				{
+					contractAddress: launchpad.address,
+					entrypoint: "claim",
+				},
+			];
+
+			const tx = await account.execute(calls);
+			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
+
+			alert(`Commit success. TxHash is ${tx.transaction_hash}`);
+
+			setSubmitting(false);
+			setRefresh((pre) => !pre);
+		} catch (error) {
+			setSubmitting(false);
+			console.log(error);
+		}
+	}, [account, launchpad.address, commitAmount, claimable]);
 
 	return (
 		<div>
@@ -489,7 +549,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
-														launchpadStatistics?.committed ?? "0",
+														accountStatistics?.committed ?? "0",
 														launchpad.tokenRaise.decimals
 													)
 												)}{" "}
@@ -504,7 +564,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
-														accountStatistics?.committed ?? "0",
+														accountStatistics?.allocation ?? "0",
 														launchpad.tokenSale.decimals
 													)
 												)}{" "}
@@ -518,10 +578,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												{numberWithCommas(
 													ethers.formatUnits(
 														accountStatistics?.claimed ?? "0",
-														launchpad.tokenRaise.decimals
+														launchpad.tokenSale.decimals
 													)
 												)}{" "}
-												{launchpad.tokenRaise.symbol}
+												{launchpad.tokenSale.symbol}
 											</div>
 										</div>
 
@@ -530,25 +590,37 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												Claimable
 											</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(0)} {launchpad.tokenRaise.symbol}
+												{numberWithCommas(
+													+ethers.formatUnits(
+														accountStatistics?.allocation ?? "0",
+														launchpad.tokenSale.decimals
+													) -
+														+ethers.formatUnits(
+															accountStatistics?.claimed ?? "0",
+															launchpad.tokenSale.decimals
+														)
+												)}{" "}
+												{launchpad.tokenSale.symbol}
 											</div>
 										</div>
 
 										<div>
-											<span
+											<button
 												className={clsx(
 													"cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold  rounded-2xl",
 													{
 														"bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB]":
-															false,
-														"text-[#1A1C24]": false,
-														"bg-[#2D313E]": true,
-														"text-[#C6C6C6]": true,
+															claimable,
+														"text-[#1A1C24]": claimable,
+														"bg-[#2D313E]": !claimable,
+														"text-[#C6C6C6]": !claimable,
 													}
 												)}
+												disabled={!claimable}
+												onClick={handleClaim}
 											>
 												Claim
-											</span>
+											</button>
 										</div>
 									</div>
 
@@ -560,7 +632,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
-														allocation?.deducted ?? "0",
+														accountStatistics?.deducted ?? "0",
 														launchpad.tokenRaise.decimals
 													)
 												)}{" "}

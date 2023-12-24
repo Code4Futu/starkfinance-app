@@ -16,7 +16,7 @@ export default function CreateLock() {
 				<div className="flex flex-col">
 					<div className="flex items-center">
 						<input type="radio" name="radio-1" className="radio" checked />
-						<div>not owner</div>
+						<div>use another owner?</div>
 					</div>
 					<input
 						type="text"

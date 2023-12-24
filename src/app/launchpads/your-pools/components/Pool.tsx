@@ -8,7 +8,7 @@ export default function Pool({ index }: { index: number }) {
 					<Image src="/logo.png" alt="logo" fill />
 				</div>
 
-				<div className="text-[20px] md:text-[14px] font-bold text-[#F1F1F1] line-clamp-3">
+				<div className="flex-1 text-[20px] md:text-[14px] font-bold text-[#F1F1F1] line-clamp-3">
 					StarkFinance StarkFinance StarkFinance StarkFinance
 				</div>
 			</div>
