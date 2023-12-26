@@ -15,31 +15,65 @@ import dayjs from "dayjs";
 import useSWR from "swr";
 import clsx from "clsx";
 import { IAirdrop } from "@/app/types";
+import { useWeb3Store } from "@/app/store";
 
 export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 	const { account, address } = useAccount();
+	const txHash = useWeb3Store((s) => s.txHash);
 
-	const { data: airdropStatistics } = useSWR<{
-		participants: string;
-		committed: string;
-	}>(
-		`${BASE_API}/airdrops/${airdrop.address}/statistics`,
-		(url: string) => fetch(url).then((r) => r.json()),
-		{ refreshInterval: 300 }
-	);
+	const { data: airdropStatistics, isLoading: airdropStatisticsLoading } =
+		useSWR<{
+			claimed: string | undefined;
+		}>([airdrop.address, txHash], async () => {
+			try {
+				const airdropStatistics = await StarknetRpcProvider.callContract({
+					contractAddress: airdrop.address,
+					entrypoint: "get_stats",
+				});
 
-	const { data: accountStatistics } = useSWR<{
-		committed: string;
-		claimed: string;
-	}>(
-		`${BASE_API}/airdrops/${airdrop.address}/${address}/statistics`,
-		(url: string) => fetch(url).then((r) => r.json()),
-		{ refreshInterval: 300 }
-	);
+				return {
+					claimed: num.hexToDecimalString(airdropStatistics.result[0]),
+				};
+			} catch (error) {
+				return {
+					claimed: undefined,
+				};
+			}
+		});
 
-	const [tokenRaiseBalance, setTokenRaiseBalance] = useState<string>();
+	const { data: accountStatistics, isLoading: accountStatisticsLoading } =
+		useSWR<{
+			allocation: string | undefined;
+			claimed: string | undefined;
+			claimedCount: string | undefined;
+		}>([airdrop.address, address, txHash], async () => {
+			try {
+				const userStats = await StarknetRpcProvider.callContract({
+					contractAddress: airdrop.address,
+					entrypoint: "get_user_stats",
+					calldata: [address!],
+				});
+
+				return {
+					allocation: num.hexToDecimalString(userStats.result[1]),
+					claimed: num.hexToDecimalString(userStats.result[5]),
+					claimedCount: num.hexToDecimalString(userStats.result[3]),
+				};
+			} catch (error) {
+				return {
+					tokenRaiseBalance: undefined,
+					committed: undefined,
+					allocation: undefined,
+					deducted: undefined,
+					remaining: undefined,
+					claimed: undefined,
+					claimedCount: undefined,
+					lastCommittedTime: undefined,
+				};
+			}
+		});
+
 	const [commitAmount, setCommitAmount] = useState<string>("");
-	const [refresh, setRefresh] = useState<boolean>(false);
 	const [submitting, setSubmitting] = useState<boolean>(false);
 	const [allocation, setAllocation] = useState<{
 		allocation: string | undefined;
@@ -112,14 +146,12 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 	const handleClaim = useCallback(async () => {
 		if (!account) return alert("Connect wallet first");
 		try {
-			if (!commitAmount || isNaN(+commitAmount))
-				return alert("Invalid commit amount");
-
 			setSubmitting(true);
 			const calls = [
 				{
 					contractAddress: airdrop.address,
 					entrypoint: "claim",
+					calldata: [],
 				},
 			];
 
@@ -130,7 +162,6 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 			setCommitAmount("");
 			setSubmitting(false);
-			setRefresh((pre) => !pre);
 		} catch (error) {
 			setSubmitting(false);
 			console.log(error);
@@ -235,64 +266,62 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 					<div className="flex flex-col lg:flex-row gap-6">
 						<div className="flex flex-col gap-6 w-full lg:w-[368px]">
-							{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-								<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl py-9 px-6">
-									<div className="mb-2.5 font-bold text-xl text-[#F1F1F1]">
-										Launchpad {statusToText(timeStartDiff.status)}
-									</div>
+							<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl py-9 px-6">
+								<div className="mb-2.5 font-bold text-xl text-[#F1F1F1]">
+									Airdrop {statusToText(timeStartDiff.status)}
+								</div>
 
-									<div className="flex justify-between">
-										<div className="flex items-center gap-[2px]">
-											<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-												<span
-													// @ts-expect-error
-													style={{ "--value": timeStartDiff?.d ?? 0 }}
-												></span>
-											</span>
-											<div className="font-[400] text-[14px] text-[#F1F1F1]">
-												days
-											</div>
+								<div className="flex justify-between">
+									<div className="flex items-center gap-[2px]">
+										<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+											<span
+												// @ts-expect-error
+												style={{ "--value": timeStartDiff?.d ?? 0 }}
+											></span>
+										</span>
+										<div className="font-[400] text-[14px] text-[#F1F1F1]">
+											days
 										</div>
-										<div className="flex items-center gap-[2px]">
-											<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-												<span
-													// @ts-expect-error
-													style={{ "--value": timeStartDiff?.h ?? 0 }}
-												></span>
-											</span>
-											<div className="font-[400] text-[14px] text-[#F1F1F1]">
-												hrs
-											</div>
+									</div>
+									<div className="flex items-center gap-[2px]">
+										<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+											<span
+												// @ts-expect-error
+												style={{ "--value": timeStartDiff?.h ?? 0 }}
+											></span>
+										</span>
+										<div className="font-[400] text-[14px] text-[#F1F1F1]">
+											hrs
 										</div>
-										<div className="flex items-center gap-[2px]">
-											<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-												<span
-													// @ts-expect-error
-													style={{ "--value": timeStartDiff?.m ?? 0 }}
-												></span>
-											</span>
-											<div className="font-[400] text-[14px] text-[#F1F1F1]">
-												mins
-											</div>
+									</div>
+									<div className="flex items-center gap-[2px]">
+										<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+											<span
+												// @ts-expect-error
+												style={{ "--value": timeStartDiff?.m ?? 0 }}
+											></span>
+										</span>
+										<div className="font-[400] text-[14px] text-[#F1F1F1]">
+											mins
 										</div>
-										<div className="flex items-center gap-[2px]">
-											<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-												<span
-													// @ts-expect-error
-													style={{ "--value": timeStartDiff?.s ?? 0 }}
-												></span>
-											</span>
-											<div className="font-[400] text-[14px] text-[#F1F1F1]">
-												secs
-											</div>
+									</div>
+									<div className="flex items-center gap-[2px]">
+										<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+											<span
+												// @ts-expect-error
+												style={{ "--value": timeStartDiff?.s ?? 0 }}
+											></span>
+										</span>
+										<div className="font-[400] text-[14px] text-[#F1F1F1]">
+											secs
 										</div>
 									</div>
 								</div>
-							)}
+							</div>
 
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 								<div className="text-xl font-bold text-[#F1F1F1]">
-									Sale information
+									Airdrop information
 								</div>
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">Start time</div>
@@ -300,12 +329,12 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 										{dayjs(airdrop.start * 1000).format("HH:mm DD MMM YYYY")}
 									</div>
 								</div>
-								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								{/* <div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">End time</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
 										{dayjs(airdrop.end * 1000).format("HH:mm DD MMM YYYY")}
 									</div>
-								</div>
+								</div> */}
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">
 										Total airdrop
@@ -317,6 +346,14 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 												airdrop.tokenAirdrop.decimals
 											)
 										)}
+									</div>
+								</div>
+								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+									<div className="text-[12px] text-[#C6C6C6]">
+										Total Eligible Users
+									</div>
+									<div className="text-[14px] text-[#F1F1F1] font-bold">
+										{numberWithCommas(1000)}
 									</div>
 								</div>
 								{/* <div className="flex justify-between py-3 border-b border-b-[#2D313E]">
@@ -353,7 +390,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 								</div>
 								<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 									<div className="text-[12px] text-[#C6C6C6]">
-										Total participles
+										Total participial
 									</div>
 									<div className="text-[14px] text-[#F1F1F1] font-bold">
 										{numberWithCommas(airdropStatistics?.participants ?? 0)}
@@ -398,66 +435,65 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 						</div>
 
 						<div className="flex-1 flex flex-col gap-6">
-							{/* {timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
+							{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
 								<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 									<div className="text-xl font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
 										Your Allocation
 									</div>
 
-									<div className="grid grid-cols-2 gap-y-6 border-b border-b-[#2D313E] py-6">
-										<div>
+									<div className="grid grid-cols-4 gap-y-6 border-b border-b-[#2D313E] py-6">
+										<div className="flex flex-col justify-center">
 											<div className="text-[12px] text-[#C6C6C6]">
-												Committed SFN
+												Your airdrop
 											</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
-														airdropStatistics?.committed ?? "0",
-														airdrop.tokenRaise.decimals
+														accountStatistics?.allocation ?? "0",
+														airdrop.tokenAirdrop.decimals
 													)
 												)}{" "}
-												{airdrop.tokenRaise.symbol}
+												{airdrop.tokenAirdrop.symbol}
 											</div>
 										</div>
 
-										<div>
-											<div className="text-[12px] text-[#C6C6C6]">
-												Your Allocation
-											</div>
-											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(
-													ethers.formatUnits(
-														accountStatistics?.committed ?? "0",
-														airdrop.tokenSale.decimals
-													)
-												)}{" "}
-												{airdrop.tokenSale.symbol}
-											</div>
-										</div>
-
-										<div>
+										<div className="flex flex-col justify-center">
 											<div className="text-[12px] text-[#C6C6C6]">Claimed</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
 													ethers.formatUnits(
 														accountStatistics?.claimed ?? "0",
-														airdrop.tokenRaise.decimals
+														airdrop.tokenAirdrop.decimals
 													)
 												)}{" "}
-												{airdrop.tokenRaise.symbol}
+												{airdrop.tokenAirdrop.symbol}
 											</div>
 										</div>
 
-										<div>
+										<div className="flex flex-col justify-center">
 											<div className="text-[12px] text-[#C6C6C6]">
 												Claimable
 											</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(0)} {airdrop.tokenRaise.symbol}
+												{numberWithCommas(
+													Number(
+														ethers.formatUnits(
+															accountStatistics?.allocation ?? "0",
+															airdrop.tokenAirdrop.decimals
+														)
+													) -
+														Number(
+															ethers.formatUnits(
+																accountStatistics?.claimed ?? "0",
+																airdrop.tokenAirdrop.decimals
+															)
+														)
+												)}{" "}
+												{airdrop.tokenAirdrop.symbol}
 											</div>
 										</div>
 
-										<div>
+										<div className="flex flex-col justify-center">
 											<span
 												className={clsx(
 													"cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold  rounded-2xl",
@@ -469,71 +505,14 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 														"text-[#C6C6C6]": true,
 													}
 												)}
-											>
-												Claim
-											</span>
-										</div>
-									</div>
-
-									<div className="grid grid-cols-2 pt-6 gap-y-6">
-										<div>
-											<div className="text-[12px] text-[#C6C6C6]">
-												Your deducted SFN
-											</div>
-											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(
-													ethers.formatUnits(
-														allocation?.deducted ?? "0",
-														airdrop.tokenRaise.decimals
-													)
-												)}{" "}
-												{airdrop.tokenRaise.symbol}
-											</div>
-										</div>
-
-										<div>
-											<div className="text-[12px] text-[#C6C6C6]">
-												Your remaining SFN
-											</div>
-											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{numberWithCommas(
-													ethers.formatUnits(
-														allocation?.remaining ?? "0",
-														airdrop.tokenRaise.decimals
-													)
-												)}{" "}
-												{airdrop.tokenRaise.symbol}
-											</div>
-										</div>
-
-										<div className="col-span-2">
-											<div className="text-[12px] text-[#C6C6C6]">
-												Time to unlock
-											</div>
-											<div className="text-[14px] text-[#F1F1F1] font-bold">
-												{dayjs(airdrop.end * 1000).format("HH:mm DD MMM YYYY")}
-											</div>
-										</div>
-
-										<div>
-											<span
-												className={clsx(
-													"cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold  rounded-2xl",
-													{
-														"bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB]":
-															false,
-														"text-[#1A1C24]": false,
-														"bg-[#2D313E]": true,
-														"text-[#C6C6C6]": true,
-													}
-												)}
+												onClick={handleClaim}
 											>
 												Claim
 											</span>
 										</div>
 									</div>
 								</div>
-							)} */}
+							)}
 
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 								<div className="text-xl font-bold text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
@@ -549,7 +528,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 														{airdrop.vestingPercent[idx] / 1000}%
 													</div>
 													<div className="text-[12px] text-[#C6C6C6]">
-														{dayjs((airdrop.end + time) * 1000).format(
+														{dayjs((airdrop.start + time) * 1000).format(
 															"HH:mm DD MMM YYYY"
 														)}
 													</div>

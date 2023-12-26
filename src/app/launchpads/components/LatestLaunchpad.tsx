@@ -170,16 +170,16 @@ const LatestLaunchpad = ({
 							<div className="text-[12px] text-[#C6C6C6]">Rate</div>
 							<div className="text-[20px] font-bold">
 								1 {launchpad.tokenRaise.symbol} ={" "}
-								{(
+								{numberWithCommas(
 									+ethers.formatUnits(
 										launchpad.totalSale,
 										launchpad.tokenSale.decimals
 									) /
-									+ethers.formatUnits(
-										launchpad.totalRaise,
-										launchpad.tokenRaise.decimals
-									)
-								).toFixed(3)}
+										+ethers.formatUnits(
+											launchpad.totalRaise,
+											launchpad.tokenRaise.decimals
+										)
+								)}{" "}
 								{launchpad.tokenSale.symbol}
 							</div>
 						</div>

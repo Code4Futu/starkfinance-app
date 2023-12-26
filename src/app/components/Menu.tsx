@@ -98,7 +98,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 											Launchpad List
 										</Link>
 									</li>
-									<li className="p-3">
+									{/* <li className="p-3">
 										<Link href="/airdrops" rel="noreferrer">
 											Airdrop List
 										</Link>
@@ -107,7 +107,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 										<Link href="/launchpads/your-pools" rel="noreferrer">
 											Your Pools
 										</Link>
-									</li>
+									</li> */}
 								</ul>
 							</div>
 						</div>
@@ -451,11 +451,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 										Launchpad List
 									</Link>
 								</li>
-								<li>
+								{/* <li>
 									<Link className="p-3" href="/airdrops" rel="noreferrer">
 										Airdrop List
 									</Link>
-								</li>
+								</li> */}
 								{/* <li>
 									<Link className="p-3" href="/launchpads/your-pools" rel="noreferrer">
 										Your Pool
