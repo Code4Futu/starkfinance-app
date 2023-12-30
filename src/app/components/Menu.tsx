@@ -178,13 +178,18 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<a href="/locks/create" rel="noreferrer">
+										<a href="/locking" rel="noreferrer">
 											Create Lock
 										</a>
 									</li>
 									<li className="p-3">
-										<a href="/locks" rel="noreferrer">
-											My Lock
+										<a href="/locking/token" rel="noreferrer">
+											Token
+										</a>
+									</li>
+									<li className="p-3">
+										<a href="/locking/liquidity" rel="noreferrer">
+											Liquidity
 										</a>
 									</li>
 								</ul>
@@ -362,7 +367,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 				<div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
 					{children}
 				</div>
-				<div className="fixed bottom-0 left-0 right-0 grid lg:hidden z-[999] grid-cols-6 place-items-center px-3 md:px-12 py-3 bg-[#1A1C24] border-t border-t-[#2D313E]">
+				<div className="nav-mobile fixed bottom-0 left-0 right-0 grid lg:hidden z-[999] grid-cols-6 place-items-center px-3 md:px-12 py-3 bg-[#1A1C24] border-t border-t-[#2D313E]">
 					<Link href="/" rel="noreferrer">
 						<div className="text-center w-[30px] h-[30px] relative">
 							<Image fill src="/svg/home.svg" alt="home" />
@@ -385,27 +390,27 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</div>
 							</label>
 						</div>
-						<div className="drawer-side">
+						<div className="drawer-side z-[999]">
 							<label
 								htmlFor="exchange-drawer"
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute left-0 bottom-[80px] right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
-								<li>
+							<ul className="menu absolute left-0 bottom-[79px] right-0 px-4 min-w-full bg-[#1A1C24] font-bold">
+								<li className="border-b border-b-[#363b4d]">
 									<a
 										href="https://exchange.starkfinance.co"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Swap
 									</a>
 								</li>
-								<li>
+								<li className="border-b border-b-[#363b4d]">
 									<a
 										href="https://exchange.starkfinance.co/liquidity"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Liquidity
 									</a>
@@ -414,7 +419,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									<a
 										href="https://exchange.starkfinance.co"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Overview
 									</a>
@@ -439,25 +444,29 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</div>
 							</label>
 						</div>
-						<div className="drawer-side">
+						<div className="drawer-side z-[999]">
 							<label
 								htmlFor="launchpad-drawer"
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[79px] left-0 right-0 px-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
-									<Link className="p-3" href="/launchpads" rel="noreferrer">
+									<Link
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+										href="/launchpads"
+										rel="noreferrer"
+									>
 										Launchpad List
 									</Link>
 								</li>
 								{/* <li>
-									<Link className="p-3" href="/airdrops" rel="noreferrer">
+									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/airdrops" rel="noreferrer">
 										Airdrop List
 									</Link>
 								</li> */}
 								{/* <li>
-									<Link className="p-3" href="/launchpads/your-pools" rel="noreferrer">
+									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/launchpads/your-pools" rel="noreferrer">
 										Your Pool
 									</Link>
 								</li> */}
@@ -481,18 +490,18 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</div>
 							</label>
 						</div>
-						<div className="drawer-side">
+						<div className="drawer-side z-[999]">
 							<label
 								htmlFor="market-drawer"
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[79px] left-0 right-0 px-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
 									<a
 										href="https://marketplace.starkfinance.co/top_volume"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Collections
 									</a>
@@ -501,7 +510,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									<a
 										href="https://marketplace.starkfinance.co/activity"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Activity
 									</a>
@@ -510,7 +519,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									<a
 										href="https://marketplace.starkfinance.co/events"
 										rel="noreferrer"
-										className="p-3"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Events
 									</a>
@@ -519,7 +528,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
             <a
               href={`https://marketplace.starkfinance.co/account/${address}`}
               rel="noreferrer"
-              className="p-3"
+              className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
             >
               Profile
             </a>
@@ -551,15 +560,19 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								</div>
 							</label>
 						</div>
-						<div className="drawer-side">
+						<div className="drawer-side z-[999]">
 							<label
 								htmlFor="socials-drawer"
 								aria-label="close sidebar"
 								className="drawer-overlay"
 							></label>
-							<ul className="menu absolute bottom-[80px] left-0 right-0 p-4 min-w-full bg-[#1A1C24] font-bold">
+							<ul className="menu absolute bottom-[79px] left-0 right-0 px-4 min-w-full bg-[#1A1C24] font-bold">
 								<li>
-									<a href="#" rel="noreferrer" className="p-3">
+									<a
+										href="#"
+										rel="noreferrer"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+									>
 										<div className="flex items-center">
 											<div className="w-[30px] h-[30px] relative">
 												<Image
@@ -574,7 +587,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</a>
 								</li>
 								<li>
-									<a href="#" rel="noreferrer" className="p-3">
+									<a
+										href="#"
+										rel="noreferrer"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+									>
 										<div className="flex items-center">
 											<div className="w-[30px] h-[30px] relative">
 												<Image
@@ -589,7 +606,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</a>
 								</li>
 								<li>
-									<a href="#" rel="noreferrer" className="p-3">
+									<a
+										href="#"
+										rel="noreferrer"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+									>
 										<div className="flex items-center">
 											<div className="w-[30px] h-[30px] relative">
 												<Image src="/svg/x.svg" alt="x" fill sizes="30px" />
@@ -599,7 +620,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</a>
 								</li>
 								<li>
-									<a href="#" rel="noreferrer" className="p-3">
+									<a
+										href="#"
+										rel="noreferrer"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+									>
 										<div className="flex items-center">
 											<div className="w-[30px] h-[30px] relative">
 												<Image
@@ -614,7 +639,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 									</a>
 								</li>
 								<li>
-									<a href="#" rel="noreferrer" className="p-3">
+									<a
+										href="#"
+										rel="noreferrer"
+										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
+									>
 										<div className="flex items-center">
 											<div className="w-[30px] h-[30px] relative">
 												<Image

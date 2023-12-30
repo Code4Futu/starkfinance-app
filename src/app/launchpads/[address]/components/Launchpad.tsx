@@ -388,7 +388,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							<div className="w-[24px] h-[24px] relative">
 								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
 							</div>
-							<div className="hidden ml-1.5  text-[14px]">Launchpad</div>
+							<div className="ml-1.5  text-[14px]">Launchpad</div>
 						</div>
 					</li>
 					<li>

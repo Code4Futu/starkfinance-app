@@ -24,7 +24,7 @@ export default async function LaunchpadList() {
 							<div className="w-[30px] h-[30px] relative">
 								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
 							</div>
-							<div className="hidden ml-1.5">Launchpad</div>
+							<div className="ml-1.5">Launchpad</div>
 						</div>
 					</li>
 					<li>
