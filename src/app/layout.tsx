@@ -8,7 +8,7 @@ import Menu from "./components/Menu";
 import Head from "next/head";
 
 export const metadata: Metadata = {
-	title: "StarkFinance Launchpad",
+	title: "StarkFinance App",
 	icons: [
 		{ rel: "icon", url: "/logo.png" },
 		{ rel: "apple-touch-icon", url: "/apple-icon.png" },

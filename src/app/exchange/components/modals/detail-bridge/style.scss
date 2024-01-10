@@ -1,0 +1,72 @@
+.modal-overlay-1 {
+  position: fixed;
+  top: -500px;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  transition: opacity 0.3s ease;
+}
+
+* {
+  max-width: 100%;
+}
+
+.modal-content-setting {
+  background: #1a1c24;
+  padding: 24px;
+  border-radius: 4px;
+  z-index: 999;
+  animation: dropTop 0.2s ease-out;
+  width: 100%;
+  max-width: 442px;
+  border-radius: 8px;
+  margin-left: auto;
+  margin-right: auto;
+  height: 100%;
+  position: relative;
+  max-height: 339px;
+  @media screen and (min-width: 768px) {
+    max-height: 339px;
+  }
+}
+
+@keyframes dropTop {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.provideFeedback {
+  font-size: 20px;
+}
+
+.feedbackModalHeader {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-top: 0.8rem;
+}
+
+.input-pl::placeholder {
+  color: #3c3d4d !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}

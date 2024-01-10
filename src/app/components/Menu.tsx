@@ -60,22 +60,19 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<a href="https://exchange.starkfinance.co" rel="noreferrer">
+										<Link href="/exchange/swap" rel="noreferrer">
 											Swap
-										</a>
+										</Link>
 									</li>
 									<li className="p-3">
-										<a
-											href="https://exchange.starkfinance.co/liquidity"
-											rel="noreferrer"
-										>
+										<Link href="/exchange/liquidity" rel="noreferrer">
 											Liquidity
-										</a>
+										</Link>
 									</li>
 									<li className="p-3">
-										<a href="https://exchange.starkfinance.co" rel="noreferrer">
+										<Link href="/exchange/overview" rel="noreferrer">
 											Overview
-										</a>
+										</Link>
 									</li>
 								</ul>
 							</div>
@@ -365,7 +362,11 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					</div>
 				</div>
 				<div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
-					{children}
+					<div className="w-full flex justify-center">
+						<div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
+							{children}
+						</div>
+					</div>
 				</div>
 				<div className="nav-mobile fixed bottom-0 left-0 right-0 grid lg:hidden z-[999] grid-cols-6 place-items-center px-3 md:px-12 py-3 bg-[#1A1C24] border-t border-t-[#2D313E]">
 					<Link href="/" rel="noreferrer">
@@ -398,31 +399,31 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							></label>
 							<ul className="menu absolute left-0 bottom-[79px] right-0 px-4 min-w-full bg-[#1A1C24] font-bold">
 								<li className="border-b border-b-[#363b4d]">
-									<a
-										href="https://exchange.starkfinance.co"
+									<Link
+										href="/exchange/swap"
 										rel="noreferrer"
 										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Swap
-									</a>
+									</Link>
 								</li>
 								<li className="border-b border-b-[#363b4d]">
-									<a
-										href="https://exchange.starkfinance.co/liquidity"
+									<Link
+										href="/exchange/liquidity"
 										rel="noreferrer"
 										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Liquidity
-									</a>
+									</Link>
 								</li>
 								<li>
-									<a
-										href="https://exchange.starkfinance.co"
+									<Link
+										href="/exchange/overview"
 										rel="noreferrer"
 										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
 									>
 										Overview
-									</a>
+									</Link>
 								</li>
 							</ul>
 						</div>

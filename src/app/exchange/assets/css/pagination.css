@@ -1,0 +1,12 @@
+.ant-pagination-item a{
+    color: black !important;
+}
+
+.ant-pagination-item-active a{ 
+    color: white !important;
+}
+
+:where(.css-dev-only-do-not-override-w8mnev).ant-pagination .ant-pagination-item-active{
+    background: linear-gradient(to bottom, #3b82f6 0%, #2563eb 100%);
+    border-color: transparent;
+}

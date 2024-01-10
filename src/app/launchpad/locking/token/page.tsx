@@ -25,11 +25,7 @@ export default function TokenLocking() {
 					</li>
 				</ul>
 			</div>
-			<div className="flex justify-center">
-				<div className="flex-1 max-w-[1080px] text-[#F1F1F1]">
-					<div className="mb-6 text-[32px] font-bold">Create Lock</div>
-				</div>
-			</div>
+			<div className="mb-6 text-[32px] font-bold">Create Lock</div>
 		</div>
 	);
 }

@@ -1,0 +1,41 @@
+.animation-open-items {
+  animation: open-items 0.5s calc(60ms * var(--delay)) ease-out both;
+}
+
+@keyframes open-items {
+  from {
+    transform: translateY(100%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}
+
+.anim-drawer-show {
+  animation: show-drawer 0.7s ease-out both;
+}
+
+.anim-drawer-hidden {
+  animation: hidden-drawer 0.7s ease-out both;
+}
+
+@keyframes show-drawer {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hidden-drawer {
+  from {
+    transform: translateX(0%);
+  }
+
+  to {
+    transform: translateX(-100%);
+  }
+}

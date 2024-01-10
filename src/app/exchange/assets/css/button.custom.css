@@ -1,0 +1,27 @@
+.bg-btn {
+  background: linear-gradient(23deg, rgb(16 164 204), rgb(61 236 167));
+  transition: 0.5s;
+  border-radius: 10px;
+  background-size: 200% auto;
+  color: white;
+}
+
+.bg-btn:hover {
+  cursor: pointer;
+  background-position: right center;
+}
+
+.social-button {
+  display: flex;
+  align-items: center;
+  border-radius: 4px;
+  border: 1.5px solid rgba(255, 255, 255, 0.28);
+  opacity: 0.8;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0.1) -1.52%,
+    rgba(255, 255, 255, 0.02) 104.35%
+  );
+  backdrop-filter: blur(25px);
+  padding: 1.5px;
+}

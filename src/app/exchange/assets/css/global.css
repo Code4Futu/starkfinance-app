@@ -1,0 +1,8 @@
+.progress-bar {
+  transform: rotate(0.062deg);
+  fill: linear-gradient(270deg, #24c3bc -0.18%, rgba(100, 210, 124, 0) 133.86%);
+}
+
+.apexcharts-canvas {
+  padding-right: 20px !important;
+}
