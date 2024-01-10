@@ -665,7 +665,12 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<div className="flex justify-between gap-5 mt-6">
 											<div
 												onClick={handleCommit}
-												className="flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
+												className={clsx(
+													"flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl",
+													{
+														"cursor-not-allowed": !account || nftsLoading,
+													}
+												)}
 											>
 												{submitting && (
 													<span className="loading loading-spinner loading-xl"></span>
@@ -685,7 +690,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 												)}
 												disabled={!account || nftsLoading}
 											>
-												<span>Stark NFT</span>
+												<span>Stake NFT</span>
 											</button>
 										</div>
 									</div>
