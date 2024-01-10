@@ -43,7 +43,7 @@ export default function LaunchpadItem({
 
 	return (
 		<Link
-			href={`/launchpads/${launchpad.address}`}
+			href={`/launchpad/launchpad-list/${launchpad.address}`}
 			className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] bg-[#1A1C24]"
 		>
 			<div className="w-full pt-[50%] relative rounded-2xl overflow-hidden">

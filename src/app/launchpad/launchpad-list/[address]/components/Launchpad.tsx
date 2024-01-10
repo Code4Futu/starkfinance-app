@@ -20,6 +20,7 @@ import { useWeb3Store } from "@/app/store";
 import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const { account, address } = useAccount();
@@ -381,28 +382,14 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				pauseOnHover
 				theme="light"
 			/>
-			<div className="z-[999] breadcrumbs fixed right-0 lg:right-[360px] bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
-				<ul className="overflow-hidden">
-					<li>
-						<div className="flex items-center ">
-							<div className="w-[24px] h-[24px] relative">
-								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
-							</div>
-							<div className="ml-1.5  text-[14px]">Launchpad</div>
-						</div>
-					</li>
-					<li>
-						<Link
-							className="hover:no-underline text-[#C6C6C6] text-[14px]"
-							href="/launchpads"
-							rel="noreferrer"
-						>
-							Launchpad
-						</Link>
-					</li>
-					<li className="font-bold text-[14px]">{launchpad.name}</li>
-				</ul>
-			</div>
+
+			<Breadcrumbs
+				items={[
+					{ text: "Launchpad", icon: "/svg/launchpad.svg", url: "/" },
+					{ text: "Launchpad List", url: "/launchpad/launchpad-list" },
+					{ text: launchpad.name },
+				]}
+			/>
 
 			<div className="flex justify-center">
 				<div className="flex flex-col gap-8 flex-1 max-w-[1080px]">

@@ -9,7 +9,7 @@ export default function TokenLocking() {
 					<li>
 						<div className="flex items-center">
 							<div className="w-[30px] h-[30px] relative">
-								<Image src="/svg/locking.svg" alt="locking" fill />
+								<Image src="/svg/launchpad/locking.svg" alt="locking" fill />
 							</div>
 							<div className="ml-1.5">Locking</div>
 						</div>
@@ -17,7 +17,7 @@ export default function TokenLocking() {
 					<li>
 						<Link
 							className="hover:no-underline text-[#F1F1F1]"
-							href="/locking/token"
+							href="/launchpad/locking/token"
 							rel="noreferrer"
 						>
 							Token

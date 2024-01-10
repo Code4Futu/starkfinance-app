@@ -43,14 +43,14 @@ export default function CreateLock() {
 		},
 	});
 
-	console.log(dayjs(new Date()).format("YYYY-MM-DD"));
+	// console.log(dayjs(new Date()).format("YYYY-MM-DD"));
 
 	const inputDateRef = useRef<HTMLInputElement>(null);
 
-	console.log(errors);
+	// console.log(errors);
 
 	const onSubmit = (values: any) => {
-		console.log(values);
+		// console.log(values);
 		// axiosInstance
 		//   .post("/auth/login", values)
 		//   .then((res) => {
@@ -76,7 +76,7 @@ export default function CreateLock() {
 					<li>
 						<div className="flex items-center">
 							<div className="w-[30px] h-[30px] relative">
-								<Image src="/svg/locking.svg" alt="locking" fill />
+								<Image src="/svg/launchpad/locking.svg" alt="locking" fill />
 							</div>
 							<div className="ml-1.5">Locking</div>
 						</div>
@@ -84,7 +84,7 @@ export default function CreateLock() {
 					<li>
 						<Link
 							className="hover:no-underline text-[#F1F1F1]"
-							href="/locking"
+							href="/launchpad/locking"
 							rel="noreferrer"
 						>
 							Create Lock

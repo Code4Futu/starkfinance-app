@@ -5,15 +5,11 @@ import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
 import { useEffect, useState } from "react";
 import { LAUNCHPAD_STATUS } from "@/app/constants";
 import { ethers } from "ethers";
-import { ILaunchpad } from "@/app/types";
+import { IAirdrop } from "@/app/types";
 import dayjs from "dayjs";
 import clsx from "clsx";
 
-const LatestLaunchpad = ({
-	launchpad,
-}: {
-	launchpad: ILaunchpad | undefined;
-}) => {
+const LatestAirdrop = ({ airdrop }: { airdrop: IAirdrop }) => {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -30,19 +26,19 @@ const LatestLaunchpad = ({
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			if (!launchpad) return;
+			if (!airdrop) return;
 			const time = timeDiff(
 				Date.now(),
-				launchpad.start * 1000,
-				launchpad.end * 1000
+				airdrop.start * 1000,
+				airdrop.end * 1000
 			);
 			setTimeStartDiff(time);
 		}, 1000);
 
 		return () => clearInterval(interval);
-	}, [launchpad?.start, launchpad?.end]);
+	}, [airdrop?.start, airdrop?.end]);
 
-	if (!launchpad) return null;
+	if (!airdrop) return null;
 
 	return (
 		<div className="flex flex-col gap-6 p-3 md:p-6 border rounded-3xl border-[#24C3BC] bg-[#1A1C24] ">
@@ -50,10 +46,10 @@ const LatestLaunchpad = ({
 				<Image alt="image" src="/mocks/banner.png" fill />
 				<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] ">
 					<div className="text-2xl text-[#F1F1F1] font-bold">
-						{dayjs(launchpad.start * 1000).format("DD")}
+						{dayjs(airdrop.start * 1000).format("DD")}
 					</div>
 					<div className="text-sm text-[#C6C6C6]">
-						{dayjs(launchpad.start).format("MMM")}
+						{dayjs(airdrop.start).format("MMM")}
 					</div>
 				</div>
 			</div>
@@ -62,9 +58,7 @@ const LatestLaunchpad = ({
 					<Image alt="image" src="/logo80x80.png" fill />
 				</div>
 				<div className="flex-1 flex flex-col justify-between gap-2">
-					<div className="text-2xl font-bold line-clamp-1">
-						{launchpad.name}
-					</div>
+					<div className="text-2xl font-bold line-clamp-1">{airdrop.name}</div>
 					<div className="flex flex-wrap items-center gap-2">
 						{timeStartDiff.status && (
 							<div
@@ -100,13 +94,13 @@ const LatestLaunchpad = ({
 						<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 							<div className="w-[18px] h-[18px] relative">
 								<Image
-									src={`/wallets/${launchpad.chainKey}.png`}
+									src={`/wallets/${airdrop.chainKey}.png`}
 									alt="starknet"
 									fill
 								/>
 							</div>
 							<div className="text-[12px] text-[#F1F1F1] capitalize">
-								{launchpad.chainKey}
+								{airdrop.chainKey}
 							</div>
 						</div>
 						<div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
@@ -114,11 +108,11 @@ const LatestLaunchpad = ({
 								<Image src="/logo.png" alt="token" fill />
 							</div>
 							<div className=" text-[12px] text-[#F1F1F1]">
-								{launchpad.tokenRaise.symbol}
+								{airdrop.tokenAirdrop.symbol}
 							</div>
 						</div>
 						<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] uppercase">
-							{launchpad.type}
+							{airdrop.type}
 						</div>
 					</div>
 				</div>
@@ -129,64 +123,32 @@ const LatestLaunchpad = ({
 					<Image alt="image" src="/mocks/banner.png" fill />
 					<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
 						<div className="text-[36px]">
-							{dayjs(launchpad.start * 1000).format("DD")}
+							{dayjs(airdrop.start * 1000).format("DD")}
 						</div>
-						<div>{dayjs(launchpad.start * 1000).format("MMM")}</div>
+						<div>{dayjs(airdrop.start * 1000).format("MMM")}</div>
 					</div>
 				</div>
 
 				<div className="flex-1 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 					<div className="flex flex-col md:flex-row justify-between gap-4">
 						<div className="flex flex-col md:border-none border-b border-b-[#2D313E] pb-3">
-							<div className="text-[12px] text-[#C6C6C6]">Total raise</div>
+							<div className="text-[12px] text-[#C6C6C6]">Total airdrop</div>
 							<div className="text-[20px] font-bold">
 								{numberWithCommas(
 									ethers
 										.formatUnits(
-											launchpad.totalRaise,
-											launchpad.tokenRaise.decimals
+											airdrop.totalAirdropAmount,
+											airdrop.tokenAirdrop.decimals
 										)
 										.toString()
 								)}{" "}
-								{launchpad.tokenRaise.symbol}
-							</div>
-						</div>
-						<div className="flex flex-col md:border-none border-b border-b-[#2D313E] pb-3">
-							<div className="text-[12px] text-[#C6C6C6]">Total sale</div>
-							<div className="text-[20px] font-bold">
-								{numberWithCommas(
-									ethers
-										.formatUnits(
-											launchpad.totalSale,
-											launchpad.tokenSale.decimals
-										)
-										.toString()
-								)}{" "}
-								{launchpad.tokenSale.symbol}
-							</div>
-						</div>
-
-						<div className="flex flex-col">
-							<div className="text-[12px] text-[#C6C6C6]">Rate</div>
-							<div className="text-[20px] font-bold">
-								1 {launchpad.tokenRaise.symbol} ={" "}
-								{numberWithCommas(
-									+ethers.formatUnits(
-										launchpad.totalSale,
-										launchpad.tokenSale.decimals
-									) /
-										+ethers.formatUnits(
-											launchpad.totalRaise,
-											launchpad.tokenRaise.decimals
-										)
-								)}{" "}
-								{launchpad.tokenSale.symbol}
+								{airdrop.tokenAirdrop.symbol}
 							</div>
 						</div>
 					</div>
 					<div className="border-t border-t-[#2D313E] pt-3">
 						<div className="mb-2.5">
-							Launchpad {statusToText(timeStartDiff.status)}
+							Airdrop {statusToText(timeStartDiff.status)}
 						</div>
 						<div className="flex justify-between md:justify-start gap-4">
 							<div>
@@ -222,13 +184,13 @@ const LatestLaunchpad = ({
 				</div>
 			</div>
 			<Link
-				href={`/launchpads/${launchpad.address}`}
+				href={`/launchpad/airdrop-list/${airdrop.address}`}
 				className="w-full md:max-w-[280px] text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
 			>
-				Go to Launchpad Now
+				Go to Airdrop Now
 			</Link>
 		</div>
 	);
 };
 
-export default LatestLaunchpad;
+export default LatestAirdrop;

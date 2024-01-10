@@ -1,11 +1,11 @@
 import Image from "next/image";
-import LatestLaunchpad from "./launchpads/components/LatestLaunchpad";
+import LatestLaunchpad from "./launchpad/launchpad-list/components/LatestLaunchpad";
 import Link from "next/link";
 import { ILaunchpad } from "./types";
 import { BASE_API } from "./constants";
 
 async function getLaunchpads(): Promise<ILaunchpad[]> {
-	const res = await fetch(`${BASE_API}/launchpads/`, {
+	const res = await fetch(`${BASE_API}/launchpads`, {
 		next: { revalidate: 60 },
 	});
 	return res.json();
@@ -27,23 +27,23 @@ export default async function Home() {
 					<LatestLaunchpad launchpad={launchpads[0]} />
 
 					<div className="flex flex-wrap gap-1 md:gap-4">
-						<div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] border-2 font-bold text-[#1A1C24]  rounded-2xl">
 							Buy SFN token
 						</div>
-						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24] border-2 rounded-2xl">
 							Apply for Launchpad
 						</div>
-						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 bg-[#F1F1F1] font-bold text-[#1A1C24] border-2rounded-2xl">
 							Apply for Airdrop
 						</div>
 
-						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1] rounded-2xl">
 							Launchpad List
 						</div>
-						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1] rounded-2xl">
 							Airdrop List
 						</div>
-						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1]  rounded-2xl">
+						<div className="py-2 px-2 md:py-3 md:px-5 border-solid border-2 font-bold text-[#F1F1F1] rounded-2xl">
 							Your Pools
 						</div>
 					</div>

@@ -94,17 +94,17 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<Link href="/launchpads" rel="noreferrer">
+										<Link href="/launchpad/launchpad-list" rel="noreferrer">
 											Launchpad List
 										</Link>
 									</li>
 									{/* <li className="p-3">
-										<Link href="/airdrops" rel="noreferrer">
+										<Link href="/launchpad/airdrop-list" rel="noreferrer">
 											Airdrop List
 										</Link>
 									</li>
 									<li className="p-3">
-										<Link href="/launchpads/your-pools" rel="noreferrer">
+										<Link href="/launchpad/launchpad-list/your-pools" rel="noreferrer">
 											Your Pools
 										</Link>
 									</li> */}
@@ -178,17 +178,17 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 							<div className="collapse-content">
 								<ul className="pl-2 font-bold">
 									<li className="p-3">
-										<a href="/locking" rel="noreferrer">
+										<a href="/launchpad/locking" rel="noreferrer">
 											Create Lock
 										</a>
 									</li>
 									<li className="p-3">
-										<a href="/locking/token" rel="noreferrer">
+										<a href="/launchpad/locking/token" rel="noreferrer">
 											Token
 										</a>
 									</li>
 									<li className="p-3">
-										<a href="/locking/liquidity" rel="noreferrer">
+										<a href="/launchpad/locking/liquidity" rel="noreferrer">
 											Liquidity
 										</a>
 									</li>
@@ -454,19 +454,19 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 								<li>
 									<Link
 										className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2"
-										href="/launchpads"
+										href="/launchpad/launchpad-list"
 										rel="noreferrer"
 									>
 										Launchpad List
 									</Link>
 								</li>
 								{/* <li>
-									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/airdrops" rel="noreferrer">
+									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/launchpad/airdrop-list" rel="noreferrer">
 										Airdrop List
 									</Link>
 								</li> */}
 								{/* <li>
-									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/launchpads/your-pools" rel="noreferrer">
+									<Link className="p-3 hover:text-[#24c3bc] hover:bg-[#232631] my-2" href="/launchpad/launchpad-list/your-pools" rel="noreferrer">
 										Your Pool
 									</Link>
 								</li> */}

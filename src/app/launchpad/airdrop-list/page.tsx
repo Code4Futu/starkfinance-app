@@ -2,11 +2,12 @@ import Link from "next/link";
 import Image from "next/image";
 import AirdropItem from "./components/AirdropItem";
 import LatestAirdrop from "./components/LatestAirdrop";
-import { IAirdrop } from "../types";
-import { BASE_API } from "../constants";
+import { IAirdrop } from "../../types";
+import { BASE_API } from "../../constants";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 async function getAirdrops(): Promise<IAirdrop[]> {
-	const res = await fetch(`${BASE_API}/airdrops/`, {
+	const res = await fetch(`${BASE_API}/airdrops`, {
 		next: { revalidate: 60 },
 	});
 	return res.json();
@@ -17,27 +18,12 @@ export default async function AirdropList() {
 
 	return (
 		<div>
-			<div className="breadcrumbs z-[999] fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 lg:right-[360px] px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
-				<ul className="text-[14px]">
-					<li>
-						<div className="flex items-center">
-							<div className="w-[30px] h-[30px] relative">
-								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
-							</div>
-							<div className="ml-1.5">Launchpad</div>
-						</div>
-					</li>
-					<li>
-						<Link
-							className="hover:no-underline"
-							href="/airdrops"
-							rel="noreferrer"
-						>
-							Airdrop
-						</Link>
-					</li>
-				</ul>
-			</div>
+			<Breadcrumbs
+				items={[
+					{ text: "Launchpad", icon: "/svg/launchpad.svg", url: "/" },
+					{ text: "Airdrop List" },
+				]}
+			/>
 			<div className="flex justify-center">
 				<div className="flex-1 max-w-[1080px]">
 					{/* title and filters */}
@@ -195,7 +181,7 @@ export default async function AirdropList() {
 							</div>
 
 							<Link
-								href="/airdrops/your-pools"
+								href="/launchpad/airdrop-list/your-pools"
 								className="hidden md:block border rounded-2xl border-[#2D313E] py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
 							>
 								Your Pools

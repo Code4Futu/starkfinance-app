@@ -1,49 +1,24 @@
-import Link from "next/link";
 import Image from "next/image";
-import LaunchpadItem from "./components/LaunchpadItem";
-import LatestLaunchpad from "./components/LatestLaunchpad";
-import { ILaunchpad } from "../types";
-import { BASE_API } from "../constants";
+import Link from "next/link";
+import Pool from "./components/Pool";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
 
-async function getLaunchpads(): Promise<ILaunchpad[]> {
-	const res = await fetch(`${BASE_API}/launchpads/`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
-
-export default async function LaunchpadList() {
-	const launchpads = await getLaunchpads();
-
+export default function YourPools() {
 	return (
 		<div>
-			<div className="breadcrumbs z-[999] fixed bg-[#0D0E12] lg:bg-inherit left-0 lg:left-[288px] top-[96px] lg:top-[25px] right-0 lg:right-[360px] px-6 py-3  border-b lg:border-none border-b-[#2D313E]">
-				<ul className="text-[14px]">
-					<li>
-						<div className="flex items-center">
-							<div className="w-[30px] h-[30px] relative">
-								<Image src="/svg/launchpad.svg" alt="launchpad" fill />
-							</div>
-							<div className="ml-1.5">Launchpad</div>
-						</div>
-					</li>
-					<li>
-						<Link
-							className="hover:no-underline"
-							href="/launchpads"
-							rel="noreferrer"
-						>
-							Launchpad
-						</Link>
-					</li>
-				</ul>
-			</div>
+			<Breadcrumbs
+				items={[
+					{ text: "Launchpad", icon: "/svg/launchpad.svg" },
+					{ text: "Your Pools" },
+				]}
+			/>
+
 			<div className="flex justify-center">
 				<div className="flex-1 max-w-[1080px]">
 					{/* title and filters */}
 					<div className="flex justify-between items-center mb-6 lg:mb-9">
 						<div className="text-[28px] lg:text-[42px] font-bold">
-							Launchpad List
+							You Pools
 						</div>
 
 						<div className="flex gap-3">
@@ -102,35 +77,6 @@ export default async function LaunchpadList() {
 								</ul>
 							</div>
 
-							{/* <div className="dropdown dropdown-end">
-							<label
-								tabIndex={0}
-								className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1"
-							>
-								<div>Chain</div>
-								<Image
-									src="/svg/drop-down.svg"
-									alt="drop-down"
-									height={24}
-									width={24}
-								/>
-							</label>
-							<ul
-								tabIndex={0}
-								className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-32"
-							>
-								<li>
-									<a>Inprogress</a>
-								</li>
-								<li>
-									<a>Upcoming</a>
-								</li>
-								<li>
-									<a>Ended</a>
-								</li>
-							</ul>
-						</div> */}
-
 							<label
 								htmlFor="filters"
 								className="p-3 lg:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
@@ -140,9 +86,10 @@ export default async function LaunchpadList() {
 								</div>
 							</label>
 
+							{/* Put this part before </body> tag */}
 							<input type="checkbox" id="filters" className="modal-toggle" />
 							<div className="modal z-[9999] " role="dialog">
-								<div className="modal-box px-6 py-9 text-[#F1F1F1] font-bold max-h-[90vh] relative bg-[#0D0E12]">
+								<div className="modal-box px-6 py-9 text-[#F1F1F1] font-bold max-h-[90vh] relative">
 									<label
 										className="absolute top-[12px] right-[12px] cursor-pointer"
 										htmlFor="filters"
@@ -183,33 +130,52 @@ export default async function LaunchpadList() {
 												All
 											</div>
 											<div className="border border-[#2D313E] py-3 px-6 rounded-2xl">
-												Public
+												Committed SFN
 											</div>
 											<div className="border border-[#2D313E] py-3 px-6 rounded-2xl">
-												Private
+												NFT Stake
+											</div>
+											<div className="border border-[#2D313E] py-3 px-6 rounded-2xl">
+												Allocation
+											</div>
+											<div className="border border-[#2D313E] py-3 px-6 rounded-2xl">
+												Claimed
+											</div>
+											<div className="border border-[#2D313E] py-3 px-6 rounded-2xl">
+												Claimable
 											</div>
 										</div>
 									</div>
 								</div>
 								<label className="modal-backdrop" htmlFor="filters" />
 							</div>
-
-							<Link
-								href="/launchpads/your-pools"
-								className="hidden md:block border rounded-2xl border-[#2D313E] py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
-							>
-								Your Pools
-							</Link>
 						</div>
 					</div>
 
-					{/* latest launchpad */}
-					<LatestLaunchpad launchpad={launchpads[0]} />
-
-					{/* list launchpad */}
-					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-						{launchpads.slice(1).map((launchpad: any, idx: number) => (
-							<LaunchpadItem launchpad={launchpad} key={idx} />
+					<div className="flex flex-col gap-6 bg-[#1A1C24] rounded-3xl p-9">
+						<div className="hidden md:grid grid-cols-7 bg-[#0D0E12] rounded-2xl p-6">
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2">
+								Pool name
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Status
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								NFT Stake
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Allocation
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Total committed
+							</div>
+							<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+								Claimed
+							</div>
+							<div className="w-full text-center">Claimable</div>
+						</div>
+						{new Array(3).fill("").map((_, idx) => (
+							<Pool index={idx} />
 						))}
 					</div>
 				</div>
