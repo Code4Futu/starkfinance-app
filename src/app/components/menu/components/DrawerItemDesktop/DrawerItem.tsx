@@ -88,11 +88,12 @@ export const DrawerItem = ({
               {item.items?.length > 0 && !resize && (
                 <div
                   className={twMerge(
-                    "transition-height mt-[130px] border-[1px] border-[#2D313E] rounded-3xl flex flex-col gap-2 p-3"
+                    "transition-height mt-[130px] border-[1px] border-[#2D313E] rounded-3xl flex flex-col gap-2 p-3 bg-[#1a1c24]"
                   )}
                 >
                   {item.items.map((item: any, indexs: number) => (
                     <SubDrawerItem
+                      key={indexs}
                       item={item}
                       indexs={indexs}
                       handleOpenChange={handleOpenChange}
@@ -120,7 +121,7 @@ export const DrawerItem = ({
               // if (item.id === 1) {
               //   navigation(route.home);
               // }
-              handleDrawerClick(item.id);
+              // handleDrawerClick(item.id);
             }}
           >
             <div className="flex items-center">
@@ -164,7 +165,7 @@ export const DrawerItem = ({
             // if (item.id === 1) {
             //   navigation(route.home);
             // }
-            handleDrawerClick(item.id);
+            // handleDrawerClick(item.id);
           }}
         >
           <div className="flex items-center">
