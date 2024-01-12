@@ -1,5 +1,5 @@
 import { twMerge } from "tailwind-merge";
-import { useState, useContext } from "react";
+import { useState } from "react";
 
 export const SubDrawerItem = ({
   item,
@@ -32,9 +32,9 @@ export const SubDrawerItem = ({
       // style={{ ["--delay"]: indexs }}
       onClick={() => {
         // item.toggle();
-        // handleOpenChange(false);
+        handleOpenChange(false);
         // navigation(item.path);
-        // handleSubMenuClick(item.id, item.title);
+        handleSubMenuClick(item.id, item.title);
       }}
       href={item.path}
     >

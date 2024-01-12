@@ -9,8 +9,6 @@ import { LeftIcon, RightIcon, LogoNoName, LogoWithText } from "../icons";
 import ModalWallet from "../modals/ModalWallet";
 import { drawerData, drawerDataMobile, socialData } from "./drawData";
 import { DrawerItem } from "./components/DrawerItemDesktop";
-import { SiteNavigation } from "./components/SiteNavigation/SiteNavigation";
-import { DrawerDesktop } from "./components/DrawerDesktop";
 
 const drawData = drawerData;
 const drawDataMobile = drawerDataMobile;
@@ -166,21 +164,15 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 
   return (
     <div className="h-full w-full overflow-hidden flex justify-stretch">
-      <DrawerDesktop
-        resizeDrawer={resizeDrawer}
-        resizeToggle={resizeToggle}
-        drawerData={drawerData}
-        socialData={socialData}
-      />
-      {/* <div
+      <div
         className={clsx(
-          `drawer-container anim-drawer-show bottom-0 left-0 z-50 flex min-h-screen flex-col justify-between border-r-[1px] border-[#2D313E] bg-[#1A1C24] p-6 xl:translate-x-0`,
+          `drawer-container anim-drawer-show fixed bottom-0 left-0 z-50 flex min-h-screen flex-col justify-between border-r-[1px] border-[#2D313E] bg-[#1A1C24] p-6 xl:translate-x-0`,
           resizeDrawer ? "!w-[104px]" : "!w-[288px]"
         )}
       >
         <div className="flex flex-col gap-12">
           {resizeDrawer ? <LogoNoName /> : <LogoWithText />}
-          <div className="flex flex-col gap-3">
+          <div className="flex flex-col gap-3 overflow-scroll">
             {drawerData.map((item: any, idx: number) => (
               <DrawerItem
                 key={item.id}
@@ -193,32 +185,32 @@ export default function Menu({ children }: { children: React.ReactNode }) {
             ))}
           </div>
         </div>
-        <div className="flex flex-col gap-12 max-h-[150px] 2xl:hidden">
+        <div className="flex flex-col gap-12 max-h-[150px] overflow-scroll 2xl:hidden">
           <div className="flex flex-col gap-3">
-            {socialData.map((item: any) => (
-              <DrawerItem
-                key={item.id}
-                item={item}
-                // handleDrawerClick={handleSocialClick}
-                resize={resizeDrawer}
-                // currentPath={currentPath}
-                // handleSubMenuClick={handleSubMenuClick}
-              />
-            ))}
+            {/* {socicalData.map((item) => (
+            <DrawerItem
+              key={item.id}
+              item={item}
+              handleDrawerClick={handleSocialClick}
+              resize={resizeDrawer}
+              currentPath={currentPath}
+              handleSubMenuClick={handleSubMenuClick}
+            />
+          ))} */}
           </div>
         </div>
         <div className="hidden flex-col gap-12 2xl:flex">
           <div className="flex flex-col gap-3">
-            {socialData.map((item: any) => (
-              <DrawerItem
-                key={item.id}
-                item={item}
-                // handleDrawerClick={handleSocialClick}
-                resize={resizeDrawer}
-                // currentPath={currentPath}
-                // handleSubMenuClick={handleSubMenuClick}
-              />
-            ))}
+            {/* {socicalData.map((item) => (
+            <DrawerItem
+              key={item.id}
+              item={item}
+              handleDrawerClick={handleSocialClick}
+              resize={resizeDrawer}
+              currentPath={currentPath}
+              handleSubMenuClick={handleSubMenuClick}
+            />
+          ))} */}
           </div>
         </div>
         <div
@@ -230,10 +222,9 @@ export default function Menu({ children }: { children: React.ReactNode }) {
         >
           {resizeDrawer ? <RightIcon /> : <LeftIcon />}
         </div>
-      </div> */}
+      </div>
       <div className="flex-1 text-[#C6C6C6]">
-        <SiteNavigation />
-        {/* <div
+        <div
           className={clsx(
             "flex justify-between lg:justify-end px-6 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]",
             resizeDrawer ? "min-[1024px]:pl-[104px]" : "min-[1024px]:pl-[288px]"
@@ -283,7 +274,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
               </div>
             </button>
           </div>
-        </div> */}
+        </div>
         <div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
           <div className="w-full flex justify-center">
             <div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
