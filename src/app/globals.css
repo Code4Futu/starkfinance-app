@@ -4,42 +4,42 @@
 
 @import url("https://fonts.googleapis.com/css2?family=Roboto:wght@500;700&display=swap");
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+	--foreground-rgb: 0, 0, 0;
+	--background-start-rgb: 214, 219, 220;
+	--background-end-rgb: 255, 255, 255;
 }
 
 @media (prefers-color-scheme: dark) {
-  :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
-  }
+	:root {
+		--foreground-rgb: 255, 255, 255;
+		--background-start-rgb: 0, 0, 0;
+		--background-end-rgb: 0, 0, 0;
+	}
 }
 
 ::-webkit-scrollbar {
-  width: 5px;
+	width: 5px;
 }
 
 /* Handle */
 ::-webkit-scrollbar-thumb {
-  background: #24c3bc;
+	background: #24c3bc;
 }
 
 /* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+	background: #555;
 }
 
 body {
-  /* background: 1945.846px 1683.603px / -196.111% -160.942% no-repeat;
+	/* background: 1945.846px 1683.603px / -196.111% -160.942% no-repeat;
 	background-image: url("/bg.png"); */
-  background: no-repeat url("/bg.png");
-  background-size: cover;
-  width: 100vw;
-  height: 100vh;
-  overflow: hidden;
-  /* color: rgb(var(--foreground-rgb));
+	background: no-repeat url("/bg.png");
+	background-size: cover;
+	width: 100vw;
+	height: 100vh;
+	overflow: hidden;
+	/* color: rgb(var(--foreground-rgb));
 	background: linear-gradient(
 			to bottom,
 			transparent,
@@ -49,59 +49,56 @@ body {
 }
 
 * {
-  font-family: "Roboto", sans-serif;
+	font-family: "Roboto", sans-serif;
 }
 
 .bg-gradient-status-upcoming {
-  background-image: linear-gradient(
-    to right,
-    rgba(97, 179, 255, 0.15) 0%,
-    rgba(97, 179, 255, 0.15) 100%
-  );
+	background-image: linear-gradient(
+		to right,
+		rgba(97, 179, 255, 0.15) 0%,
+		rgba(97, 179, 255, 0.15) 100%
+	);
 }
 
 .bg-dark {
-  background-color: #2d3244d9;
+	background-color: #2d3244d9;
 }
 
 .toggle,
 .toggle:hover {
-  border-radius: 24px;
-  border: 1px solid #2d313e;
-  background: #f1f1f1;
-  --tglbg: #0d0e12;
-  width: 40px;
-  border-radius: 24px;
-  --handleoffset: 1rem;
-  /* height: 20px; */
+	border-radius: 24px;
+	border: 1px solid #2d313e;
+	background: #f1f1f1;
+	--tglbg: #0d0e12;
+	width: 40px;
+	border-radius: 24px;
+	--handleoffset: 1rem;
+	/* height: 20px; */
 }
 
 .toggle:checked,
 .toggle[checked="true"],
 .toggle[aria-checked="true"] {
-  border-radius: 24px;
-  border: 1px solid #2d313e;
-  background: #f1f1f1;
-  --tglbg: #24c3bc;
+	border-radius: 24px;
+	border: 1px solid #2d313e;
+	background: #f1f1f1;
+	--tglbg: #24c3bc;
 }
 
 .react-datepicker-wrapper {
-  width: 100%;
+	width: 100%;
 }
 
 .react-datepicker__input-container.react-datepicker__view-calendar-icon {
-  display: flex;
-  justify-content: flex-end;
-  align-items: center;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 }
 
 .react-datepicker__view-calendar-icon > input {
-  padding: 0.75rem !important;
+	padding: 0.75rem !important;
 }
 
-.anim-drawer-show {
-  transition: all 0.2s;
-}
 /* .nav-mobile .drawer-toggle:checked ~ .drawer-side > *:not(.drawer-overlay) {
 	transform: translateY(0);
 }
