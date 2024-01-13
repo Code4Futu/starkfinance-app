@@ -1,10 +1,11 @@
 import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAccount } from "@starknet-react/core";
+import { useAccount, useConnectors } from "@starknet-react/core";
 
 export const SiteNavigation = () => {
   const { address } = useAccount();
+  const {connect, connectors} = useConnectors()
   return (
     <div
       className={clsx(
@@ -44,7 +45,7 @@ export const SiteNavigation = () => {
           </div>
           <div
             className="text-md font-bold text-[#1A1C24] cursor-pointer"
-            // onClick={() => handleConnect(connectors[1])}
+            onClick={() => connect(connectors[1])}
           >
             {address
               ? `${address.slice(0, 4)}...${address.slice(-3)}`

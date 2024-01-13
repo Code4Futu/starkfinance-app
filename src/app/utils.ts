@@ -43,11 +43,14 @@ export const formatSmartNumber = (num: number | string): string => {
 	}
 };
 
-export function numberWithCommas(x: number | string) {
-	return formatSmartNumber(x)
-		.toString()
-		.replace(/\B(?=(\d{3})+(?!\d))/g, ",")
-		.replace(/\.0$/, "");
+export function numberWithCommas(x: number | string | undefined) {
+	console.log(formatSmartNumber(x ?? ""));
+	return !x
+		? ""
+		: formatSmartNumber(x)
+				.toString()
+				.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+				.replace(/\.0$/, "");
 }
 
 // time in milliseconds
