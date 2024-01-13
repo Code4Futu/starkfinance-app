@@ -14,15 +14,15 @@ export const drawerDataMobile = [
     items: [
       {
         title: "Swap",
-        //   path: route.swap,
+        path: "/",
       },
       {
         title: "Pools",
-        //   path: route.liquidity,
+        path: "/",
       },
       {
         title: "Overview",
-        //   path: route.overview,
+        path: "/",
       },
     ],
   },
@@ -68,15 +68,15 @@ export const drawerData = [
     items: [
       {
         title: "Swap",
-        //   path: route.swap,
+        path: "/",
       },
       {
         title: "Pools",
-        //   path: route.liquidity,
+        path: "/",
       },
       {
         title: "Overview",
-        //   path: route.overview,
+        path: "/",
       },
       // {
       //   title: "Staking",

@@ -1,5 +1,7 @@
 import { twMerge } from "tailwind-merge";
-import { useState, useContext } from "react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export const SubDrawerItem = ({
   item,
@@ -13,6 +15,7 @@ export const SubDrawerItem = ({
   handleSubMenuClick: any;
 }) => {
   const [hover, setHover] = useState(false);
+  const router = useRouter();
 
   const mouseOver = () => {
     setHover(true);
@@ -22,7 +25,7 @@ export const SubDrawerItem = ({
     setHover(false);
   };
   return (
-    <a
+    <Link
       key={indexs}
       onMouseOver={mouseOver}
       onMouseOut={mouseOut}
@@ -31,15 +34,13 @@ export const SubDrawerItem = ({
       )}
       // style={{ ["--delay"]: indexs }}
       onClick={() => {
-        // item.toggle();
-        // handleOpenChange(false);
-        // navigation(item.path);
-        // handleSubMenuClick(item.id, item.title);
+        handleOpenChange(false);
+        router.push(item.path);
+        handleSubMenuClick(item.id, item.title);
       }}
       href={item.path}
     >
       <div className="ml-3 flex gap-2">
-        {/* {checkSocialIcon(item.title)} */}
         <p
           className={twMerge(
             "text-base font-bold text-[#C6C6C6]",
@@ -49,6 +50,6 @@ export const SubDrawerItem = ({
           {item.title}
         </p>
       </div>
-    </a>
+    </Link>
   );
 };

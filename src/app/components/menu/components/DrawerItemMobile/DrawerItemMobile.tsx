@@ -1,6 +1,4 @@
-import { useNavigate } from "react-router-dom";
-import { useState } from "react";
-import route from "../../../../routes/route";
+import { MouseEventHandler, useState } from "react";
 import {
   DocumentationIcon,
   ExchangeIcon,
@@ -9,19 +7,24 @@ import {
   LockingIcon,
   MarketIcon,
   SocialIcon,
-} from "../../icons";
-import { Divider } from "../../../../components/Divider";
+} from "@/app/components/icons";
+import { Divider } from "@/app/components/Divider";
+import { usePathname, useRouter } from "next/navigation";
 
 export const DrawerItemMobile = ({
   item,
   handleDrawerClick,
-  resize,
-  currentPath,
+  resizeDrawer,
   toggle,
+}: {
+  item: any;
+  handleDrawerClick: any;
+  resizeDrawer: boolean;
+  toggle: MouseEventHandler;
 }) => {
   const [hover, setHover] = useState(false);
-
-  const navigation = useNavigate();
+  const currentPath = usePathname();
+  const router = useRouter();
 
   const mouseOver = () => {
     setHover(true);
@@ -31,7 +34,7 @@ export const DrawerItemMobile = ({
     setHover(false);
   };
 
-  const checkIcon = (id, currentPath) => {
+  const checkIcon = (id: number, currentPath?: string) => {
     switch (id) {
       case 1:
         return <HomeIcon color={hover ? "#ADFFFB" : ""} />;
@@ -59,7 +62,7 @@ export const DrawerItemMobile = ({
       className={"flex items-center rounded-xl p-3 text-white"}
       onClick={() => {
         if (item.id === 1) {
-          navigation(route.home);
+          router.push("/");
         }
         if (item.id === 5) {
           window.location.replace(
@@ -71,16 +74,15 @@ export const DrawerItemMobile = ({
       }}
     >
       <div className="flex items-center gap-2">{checkIcon(item.id)}</div>
-      {item.items.length > 0 && item.open && !resize && (
+      {item.items.length > 0 && item.open && !resizeDrawer && (
         <div className="modal-overlay">
           <div className="navbar-mobile-animation flex min-w-full justify-center items-center bg-[#1A1C24] absolute left-0 bottom-[80px]">
             <ul className="flex min-w-full p-3 flex-col items-start gap-[6px]">
-              {item.items.map((item, index, arr) => (
-                <>
+              {item.items.map((item: any, index: number, arr: any) => (
+                <div className="w-full" key={index}>
                   <li
-                    key={index}
                     className="flex min-w-full px-3 py-3 justify-between items-center rounded-xl"
-                    onClick={() => navigation(item.path)}
+                    onClick={() => router.push(item.path)}
                   >
                     <a
                       href={item.path}
@@ -90,7 +92,7 @@ export const DrawerItemMobile = ({
                     </a>
                   </li>
                   {arr.length - 1 !== index && <Divider />}
-                </>
+                </div>
               ))}
             </ul>
           </div>

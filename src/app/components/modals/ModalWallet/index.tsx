@@ -1,14 +1,18 @@
-// import { useConnectors } from "@starknet-react/core";
+import { useConnectors } from "@starknet-react/core";
 import React, { MouseEventHandler, useRef, useState, useEffect } from "react";
 import "./style.scss";
 import { Divider } from "../../Divider";
 import Image from "next/image";
 
 // import { useWallet } from "../../evm/hooks/useWallet";
-// import { injected } from "../../evm/utils/web3React";
-// import { useDispatch } from "react-redux";
+import { injected } from "@/app/evm/utils/web3React";
+import { useDispatch } from "react-redux";
+import { useGlobalContext } from "@/app/context/GlobalContext";
+import { useWallet } from "@/app/evm/hooks/useWallet";
 // import actions from "../../redux/action";
-// import { CHAIN_ID } from "../../evm/configs/networks";
+import { CHAIN_ID } from "@/app/evm/configs/networks";
+import { WALLETS, WALLET_TYPES } from "@/app/context/types";
+import actions from "@/app/redux/action";
 // import { WALLET_TYPES, WALLETS } from "../../context/types";
 // import { useGlobalContext } from "../../context/GlobalContext";
 // import { Divider } from "../Divider";
@@ -61,11 +65,11 @@ const ModalWallet = ({
   isShowing: boolean;
   hide: any;
 }) => {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
 
-  // const { setWalletConnected } = useGlobalContext();
+  const { setWalletConnected } = useGlobalContext();
 
-  // const { connect: connectEvm } = useWallet();
+  const { connect: connectEvm } = useWallet();
 
   //   const handleArgent = () => {};
 
@@ -76,51 +80,64 @@ const ModalWallet = ({
     setShowWallet(false);
   };
 
-  // const { available, connectors, connect, refresh } = useConnectors();
+  const { available, connectors, connect, refresh } = useConnectors();
 
   const [showWallet, setShowWallet] = useState(false);
 
   // Refresh to check for available connectors every 5 seconds.
-  // useEffect(() => {
-  //   const interval = setInterval(refresh, 5000);
-  //   return () => clearInterval(interval);
-  // }, [refresh]);
+  useEffect(() => {
+    const interval = setInterval(refresh, 5000);
+    return () => clearInterval(interval);
+  }, [refresh]);
 
-  // Handle connect wallet, alert if user haven't installed that wallet
-  // const handleConnect = async (
-  //   connector,
-  //   okx = false,
-  //   isEvm = false,
-  //   _chainId = CHAIN_ID.ZETA_TESTNET
-  // ) => {
-  //   if (okx) {
-  //     if (window.okxwallet.starknet.isConnected) {
-  //       setWalletConnected(
-  //         WALLETS.OKX,
-  //         window.okxwallet.starknet.selectedAddress,
-  //         WALLET_TYPES.STARKNET
-  //       );
-  //     }
-
-  //     const [address] = await window.okxwallet.starknet.enable();
-  //     setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
-  //   } else if (isEvm) {
-  //     connectEvm(connector, _chainId);
-  //     setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
-  //   } else {
-  //     const isWalletConnected = available.find(
-  //       (availableConnector) => availableConnector.id() === connector.id()
-  //     );
-  //     if (isWalletConnected) {
-  //       await connect(connector);
-  //       setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
-  //     } else alert(`Please install ${connector.id()} wallet!`);
-  //   }
-  //   localStorage.setItem("isEvm", isEvm);
-  //   localStorage.setItem("isOkx", okx);
-  //   dispatch(actions.setIsEvm(isEvm));
-  //   handleClose();
-  // };
+  //Handle connect wallet, alert if user haven't installed that wallet
+  const handleConnect = async ({
+    connector,
+    okx = false,
+    isEvm = false,
+    _chainId = CHAIN_ID.ZETA_TESTNET,
+  }: {
+    connector: any;
+    okx?: boolean;
+    isEvm?: boolean;
+    _chainId?: number;
+  }) => {
+    if (okx) {
+      if (typeof window === "undefined") {
+        return;
+      }
+      // @ts-ignore
+      if (window?.okxwallet.starknet.isConnected) {
+        setWalletConnected(
+          WALLETS.OKX,
+          // @ts-ignore
+          window?.okxwallet.starknet.selectedAddress,
+          WALLET_TYPES.STARKNET
+        );
+      }
+      // @ts-ignore
+      const [address] = await window?.okxwallet.starknet.enable();
+      setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
+    } else if (isEvm) {
+      connectEvm(connector, _chainId);
+      setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
+    } else {
+      const isWalletConnected = available.find(
+        // @ts-ignore
+        (availableConnector) => availableConnector.id() === connector.id()
+      );
+      if (isWalletConnected) {
+        await connect(connector);
+        setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
+      } else alert(`Please install ${connector.id()} wallet!`);
+    }
+    // @ts-ignore
+    localStorage.setItem("isEvm", isEvm);
+    // @ts-ignore
+    localStorage.setItem("isOkx", okx);
+    dispatch(actions.setIsEvm(isEvm));
+    handleClose();
+  };
 
   const useOutsideAlerter = (ref: any) => {
     useEffect(() => {
@@ -194,14 +211,14 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                // onClick={() =>
-                //   handleConnect(
-                //     injected,
-                //     false,
-                //     true,
-                //     CHAIN_ID.ZETA_TESTNET
-                //   )
-                // }
+                onClick={() =>
+                  handleConnect({
+                    connector: injected,
+                    okx: false,
+                    isEvm: true,
+                    _chainId: CHAIN_ID.ZETA_TESTNET,
+                  })
+                }
               >
                 <Image src="/zeta.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -210,14 +227,14 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                // onClick={() =>
-                //   handleConnect(
-                //     injected,
-                //     false,
-                //     true,
-                //     CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP
-                //   )
-                // }
+                onClick={() =>
+                  handleConnect({
+                    connector: injected,
+                    okx: false,
+                    isEvm: true,
+                    _chainId: CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP,
+                  })
+                }
               >
                 <Image src="/opside.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -229,7 +246,7 @@ const ModalWallet = ({
             <div className="flex px-6 pt-6 pb-9 flex-col items-start gap-[10px]">
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                // onClick={() => handleConnect(connectors[1])}
+                onClick={() => connect(connectors[1])}
               >
                 <Image src="/argent.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -238,7 +255,7 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                // onClick={() => handleConnect(connectors[0])}
+                onClick={() => connect(connectors[0])}
               >
                 <Image src="/braavos.jpg" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -247,7 +264,13 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                // onClick={() => handleConnect(undefined, true, false)}
+                onClick={() =>
+                  handleConnect({
+                    connector: undefined,
+                    okx: true,
+                    isEvm: false,
+                  })
+                }
               >
                 <Image src="/okx.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">OKX</span>
