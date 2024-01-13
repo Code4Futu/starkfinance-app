@@ -12,6 +12,7 @@ import {
 import { twMerge } from "tailwind-merge";
 import { SubDrawerItem } from "./SubDrawerItem";
 import { Popover } from "antd";
+import { useRouter } from "next/navigation";
 
 export const DrawerItem = ({
   item,
@@ -27,6 +28,7 @@ export const DrawerItem = ({
   handleSubMenuClick?: any;
 }) => {
   const [hover, setHover] = useState(false);
+  const router = useRouter();
 
   const mouseOver = () => {
     setHover(true);
@@ -118,10 +120,10 @@ export const DrawerItem = ({
               resize && "p-0"
             )}
             onClick={() => {
-              // if (item.id === 1) {
-              //   navigation(route.home);
-              // }
-              // handleDrawerClick(item.id);
+              if (item.id === 1) {
+                router.push("/");
+              }
+              handleDrawerClick(item.id);
             }}
           >
             <div className="flex items-center">
@@ -162,10 +164,10 @@ export const DrawerItem = ({
             resize && "p-0"
           )}
           onClick={() => {
-            // if (item.id === 1) {
-            //   navigation(route.home);
-            // }
-            // handleDrawerClick(item.id);
+            if (item.id === 1) {
+              router.push("/");
+            }
+            handleDrawerClick(item.id);
           }}
         >
           <div className="flex items-center">

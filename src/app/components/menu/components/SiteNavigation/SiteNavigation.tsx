@@ -3,14 +3,17 @@ import Image from "next/image";
 import clsx from "clsx";
 import { useAccount, useConnectors } from "@starknet-react/core";
 
-export const SiteNavigation = () => {
+export const SiteNavigation = ({
+  openModalConnect,
+}: {
+  openModalConnect: any;
+}) => {
   const { address } = useAccount();
-  const {connect, connectors} = useConnectors()
+  const { connect, connectors } = useConnectors();
   return (
     <div
       className={clsx(
         "flex justify-between lg:justify-end px-6 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]"
-        // !drawer.open ? "min-[1024px]:pl-[104px]" : "min-[1024px]:pl-[288px]"
       )}
     >
       <div className="flex items-center gap-2">
@@ -38,15 +41,12 @@ export const SiteNavigation = () => {
 
         <button
           className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-1 rounded-2xl border-0"
-          // onClick={() => setIsShowModalConnect(true)}
+          onClick={() => openModalConnect()}
         >
           <div className="w-[24px] h-[24px] relative hidden lg:block ">
             <Image src="/svg/connect-wallet.svg" fill alt="connect-wallet" />
           </div>
-          <div
-            className="text-md font-bold text-[#1A1C24] cursor-pointer"
-            onClick={() => connect(connectors[1])}
-          >
+          <div className="text-md font-bold text-[#1A1C24] cursor-pointer">
             {address
               ? `${address.slice(0, 4)}...${address.slice(-3)}`
               : "Connect Wallet"}

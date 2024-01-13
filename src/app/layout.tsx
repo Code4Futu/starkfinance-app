@@ -7,6 +7,7 @@ import Link from "next/link";
 import Menu from "./components/menu/Menu";
 import Head from "next/head";
 import { useEffect, useState } from "react";
+import { GlobalProvider } from "./context/GlobalProvider";
 
 export const metadata: Metadata = {
   title: "StarkFinance App",
@@ -46,7 +47,9 @@ export default function RootLayout({
       </head>
       <body>
         <StarknetProvider>
-          <Menu>{children}</Menu>
+          <GlobalProvider>
+            <Menu>{children}</Menu>
+          </GlobalProvider>
         </StarknetProvider>
       </body>
     </html>

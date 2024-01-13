@@ -378,3 +378,17 @@ input::placeholder {
 .button-hover-effect:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+.navbar-mobile-animation {
+  animation: slide-up-1 0.1s ease-out forwards;
+}
+
+@keyframes slide-up-1 {
+  from {
+    transform: translateY(80%);
+  }
+
+  to {
+    transform: translateY(0);
+  }
+}

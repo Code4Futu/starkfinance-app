@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   RightIcon,
   LeftIcon,
@@ -7,18 +7,96 @@ import {
   LogoWithText,
 } from "@/app/components/icons";
 import { DrawerItem } from "../DrawerItemDesktop";
+import { socialData, drawerData } from "../../drawData";
+import { usePathname } from "next/navigation";
+
+const drawData = drawerData;
+const sociData = socialData;
 
 export const DrawerDesktop = ({
   resizeDrawer,
   resizeToggle,
-  drawerData,
-  socialData,
+  isMobile,
 }: {
   resizeDrawer: any;
   resizeToggle: any;
-  drawerData: any;
-  socialData: any;
+  isMobile: boolean;
 }) => {
+  const [drawerData, setDrawerData] = useState<any>(drawData);
+  const [socialData, setSocicalData] = useState<any>(sociData);
+  const currentPath = usePathname();
+
+  useEffect(() => {
+    if (
+      currentPath === "/swap" ||
+      currentPath === "/liquidity" ||
+      currentPath === "/add" ||
+      currentPath === "/bridge"
+    ) {
+      const tempDrawerData = drawerData.map((item: any) => {
+        if (item.title === "Exchange" && isMobile) {
+          item.open = true;
+        }
+        return item;
+      });
+      setDrawerData(tempDrawerData);
+    }
+  }, [currentPath]);
+
+  const handleSubMenuClick = (id: number, itemTitle: string) => {
+    if (resizeDrawer) return;
+    const tempDrawerData = drawerData.map((item: any) => {
+      if (item.id === id && item.items.includes(itemTitle)) {
+        if (item.id !== id && item.open === true) {
+          item.open = false;
+        }
+        if (item.id === id) {
+          item.open = true;
+        } else {
+          item.open = false;
+        }
+      }
+      return item;
+    });
+    setDrawerData(tempDrawerData);
+  };
+
+  const handleDrawerClick = (id: number) => {
+    if (resizeDrawer) return;
+    let tempDrawerData = [];
+    if (drawerData.find((item: any) => item.id === id).items.length > 0) {
+      tempDrawerData = drawerData.map((item: any) => {
+        if (item.id === id && item.items.length > 0) {
+          item.open = true;
+        }
+        return item;
+      });
+    } else {
+      tempDrawerData = drawerData.map((item: any) => {
+        if (item.id !== id && item.open === true) {
+          item.open = false;
+        }
+        if (item.id === id) {
+          item.open = true;
+        }
+        return item;
+      });
+    }
+    setDrawerData(tempDrawerData);
+  };
+
+  const handleSocialClick = (id: number) => {
+    if (resizeDrawer) return;
+    let tempSocialData = [];
+    tempSocialData = socialData.map((item: any) => {
+      if (item.id === id && item.items.length > 0) {
+        item.open = true;
+      }
+      return item;
+    });
+    setSocicalData(tempSocialData);
+  };
+
   return (
     <div
       className={clsx(
@@ -33,10 +111,10 @@ export const DrawerDesktop = ({
             <DrawerItem
               key={item.id}
               item={item}
-              // handleDrawerClick={handleDrawerClick}
+              handleDrawerClick={handleDrawerClick}
               resize={resizeDrawer}
-              // currentPath={currentPath}
-              // handleSubMenuClick={handleSubMenuClick}
+              currentPath={currentPath}
+              handleSubMenuClick={handleSubMenuClick}
             />
           ))}
         </div>
@@ -47,10 +125,10 @@ export const DrawerDesktop = ({
             <DrawerItem
               key={item.id}
               item={item}
-              //   handleDrawerClick={handleSocialClick}
+              handleDrawerClick={handleSocialClick}
               resize={resizeDrawer}
-              //   currentPath={currentPath}
-              //   handleSubMenuClick={handleSubMenuClick}
+              currentPath={currentPath}
+              handleSubMenuClick={handleSubMenuClick}
             />
           ))}
         </div>
