@@ -499,7 +499,7 @@ export const SwapPage = () => {
 		>
 			<div
 				className={twMerge(
-					"flex flex-row justify-center items-center gap-6 lg:max-h-[514px] lg:flex-col lg:flex-row lg:hidden",
+					"flex flex-row justify-center items-center gap-6 lg:max-h-[514px] lg:flex-col lg:hidden",
 					currentPath === "/bridge" && "flex-col"
 				)}
 			>

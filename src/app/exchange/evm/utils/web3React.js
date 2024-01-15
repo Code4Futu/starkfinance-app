@@ -16,7 +16,7 @@ export const connectorByNames = {
 
 export const simpleRpcProvider = new StaticJsonRpcProvider(rpcNode);
 
-export const getNetwork = (chainId: number) => {
+export const getNetwork = (chainId) => {
   switch (chainId) {
     case CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP:
       return NETWORKS_SUPPORTED[CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP];
@@ -26,11 +26,10 @@ export const getNetwork = (chainId: number) => {
   }
 };
 
-export const setupDefaultNetwork = async (chainId: number) => {
+export const setupDefaultNetwork = async (chainId) => {
   const network = getNetwork(chainId);
   const rpc = sample(network.rpc);
-  // @ts-ignore
-  const provider = window?.ethereum;
+  const provider = window.ethereum;
   const _chainId = `0x${network.chainId.toString(16)}`;
   if (provider) {
     try {

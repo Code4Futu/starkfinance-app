@@ -370,52 +370,52 @@ const PairComponent = ({ index, pairAddress, isMobile, loading }) => {
 	const [token0Reserve, setToken0Reserve] = useState(0);
 	const [token1Reserve, setToken1Reserve] = useState(0);
 
-	useEffect(() => {
-		const fetchData = async () => {
-			const pairContract = new Contract(pairabi, pairAddress, provider);
-			let token0_address = await pairContract.call("token0");
-			let token1_address = await pairContract.call("token1");
-			let token0AddressValue = number.toHex(token0_address.address);
-			let token1AddressValue = number.toHex(token1_address.address);
-			setToken0Address(token0AddressValue);
-			setToken1Address(token1AddressValue);
-			if (index) {
-				pairsSymbol[index]["token0AddressData"] = token0AddressValue.toString();
-				pairsSymbol[index]["token1AddressData"] = token1AddressValue.toString();
-			}
-			const token0ContractObj = new Contract(
-				erc20abi,
-				token0AddressValue,
-				provider
-			);
-			let token0_decimals = await token0ContractObj.call("decimals");
-			console.log(token0_decimals);
-			let token0DecimalsValue = token0_decimals.decimals.words[0];
+	// useEffect(() => {
+	// 	const fetchData = async () => {
+	// 		const pairContract = new Contract(pairabi, pairAddress, provider);
+	// 		let token0_address = await pairContract.call("token0");
+	// 		let token1_address = await pairContract.call("token1");
+	// 		let token0AddressValue = number.toHex(token0_address.address);
+	// 		let token1AddressValue = number.toHex(token1_address.address);
+	// 		setToken0Address(token0AddressValue);
+	// 		setToken1Address(token1AddressValue);
+	// 		if (index) {
+	// 			pairsSymbol[index]["token0AddressData"] = token0AddressValue.toString();
+	// 			pairsSymbol[index]["token1AddressData"] = token1AddressValue.toString();
+	// 		}
+	// 		const token0ContractObj = new Contract(
+	// 			erc20abi,
+	// 			token0AddressValue,
+	// 			provider
+	// 		);
+	// 		let token0_decimals = await token0ContractObj.call("decimals");
+	// 		console.log(token0_decimals);
+	// 		let token0DecimalsValue = token0_decimals.decimals.words[0];
 
-			const token1ContractObj = new Contract(
-				erc20abi,
-				token1AddressValue,
-				provider
-			);
-			let token1_decimals = await token1ContractObj.call("decimals");
-			let token1DecimalsValue = token1_decimals.decimals.words[0];
-			//
-			let reserves = await pairContract.call("get_reserves");
-			setToken0Reserve(
-				getTokenAmountInEther(
-					uint256.uint256ToBN(reserves.reserve0).toString(),
-					token0DecimalsValue
-				)
-			);
-			setToken1Reserve(
-				getTokenAmountInEther(
-					uint256.uint256ToBN(reserves.reserve1).toString(),
-					token1DecimalsValue
-				)
-			);
-		};
-		fetchData();
-	}, []);
+	// 		const token1ContractObj = new Contract(
+	// 			erc20abi,
+	// 			token1AddressValue,
+	// 			provider
+	// 		);
+	// 		let token1_decimals = await token1ContractObj.call("decimals");
+	// 		let token1DecimalsValue = token1_decimals.decimals.words[0];
+	// 		//
+	// 		let reserves = await pairContract.call("get_reserves");
+	// 		setToken0Reserve(
+	// 			getTokenAmountInEther(
+	// 				uint256.uint256ToBN(reserves.reserve0).toString(),
+	// 				token0DecimalsValue
+	// 			)
+	// 		);
+	// 		setToken1Reserve(
+	// 			getTokenAmountInEther(
+	// 				uint256.uint256ToBN(reserves.reserve1).toString(),
+	// 				token1DecimalsValue
+	// 			)
+	// 		);
+	// 	};
+	// 	fetchData();
+	// }, []);
 
 	return (
 		<Transaction
