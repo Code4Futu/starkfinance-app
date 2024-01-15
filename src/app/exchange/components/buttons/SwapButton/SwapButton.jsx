@@ -5,7 +5,10 @@ export const SwapButton = ({
 	submitting,
 	warningPriceImpact,
 	loadingPool,
+	isSwap = true,
 }) => {
+	const text = isSwap ? "Swap" : "Add Liquidity";
+
 	return (
 		<Button
 			className="button-linear-1 flex items-center justify-center gap-1 self-stretch rounded-2xl px-6 py-3 h-[43px] border-none"
@@ -18,8 +21,8 @@ export const SwapButton = ({
 				{loadingPool
 					? "Loading pool"
 					: warningPriceImpact
-					? "Swap anyway"
-					: "Swap"}
+					? `${text} anyway`
+					: `${text}`}
 			</span>
 		</Button>
 	);

@@ -23,9 +23,11 @@ import { swapCallback, useDerivedSwapInfo } from "@/app/exchange/state/swap";
 import { SwapButton } from "../../components/buttons";
 import SettingChartModal from "../../components/modals/settings-modal/SettingModalChart";
 import SelectTokenModal from "../../components/modals/select-token-modal/SelectTokenModal";
+import { useWeb3Store } from "@/app/store";
 
 export default function SwapForm() {
 	const { account, isConnected, address } = useAccount();
+	const web3State = useWeb3Store();
 
 	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
 		[Field.INPUT]: WETH[APP_CHAIN_ID],
@@ -34,10 +36,7 @@ export default function SwapForm() {
 
 	const [typedValue, setTypedValue] = useState("");
 	const [independentField, setIndependentField] = useState<Field>(Field.INPUT);
-	const [reloadPool, setReloadPool] = useState<boolean>(false);
-	// const [poolInfo, setPoolInfo] = useState<PoolState>(EmptyPool);
 	const [submitting, setSubmitting] = useState<boolean>(false);
-	const [tokensNeedApproved, setTokensNeedApproved] = useState<Token[]>([]);
 	const [slippage, setSlippage] = useState<string>("0.5");
 	const [disabledMultihops, setDisabledMultihops] = useState<boolean>(false);
 	const [isCheckedHighPriceImpact, setIsCheckedHighPriceImpact] =
@@ -47,7 +46,7 @@ export default function SwapForm() {
 	const [isShowTokenModal, setIsShowTokenModal] = useState(false);
 
 	const { data: balances } = useSWR<(TokenAmount | undefined)[]>(
-		[address, tokens[Field.INPUT], tokens[Field.OUTPUT]],
+		[address, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
 		async () => {
 			if (!address || !isConnected) return [];
 			const provider = SN_RPC_PROVIDER();
@@ -74,6 +73,7 @@ export default function SwapForm() {
 			typedValue,
 			independentField,
 			disabledMultihops,
+			web3State.txHash,
 		],
 		() =>
 			!account
@@ -128,8 +128,8 @@ export default function SwapForm() {
 	const onSwapCallback = useCallback(async () => {
 		try {
 			setSubmitting(true);
-			await swapCallback(account, address, trade, +slippage);
-			setReloadPool((pre) => !pre);
+			const tx = await swapCallback(account, address, trade, +slippage);
+			useWeb3Store.setState({ ...web3State, txHash: tx?.transaction_hash });
 			setSubmitting(false);
 			setTypedValue("");
 		} catch (error) {

@@ -24,13 +24,13 @@ import Breadcrumbs from "@/app/components/Breadcrumbs";
 
 export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const { account, address } = useAccount();
-	const txHash = useWeb3Store((s) => s.txHash);
+	const web3State = useWeb3Store();
 
 	const { data: launchpadStatistics, isLoading: launchpadStatisticsLoading } =
 		useSWR<{
 			participants: string | undefined;
 			committed: string | undefined;
-		}>([launchpad.address, txHash], async () => {
+		}>([launchpad.address, web3State.txHash], async () => {
 			try {
 				const launchpadStatistics = await StarknetRpcProvider.callContract({
 					contractAddress: launchpad.address,
@@ -60,7 +60,12 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			claimedCount: string | undefined;
 			lastCommittedTime: string | undefined;
 		}>(
-			[launchpad.address, launchpad.tokenRaise.address, address, txHash],
+			[
+				launchpad.address,
+				launchpad.tokenRaise.address,
+				address,
+				web3State.txHash,
+			],
 			async () => {
 				try {
 					const [tokenRaiseBalance, userStats] = await Promise.all([
@@ -230,7 +235,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 			const tx = await account.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
-			useWeb3Store.setState({ txHash: tx.transaction_hash });
+			useWeb3Store.setState({ ...web3State, txHash: tx.transaction_hash });
 			setCommitAmount("");
 			setSubmitting(false);
 			toast.success(`Commit success. TxHash is ${tx.transaction_hash}`);
@@ -257,7 +262,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			];
 			const tx = await account.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
-			useWeb3Store.setState({ txHash: tx.transaction_hash });
+			useWeb3Store.setState({ ...web3State, txHash: tx.transaction_hash });
 			setClaiming(false);
 			toast.success(`Claim success. TxHash is ${tx.transaction_hash}`);
 		} catch (error: any) {
@@ -283,7 +288,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			];
 			const tx = await account.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
-			useWeb3Store.setState({ txHash: tx.transaction_hash });
+			useWeb3Store.setState({ ...web3State, txHash: tx.transaction_hash });
 			setClaimingRemaining(false);
 			toast.success(
 				`Claim remaining success. TxHash is ${tx.transaction_hash}`
@@ -320,7 +325,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				const tx = await account.execute(calls);
 				await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 				modalRef.current.click();
-				useWeb3Store.setState({ txHash: tx.transaction_hash });
+				useWeb3Store.setState({ ...web3State, txHash: tx.transaction_hash });
 				setStakingNft(false);
 				toast.success(`Stake NFT success. TxHash is ${tx.transaction_hash}`);
 			} catch (error: any) {
@@ -471,6 +476,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							<div className="flex justify-between">
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
@@ -479,6 +485,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
@@ -487,6 +494,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
@@ -495,6 +503,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
+										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
