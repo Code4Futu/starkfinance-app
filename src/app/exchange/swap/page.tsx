@@ -122,7 +122,7 @@ function getDeadlineTime() {
 	return newUnixTimeSeconds;
 }
 
-export const FormSwap = ({
+const FormSwap = ({
 	historicalPrices,
 	setHistoricalPrices,
 	setVol,
@@ -373,7 +373,7 @@ export const FormSwap = ({
 	return <SwapForm />;
 };
 
-export const SwapPage = () => {
+const SwapPage = () => {
 	const { account, address, status } = useCurrentAccount();
 	const [vol, setVol] = useState(0);
 	const [historicalPrices, setHistoricalPrices] = useState<any[]>([]);
@@ -493,7 +493,7 @@ export const SwapPage = () => {
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6 px-6 py-6 text-white mb-[80px] max-[480px]:items-center md:mb-[80px] md:items-center lg:mb-0 lg:py-[72px]",
+				"flex w-full flex-col gap-6 text-white max-[480px]:items-center md:items-center ",
 				currentPath === "/bridge" && "lg:pt-[222px]"
 			)}
 		>

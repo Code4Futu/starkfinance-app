@@ -1,5 +1,7 @@
 "use client";
 
+// @ts-ignore
+
 import { useState, useEffect, useRef } from "react";
 import { RpcProvider, Contract, uint256, number } from "starknet";
 import BigNumber from "bignumber.js";
@@ -27,7 +29,7 @@ const provider = new RpcProvider({
 });
 
 // randomed not truth
-export const tokenNameSymbol = [
+const tokenNameSymbol = [
 	{
 		name: "WBTC",
 		id: "bitcoin",
@@ -86,9 +88,9 @@ export const tokenNameSymbol = [
 	},
 ];
 
-var pairsSymbol = [];
+var pairsSymbol: any[] = [];
 
-function findTokenPriceByName(tokenName) {
+function findTokenPriceByName(tokenName: any) {
 	for (let i = 0; i < tokenNameSymbol.length; i++) {
 		if (tokenNameSymbol[i].name == tokenName) {
 			return tokenNameSymbol[i].price;
@@ -97,13 +99,13 @@ function findTokenPriceByName(tokenName) {
 	return 1;
 }
 
-function getTokenAmountInEther(amount, decimals) {
+function getTokenAmountInEther(amount: any, decimals: number) {
 	const tokenAmountInWei = new BigNumber(amount);
 	const etherAmount = tokenAmountInWei.dividedBy(new BigNumber(10 ** decimals));
 	return etherAmount.toFixed(6);
 }
 
-function hex2a(hexx) {
+function hex2a(hexx: any) {
 	var hex = hexx.toString(); //force conversion
 	var str = "";
 	for (var i = 0; i < hex.length; i += 2)
@@ -116,7 +118,7 @@ const TVLComponent = ({
 	token1Symbol,
 	token0Reserve,
 	token1Reserve,
-}) => {
+}: any) => {
 	const [token0TVL, setToken0TVL] = useState(0);
 	const [token1TVL, setToken1TVL] = useState(0);
 	const [TVL, setTVL] = useState(0);
@@ -134,13 +136,13 @@ const TVLComponent = ({
 				style: "currency",
 				currency: "USD",
 				minimumFractionDigits: 2,
-			})
+			}) as any
 		);
 	}, [token0TVL, token1TVL]);
 	return <>{TVL}</>;
 };
 
-const HeaderMobile = ({ activeTab, handleActiveTab }) => {
+const HeaderMobile = ({ activeTab, handleActiveTab }: any) => {
 	return (
 		<div className="flex w-full flex-col items-start gap-3">
 			<div className="flex w-full items-start gap-3">
@@ -152,6 +154,7 @@ const HeaderMobile = ({ activeTab, handleActiveTab }) => {
 							"bg-transparent border-[1px] border-[#2D313E] text-[#f1f1f1] hover:text-[#24c3bc] btn"
 					)}
 					onClick={() => handleActiveTab(true)}
+					textStyle=""
 				/>
 				<DefaultButton
 					onClick={() => handleActiveTab(false)}
@@ -161,13 +164,14 @@ const HeaderMobile = ({ activeTab, handleActiveTab }) => {
 						activeTab &&
 							"bg-transparent border-[1px] border-[#2D313E] text-[#f1f1f1] hover:text-[#24c3bc] btn"
 					)}
+					textStyle=""
 				/>
 			</div>
 		</div>
 	);
 };
 
-const HeaderDesktop = ({ activeTab, handleActiveTab }) => {
+const HeaderDesktop = ({ activeTab, handleActiveTab }: any) => {
 	return (
 		<div className="flex w-full flex-row justify-between gap-3">
 			<div className="flex gap-3">
@@ -179,6 +183,7 @@ const HeaderDesktop = ({ activeTab, handleActiveTab }) => {
 						!activeTab &&
 							"bg-transparent border-[1px] border-[#2D313E] text-[#f1f1f1] hover:text-[#24c3bc] btn"
 					)}
+					textStyle=""
 				/>
 				<DefaultButton
 					onClick={() => handleActiveTab(false)}
@@ -188,6 +193,7 @@ const HeaderDesktop = ({ activeTab, handleActiveTab }) => {
 							"bg-transparent border-[1px] border-[#2D313E] text-[#f1f1f1] hover:text-[#24c3bc] btn"
 					)}
 					title="My Pools"
+					textStyle=""
 				/>
 			</div>
 		</div>
@@ -203,18 +209,18 @@ const Transaction = ({
 	token1Reserve,
 	isMobile,
 	loading,
-}) => {
+}: any) => {
 	const { status } = useCurrentAccount();
 	// Get token symbols
 	const [token0Symbol, setToken0Symbol] = useState(" - ");
 	const [token1Symbol, setToken1Symbol] = useState(" - ");
 	// const navigation = useNavigate();
 
-	function useImages(sources) {
+	function useImages(sources: any) {
 		const imageRefs = useRef(sources.map(() => new Image()));
 
 		useEffect(() => {
-			sources.forEach((src, index) => {
+			sources.forEach((src: any, index: number) => {
 				imageRefs.current[index].src = src;
 			});
 		}, [sources]);
@@ -231,7 +237,8 @@ const Transaction = ({
 					provider
 				);
 				let token0_symbol = await token0ContractObj.call("symbol");
-				let token0SymbolValue = hex2a(number.toHex(token0_symbol.symbol));
+
+				let token0SymbolValue = hex2a(number.toHex(token0_symbol.toString()));
 				setToken0Symbol(token0SymbolValue);
 				const token1ContractObj = new Contract(
 					erc20abi,
@@ -239,7 +246,7 @@ const Transaction = ({
 					provider
 				);
 				let token1_symbol = await token1ContractObj.call("symbol");
-				let token1SymbolValue = hex2a(number.toHex(token1_symbol.symbol));
+				let token1SymbolValue = hex2a(number.toHex(token1_symbol.toString()));
 				setToken1Symbol(token1SymbolValue);
 				if (token0SymbolValue && token1SymbolValue && index) {
 					pairsSymbol[index]["token0SymbolData"] =
@@ -251,7 +258,7 @@ const Transaction = ({
 		fetchData();
 	}, [token0Address, token1Address]);
 
-	const checkIcon = (name) => {
+	const checkIcon = (name: string) => {
 		switch (name) {
 			case "ETH":
 				return icons.v2.eth_logo.src;
@@ -360,7 +367,7 @@ const Transaction = ({
 	);
 };
 
-const PairComponent = ({ index, pairAddress, isMobile, loading }) => {
+const PairComponent = ({ index, pairAddress, isMobile, loading }: any) => {
 	const { address, status } = useCurrentAccount();
 	// Get token addresses
 	const [token0Address, setToken0Address] = useState();
@@ -431,7 +438,7 @@ const PairComponent = ({ index, pairAddress, isMobile, loading }) => {
 	);
 };
 
-const TransactionDesktop = ({ allPairs, loading }) => {
+const TransactionDesktop = ({ allPairs, loading }: any) => {
 	return (
 		<div className="flex w-full flex-col">
 			<div className="flex items-center justify-between self-stretch">
@@ -468,7 +475,7 @@ const TransactionDesktop = ({ allPairs, loading }) => {
 			) : allPairs.length === 0 ? (
 				<>No Liquidity</>
 			) : (
-				allPairs.map((pool, index) => {
+				allPairs.map((pool: any, index: number) => {
 					return (
 						<PairComponent
 							loading={loading}
@@ -483,7 +490,7 @@ const TransactionDesktop = ({ allPairs, loading }) => {
 	);
 };
 
-const TransactionMobile = ({ allPairs, loading }) => {
+const TransactionMobile = ({ allPairs, loading }: any) => {
 	return (
 		<div className="flex w-full flex-col gap-3">
 			<div className="flex items-center justify-between self-stretch">
@@ -512,7 +519,7 @@ const TransactionMobile = ({ allPairs, loading }) => {
 				) : allPairs.length === 0 ? (
 					<>No Liquidity</>
 				) : (
-					allPairs.map((pool, index) => {
+					allPairs.map((pool: any, index: number) => {
 						return (
 							<PairComponent
 								loading={loading}
@@ -529,7 +536,7 @@ const TransactionMobile = ({ allPairs, loading }) => {
 	);
 };
 
-export const LiquidityPage = () => {
+const LiquidityPage = () => {
 	const { address, status } = useCurrentAccount();
 	// 1. get_all_pairs​ in FACTORY
 	const [allPairs, setAllPairs] = useState([]);
@@ -545,46 +552,46 @@ export const LiquidityPage = () => {
 				provider
 			);
 			let all_pairs = await factoryContract.call("get_all_pairs");
-			let tempAllPairs = all_pairs.all_pairs;
-			let tempArr = [];
-			pairsSymbol = [];
-			for (let index = 0; index < tempAllPairs.length; index++) {
-				let pair = number.toHex(tempAllPairs[index]);
-				tempArr.push(pair);
-				const pairContract = new Contract(pairabi, pair, provider);
-				let token0_address = await pairContract.call("token0");
-				let token1_address = await pairContract.call("token1");
-				let token0AddressValue = number
-					.toHex(token0_address.address)
-					.toString();
-				let token1AddressValue = number
-					.toHex(token1_address.address)
-					.toString();
-				const token0ContractObj = new Contract(
-					erc20abi,
-					token0AddressValue,
-					provider
-				);
-				let token0_symbol = await token0ContractObj.call("symbol");
-				let token0SymbolValue = hex2a(number.toHex(token0_symbol.symbol));
-				const token1ContractObj = new Contract(
-					erc20abi,
-					token1AddressValue,
-					provider
-				);
-				let token1_symbol = await token1ContractObj.call("symbol");
-				let token1SymbolValue = hex2a(number.toHex(token1_symbol.symbol));
-				pairsSymbol.push({
-					pairAddress: pair,
-					token0AddressData: token0AddressValue,
-					token1AddressData: token1AddressValue,
-					token0SymbolData: token0SymbolValue,
-					token1SymbolData: token1SymbolValue,
-				});
-			}
-			setAllPairs(tempArr);
-			setTotalItems(tempArr.length);
-			setLoading(false);
+			// let tempAllPairs = all_pairs.re;
+			// let tempArr = [];
+			// pairsSymbol = [];
+			// for (let index = 0; index < tempAllPairs.length; index++) {
+			// 	let pair = number.toHex(tempAllPairs[index]);
+			// 	tempArr.push(pair);
+			// 	const pairContract = new Contract(pairabi, pair, provider);
+			// 	let token0_address = await pairContract.call("token0");
+			// 	let token1_address = await pairContract.call("token1");
+			// 	let token0AddressValue = number
+			// 		.toHex(token0_address.address)
+			// 		.toString();
+			// 	let token1AddressValue = number
+			// 		.toHex(token1_address.address)
+			// 		.toString();
+			// 	const token0ContractObj = new Contract(
+			// 		erc20abi,
+			// 		token0AddressValue,
+			// 		provider
+			// 	);
+			// 	let token0_symbol = await token0ContractObj.call("symbol");
+			// 	let token0SymbolValue = hex2a(number.toHex(token0_symbol.symbol));
+			// 	const token1ContractObj = new Contract(
+			// 		erc20abi,
+			// 		token1AddressValue,
+			// 		provider
+			// 	);
+			// 	let token1_symbol = await token1ContractObj.call("symbol");
+			// 	let token1SymbolValue = hex2a(number.toHex(token1_symbol.symbol));
+			// 	pairsSymbol.push({
+			// 		pairAddress: pair,
+			// 		token0AddressData: token0AddressValue,
+			// 		token1AddressData: token1AddressValue,
+			// 		token0SymbolData: token0SymbolValue,
+			// 		token1SymbolData: token1SymbolValue,
+			// 	});
+			// }
+			// setAllPairs(tempArr);
+			// setTotalItems(tempArr.length);
+			// setLoading(false);
 		};
 		fetchData();
 	}, []);
@@ -596,7 +603,7 @@ export const LiquidityPage = () => {
 	// 	else setActiveTab(true);
 	// }, [params]);
 
-	const handleActiveTab = (status) => {
+	const handleActiveTab = (status: any) => {
 		setActiveTab(status);
 	};
 
@@ -604,7 +611,7 @@ export const LiquidityPage = () => {
 	const [pageSize, setPageSize] = useState(10);
 	const [totalItems, setTotalItems] = useState(0);
 
-	const handleChange = (newCurrentPage, newPageSize) => {
+	const handleChange = (newCurrentPage: number, newPageSize: number) => {
 		setCurrentPage(newCurrentPage);
 		setPageSize(newPageSize);
 	};
