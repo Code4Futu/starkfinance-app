@@ -1,4 +1,5 @@
 import { Percent, JSBI, Token } from "@uniswap/sdk";
+import icons from "../../assets/icons";
 
 export const CHAIN_ID = {
   // ZETA_MAINNET: 7000,
@@ -109,14 +110,14 @@ export const TOKEN_LIST = {
 
 export const TOKEN_ICON_LIST = {
   [CHAIN_ID.ZETA_TESTNET]: {
-    [WETH[CHAIN_ID.ZETA_TESTNET].address]: "/zeta.png",
-    "0xC05a487a9c4c9B155F4B39117bB854D1E792B210": "/svg/bitcoin.svg",
-    "0x0439187Ab4a0E43B7E726482871df480Deb870b9": "/svg/eth.svg",
-    "0x17ff5320C6fE629730dEAC6Ff0FD795246cfdD06": "/snt.png",
+    [WETH[CHAIN_ID.ZETA_TESTNET].address]: icons.v2.zeta,
+    "0xC05a487a9c4c9B155F4B39117bB854D1E792B210": icons.v2.btc,
+    "0x0439187Ab4a0E43B7E726482871df480Deb870b9": icons.v2.eth,
+    "0x17ff5320C6fE629730dEAC6Ff0FD795246cfdD06": icons.v2.snt_token,
   },
   [CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP]: {
-    [WETH[CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP].address]: "/opside.png",
-    "0x87Bc2d3a2eDBbE8Df5f6929Be15A4A87879Aa5FB": "/svg/bitcoin.svg",
+    [WETH[CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP].address]: icons.v2.opside,
+    "0x87Bc2d3a2eDBbE8Df5f6929Be15A4A87879Aa5FB": icons.v2.btc,
   },
 };
 

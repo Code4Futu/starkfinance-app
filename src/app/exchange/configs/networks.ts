@@ -1,6 +1,7 @@
 import { StarknetChainId, Token, Percent, JSBI } from "l0k_swap-sdk";
 import sample from "lodash/sample";
 import { RpcProvider } from "starknet";
+import icons from "../assets/icons";
 
 export const APP_CHAIN_ID =
 	process.env.NODE_ENV === "production"
@@ -42,9 +43,17 @@ export const WETH = {
 };
 
 // used to construct intermediary pairs for trading
-export const BASES_TO_CHECK_TRADES_AGAINST = [WETH];
+export const BASES_TO_CHECK_TRADES_AGAINST = {
+	[StarknetChainId.MAINNET]: [WETH[StarknetChainId.MAINNET]],
+	[StarknetChainId.TESTNET]: [WETH[StarknetChainId.TESTNET]],
+};
 
-export const CUSTOM_BASES = {};
+export const CUSTOM_BASES: {
+	[key in StarknetChainId]: { [key: string]: Token[] };
+} = {
+	[StarknetChainId.MAINNET]: {},
+	[StarknetChainId.TESTNET]: {},
+};
 
 export const TOKEN_LIST = {
 	[StarknetChainId.MAINNET]: [WETH[StarknetChainId.MAINNET]],
@@ -71,16 +80,13 @@ export const TOKEN_LIST = {
 };
 
 export const TOKEN_ICON_LIST = {
-	// [CHAIN_ID.ZETA_TESTNET]: {
-	// 	[WETH[CHAIN_ID.ZETA_TESTNET].address]: icons.v2.zeta,
-	// 	"0xC05a487a9c4c9B155F4B39117bB854D1E792B210": icons.v2.btc,
-	// 	"0x0439187Ab4a0E43B7E726482871df480Deb870b9": icons.v2.eth,
-	// 	"0x17ff5320C6fE629730dEAC6Ff0FD795246cfdD06": icons.v2.snt_token,
-	// },
-	// [CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP]: {
-	// 	[WETH[CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP].address]: icons.v2.opside,
-	// 	"0x87Bc2d3a2eDBbE8Df5f6929Be15A4A87879Aa5FB": icons.v2.btc,
-	// },
+	[StarknetChainId.MAINNET]: {
+		[WETH[StarknetChainId.MAINNET].address]: icons.v2.eth.src,
+	},
+	[StarknetChainId.TESTNET]: {
+		[WETH[StarknetChainId.TESTNET].address]: icons.v2.eth.src,
+		[TOKEN_LIST[StarknetChainId.TESTNET][1].address]: icons.v2.usdc.src,
+	},
 };
 
 export const UNKNOWN_TOKEN_ICON =
@@ -93,13 +99,13 @@ export const UNKNOWN_TOKEN_ICON =
 // };
 
 export const FACTORY_ADDRESS = {
-	// [StarknetChainId.MAINNET]: "",
+	[StarknetChainId.MAINNET]: "",
 	[StarknetChainId.TESTNET]:
 		"0x13933db8e632249d1593b79b2146b7faddb17e2b6c5bd4de64702f66c9301e0",
 };
 
 export const ROUTER_ADDRESS = {
-	// [StarknetChainId.MAINNET]: "",
+	[StarknetChainId.MAINNET]: "",
 	[StarknetChainId.TESTNET]:
 		"0x56470159c6c0816ebf3ddbf021e22fb48e65e5b79e0617d425b2b153acc19",
 };
@@ -125,3 +131,9 @@ export const BIPS_BASE = JSBI.BigInt(10000);
 
 export const SN_RPC_PROVIDER = () =>
 	new RpcProvider({ nodeUrl: sample(NETWORKS_SUPPORTED[APP_CHAIN_ID].rpc)! });
+
+export const getTokenIcon = (address: string | undefined) => {
+	return address
+		? TOKEN_ICON_LIST[APP_CHAIN_ID][address] ?? UNKNOWN_TOKEN_ICON
+		: UNKNOWN_TOKEN_ICON;
+};

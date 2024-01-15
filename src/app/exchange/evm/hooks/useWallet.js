@@ -37,8 +37,8 @@ export const useWallet = () => {
   }, [error, activate, currentConnector, chainId, refresh]);
 
   const connect = useCallback(
-    async (connector: any, _chainId = CHAIN_ID.ZETA_TESTNET) => {
-      (chainIdRef as any).current = _chainId;
+    async (connector, _chainId = CHAIN_ID.ZETA_TESTNET) => {
+      chainIdRef.current = _chainId;
       setCurrentConnector(connector);
       setRefresh((pre) => !pre);
       activate(connector);

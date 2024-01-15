@@ -5,12 +5,12 @@ import { Divider } from "../../Divider";
 import Image from "next/image";
 
 // import { useWallet } from "../../evm/hooks/useWallet";
-import { injected } from "@/app/evm/utils/web3React";
-import { useDispatch } from "react-redux";
+import { injected } from "@/app/exchange/evm/utils/web3React";
+// import { useDispatch } from "react-redux";
 import { useGlobalContext } from "@/app/context/GlobalContext";
-import { useWallet } from "@/app/evm/hooks/useWallet";
+import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
 // import actions from "../../redux/action";
-import { CHAIN_ID } from "@/app/evm/configs/networks";
+import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
 import { WALLETS, WALLET_TYPES } from "@/app/context/types";
 import actions from "@/app/redux/action";
 // import { WALLET_TYPES, WALLETS } from "../../context/types";
@@ -65,7 +65,7 @@ const ModalWallet = ({
   isShowing: boolean;
   hide: any;
 }) => {
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const { setWalletConnected } = useGlobalContext();
 
@@ -124,7 +124,7 @@ const ModalWallet = ({
     } else {
       const isWalletConnected = available.find(
         // @ts-ignore
-        (availableConnector) => availableConnector.id() === connector.id()
+        (availableConnector) => availableConnector.id === connector.id
       );
       if (isWalletConnected) {
         await connect(connector);
@@ -135,7 +135,8 @@ const ModalWallet = ({
     localStorage.setItem("isEvm", isEvm);
     // @ts-ignore
     localStorage.setItem("isOkx", okx);
-    dispatch(actions.setIsEvm(isEvm));
+    // dispatch(actions.setIsEvm(isEvm));
+
     handleClose();
   };
 
@@ -246,7 +247,7 @@ const ModalWallet = ({
             <div className="flex px-6 pt-6 pb-9 flex-col items-start gap-[10px]">
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                onClick={() => connect(connectors[1])}
+                onClick={() => handleConnect({connector: connectors[1]})}
               >
                 <Image src="/argent.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -255,7 +256,7 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                onClick={() => connect(connectors[0])}
+                onClick={() =>handleConnect({connector: connectors[0]})}
               >
                 <Image src="/braavos.jpg" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
