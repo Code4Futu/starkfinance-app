@@ -1,3 +1,5 @@
+"use client";
+
 import { useState } from "react";
 import icons from "@/app/exchange/assets/icons";
 import { Divider } from "@/app/exchange/components/Divider";
@@ -6,16 +8,10 @@ import { ExampleChart } from "./ExampleChart";
 import { twMerge } from "tailwind-merge";
 // import { ChartBar } from "../../../../components/modals/chart-bar-modal/components/Chart";
 
-export const ChartDesktop = ({
-	vol,
-	dateCurrent,
-	token0,
-	token1,
-	handleChangeToken,
-}) => {
+export const ChartDesktop = () => {
 	const [time, setTime] = useState("24h");
 
-	const checkIcon = (name) => {
+	const checkIcon = (name: string) => {
 		switch (name) {
 			case "ETH":
 				return icons.v2.eth_logo.src;
@@ -40,20 +36,20 @@ export const ChartDesktop = ({
 			<div className="flex items-end justify-between self-stretch">
 				<div className="flex items-center gap-[6px]">
 					<img
-						src={checkIcon(token0.name)}
+						// src={checkIcon(token0.name)}
 						alt="Starknet Logo"
 						className="h-6 w-6"
 					/>
 					<img
-						src={checkIcon(token1.name)}
+						// src={checkIcon(token1.name)}
 						alt="Starknet Logo"
 						className="h-6 w-6"
 					/>
 					<div className="flex items-center gap-1">
 						<span className="text-xl font-bold text-[#F1F1F1]">
-							{token0.name} / {token1.name}
+							{/* {token0.name} / {token1.name} */}
 						</span>
-						<SwapParallel handleChangeToken={handleChangeToken} />
+						{/* <SwapParallel handleChangeToken={handleChangeToken} /> */}
 					</div>
 				</div>
 				<span className="text-xl font-bold leading-[28px] text-[#F1F1F1]">
@@ -65,17 +61,17 @@ export const ChartDesktop = ({
 				<div className="flex flex-col items-start gap-1">
 					<div className="flex items-end gap-1">
 						<span className="text-2xl font-bold text-[#F1F1F1] leading-[28px]">
-							{vol}
+							{/* {vol} */}0
 						</span>
 						<span className="text-base font-bold text-[#F1F1F1] leading-[19px]">
-							{token0.name}/{token1.name}
+							{/* {token0.name}/{token1.name} */}
 						</span>
 						<span className="text-base font-bold text-[#6CFF7B] leading-[19px]">
 							+6.86%
 						</span>
 					</div>
 					<span className="text-sm font-normal text-[#C6C6C6] leading-[16px]">
-						{dateCurrent} (UTC)
+						{/* {dateCurrent} (UTC) */}
 					</span>
 				</div>
 				<div className="flex items-start gap-2 rounded-md	border-[1px] border-[#2D313E] bg-[#0D0E12]">

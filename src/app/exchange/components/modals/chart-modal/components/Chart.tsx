@@ -2,6 +2,8 @@ import { Area, AreaChart, XAxis, YAxis } from "recharts";
 import DUMMY_DATA from "@/app/exchange/dummy-data-chart";
 import { useState, useEffect } from "react";
 
+declare const window: any;
+
 export const LineChart = () => {
 	const [windowSize, setWindowSize] = useState({
 		width: window.innerWidth,
