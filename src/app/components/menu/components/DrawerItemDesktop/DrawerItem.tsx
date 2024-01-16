@@ -12,7 +12,6 @@ import {
 import { twMerge } from "tailwind-merge";
 import { SubDrawerItem } from "./SubDrawerItem";
 import { Popover } from "antd";
-import { useRouter } from "next/navigation";
 
 export const DrawerItem = ({
   item,
@@ -28,7 +27,6 @@ export const DrawerItem = ({
   handleSubMenuClick?: any;
 }) => {
   const [hover, setHover] = useState(false);
-  const router = useRouter();
 
   const mouseOver = () => {
     setHover(true);

@@ -392,3 +392,28 @@ input::placeholder {
     transform: translateY(0);
   }
 }
+
+.promote_banner_md {
+  background: url("/svg/promote_md.svg"), lightgray 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.carousel-popular {
+  background: linear-gradient(
+      180deg,
+      rgba(0, 0, 0, 0) 49.07%,
+      rgba(0, 0, 0, 0.6) 68.44%,
+      rgba(0, 0, 0, 0.6) 100%
+    ),
+    url("/svg/promote_xs.svg"), lightgray 50% / cover no-repeat;
+  @media screen and (min-width: 768px) {
+    background: linear-gradient(
+        180deg,
+        rgba(0, 0, 0, 0) 49.07%,
+        rgba(0, 0, 0, 0.6) 68.44%,
+        rgba(0, 0, 0, 0.6) 100%
+      ),
+      url("/svg/promote_md.svg"), lightgray 50% / cover no-repeat;
+  }
+}
