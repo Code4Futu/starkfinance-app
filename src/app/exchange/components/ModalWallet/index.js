@@ -7,8 +7,8 @@ import "./style.scss";
 
 import { useWallet } from "../../evm/hooks/useWallet";
 import { injected } from "../../evm/utils/web3React";
-import { useDispatch } from "react-redux";
-import actions from "../../redux/action";
+// import { useDispatch } from "react-redux";
+// import actions from "../../redux/action";
 import { CHAIN_ID } from "../../evm/configs/networks";
 import { WALLET_TYPES, WALLETS } from "../../context/types";
 import { useGlobalContext } from "../../context/GlobalContext";
@@ -56,7 +56,7 @@ const IconBack = ({ onClick }) => {
 };
 
 const ModalWallet = ({ isShowing, hide }) => {
-	const dispatch = useDispatch();
+	// const dispatch = useDispatch();
 
 	const { setWalletConnected } = useGlobalContext();
 
@@ -113,7 +113,7 @@ const ModalWallet = ({ isShowing, hide }) => {
 		}
 		localStorage.setItem("isEvm", isEvm);
 		localStorage.setItem("isOkx", okx);
-		dispatch(actions.setIsEvm(isEvm));
+		// dispatch(actions.setIsEvm(isEvm));
 		handleClose();
 	};
 

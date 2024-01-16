@@ -1,7 +1,6 @@
 import { useWeb3React } from "@web3-react/core";
 import { useEffect, useRef, useState } from "react";
 import { simpleRpcProvider } from "../utils/web3React";
-import { useSelector } from "react-redux";
 
 export const useActiveWeb3React = () => {
 	// const isEvm = useSelector((state) => state.isEvm);

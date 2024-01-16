@@ -12,7 +12,7 @@ import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
 // import actions from "../../redux/action";
 import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
 import { WALLETS, WALLET_TYPES } from "@/app/context/types";
-import actions from "@/app/redux/action";
+// import actions from "@/app/redux/action";
 // import { WALLET_TYPES, WALLETS } from "../../context/types";
 // import { useGlobalContext } from "../../context/GlobalContext";
 // import { Divider } from "../Divider";
