@@ -9,3 +9,5 @@ export * from "./LaunchpadIcon";
 export * from "./MarketIcon";
 export * from "./SocialIcon";
 export * from "./LockingIcon";
+export * from "./DropdownBoldIcon";
+export * from "./DropdownLightIcon";

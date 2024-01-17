@@ -10,6 +10,7 @@ import { DrawerDesktop } from "./components/DrawerDesktop";
 import { socialLink } from "./drawData";
 import { usePathname } from "next/navigation";
 import { DrawerMobile } from "./components/DrawerMobile/DrawerMobile";
+import { ModalYourCart } from "../modals/ModalYourCart";
 
 const drawData = drawerData;
 const drawDataMobile = drawerDataMobile;
@@ -153,6 +154,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
     useOpenDrawer();
 
   const [isShowModalConnect, setIsShowModalConnect] = useState(false);
+  const [isShowModalCart, setIsShowModalCart] = useState(false);
 
   const handleConnect = async (connector: any) => {
     try {
@@ -187,7 +189,10 @@ export default function Menu({ children }: { children: React.ReactNode }) {
         />
       </div>
       <div className="flex-1 text-[#C6C6C6]">
-        <SiteNavigation openModalConnect={() => setIsShowModalConnect(true)} />
+        <SiteNavigation
+          openModalCart={setIsShowModalCart}
+          openModalConnect={setIsShowModalConnect}
+        />
         <div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
           <div className="w-full flex justify-center">
             <div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
@@ -200,6 +205,12 @@ export default function Menu({ children }: { children: React.ReactNode }) {
         <ModalWallet
           isShowing={isShowModalConnect}
           hide={() => setIsShowModalConnect(false)}
+        />
+      )}
+      {isShowModalCart && (
+        <ModalYourCart
+          isShowing={isShowModalCart}
+          hide={() => setIsShowModalCart(false)}
         />
       )}
     </div>
