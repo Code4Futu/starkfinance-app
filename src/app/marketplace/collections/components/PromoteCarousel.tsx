@@ -13,10 +13,20 @@ import "swiper/css";
 // import { FreeMode, Pagination } from "swiper/modules";
 import carouselBanner from "/public/svg/carousel_banner.svg";
 import Image from "next/image";
+import clsx from "clsx";
+import { useDrawerStore } from "@/app/store";
 
 export const PromoteCarousel = () => {
+  const { open } = useDrawerStore();
+
   return (
-    <div className="max-w-[calc(100vw-48px)] lg:max-w-[calc(100vw-335px)] xl:max-w-[1080px] flex">
+    <div
+      className={clsx(
+        "max-w-[calc(100vw-48px)] min-[1400px]:max-w-[1080px] flex",
+        !open && "lg:max-w-[calc(100vw-335px)]",
+        open && "lg:max-w-[calc(100vw-151px)]"
+      )}
+    >
       <Swiper
         slidesPerView={"auto"}
         spaceBetween={12}

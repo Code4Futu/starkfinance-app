@@ -11,6 +11,7 @@ import { socialLink } from "./drawData";
 import { usePathname } from "next/navigation";
 import { DrawerMobile } from "./components/DrawerMobile/DrawerMobile";
 import { ModalYourCart } from "../modals/ModalYourCart";
+import { useDrawerStore } from "@/app/store";
 
 const drawData = drawerData;
 const drawDataMobile = drawerDataMobile;
@@ -22,12 +23,14 @@ const useOpenDrawer = () => {
   const [resizeDrawer, setResizeDrawer] = useState(false);
   const [content, setContent] = useState<any>([]);
   const [key, setKey] = useState(0);
+  const { toggleDrawer } = useDrawerStore();
 
   let isMobile = width < 768;
   const handleResize = () => setWidth(window.innerWidth);
 
   const resizeToggle = () => {
     setResizeDrawer(!resizeDrawer);
+    toggleDrawer();
   };
 
   const toggle = (id: number) => {
@@ -208,10 +211,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
         />
       )}
       {isShowModalCart && (
-        <ModalYourCart
-          isShowing={isShowModalCart}
-          hide={() => setIsShowModalCart(false)}
-        />
+        <ModalYourCart isShowing={isShowModalCart} hide={setIsShowModalCart} />
       )}
     </div>
   );
