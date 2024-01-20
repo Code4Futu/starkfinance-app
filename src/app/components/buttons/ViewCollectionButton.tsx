@@ -1,3 +1,4 @@
+"use client";
 import { twMerge } from "tailwind-merge";
 
 const ArrowRight = () => {
@@ -24,18 +25,21 @@ export const ViewCollectionButton = ({
   className,
   textStyle,
   isIconHidden,
+  onClick,
 }: {
   title: string;
   className?: string;
   textStyle?: string;
   isIconHidden?: boolean;
+  onClick?: any;
 }) => {
   return (
     <div
       className={twMerge(
-        "flex items-center justify-center gap-1 self-stretch rounded-2xl px-6 py-3 cursor-pointer h-[48px] button-linear-2",
+        "flex items-center justify-center gap-1 self-stretch rounded-2xl px-6 py-3 cursor-pointer h-[48px] button-linear-2 transition-all",
         className
       )}
+      onClick={() => onClick()}
     >
       <span
         className={twMerge(

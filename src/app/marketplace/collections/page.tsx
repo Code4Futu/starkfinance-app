@@ -9,7 +9,7 @@ import {
 } from "./components";
 import { NewCollections } from "./components/NewCollections";
 
-export default async function Collections() {
+export default function Collections() {
   return (
     <div>
       <Breadcrumbs

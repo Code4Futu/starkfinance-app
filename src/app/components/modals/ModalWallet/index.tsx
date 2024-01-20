@@ -81,6 +81,7 @@ const ModalWallet = ({
   };
 
   const { available, connectors, connect, refresh } = useConnectors();
+  console.log(connectors);
 
   const [showWallet, setShowWallet] = useState(false);
 
@@ -102,6 +103,7 @@ const ModalWallet = ({
     isEvm?: boolean;
     _chainId?: number;
   }) => {
+    console.log(connector);
     if (okx) {
       if (typeof window === "undefined") {
         return;
@@ -247,7 +249,7 @@ const ModalWallet = ({
             <div className="flex px-6 pt-6 pb-9 flex-col items-start gap-[10px]">
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                onClick={() => handleConnect({connector: connectors[1]})}
+                onClick={() => handleConnect({ connector: connectors[1] })}
               >
                 <Image src="/argent.png" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
@@ -256,7 +258,7 @@ const ModalWallet = ({
               </div>
               <div
                 className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-                onClick={() =>handleConnect({connector: connectors[0]})}
+                onClick={() => handleConnect({ connector: connectors[0] })}
               >
                 <Image src="/braavos.jpg" alt="" width={24} height={24} />
                 <span className="text-base font-bold  text-[#F1F1F1]">
