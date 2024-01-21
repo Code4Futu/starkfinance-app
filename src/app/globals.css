@@ -399,6 +399,12 @@ input::placeholder {
   background-size: cover;
 }
 
+.event_banner_md {
+  background: url("/svg/event_promote.svg"), lightgray 50%;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
 .carousel-popular {
   background: linear-gradient(
       180deg,

@@ -39,7 +39,7 @@ export const ViewCollectionButton = ({
         "flex items-center justify-center gap-1 self-stretch rounded-2xl px-6 py-3 cursor-pointer h-[48px] button-linear-2 transition-all",
         className
       )}
-      onClick={() => onClick()}
+      // onClick={() => onClick()}
     >
       <span
         className={twMerge(
