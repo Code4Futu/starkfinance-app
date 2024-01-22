@@ -39,10 +39,10 @@ export const drawerDataMobile = [
 				title: "Token",
 				path: "/launchpad/locking/token",
 			},
-			{
-				title: "Liquidity",
-				path: "/launchpad/locking/liquidity",
-			},
+			// {
+			// 	title: "Liquidity",
+			// 	path: "/launchpad/locking/liquidity",
+			// },
 		],
 	},
 	{
@@ -128,10 +128,10 @@ export const drawerData = [
 				title: "Token",
 				path: "/launchpad/locking/token",
 			},
-			{
-				title: "Liquidity",
-				path: "/launchpad/locking/liquidity",
-			},
+			// {
+			// 	title: "Liquidity",
+			// 	path: "/launchpad/locking/liquidity",
+			// },
 		],
 	},
 	{
@@ -150,7 +150,7 @@ export const drawerData = [
 			},
 			{
 				title: "Your Pools",
-				path: "/launchpad/launchpad-list/your-pools",
+				path: "/launchpad/your-pools",
 			},
 		],
 	},

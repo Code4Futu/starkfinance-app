@@ -25,12 +25,8 @@ export default async function LaunchpadList() {
 				]}
 			/>
 
-			{/* title and filters */}
-			<div className="flex justify-between items-center mb-6 lg:mb-9">
-				<div className="text-[28px] lg:text-[42px] font-bold">
-					Launchpad List
-				</div>
-
+			{/* filters */}
+			<div className="flex justify-end items-center mb-6 lg:mb-9">
 				<div className="flex gap-3">
 					<div className="hidden lg:block dropdown dropdown-end">
 						<label

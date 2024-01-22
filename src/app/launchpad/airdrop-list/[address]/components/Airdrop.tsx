@@ -186,7 +186,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 				<div className="flex justify-stretch gap-3">
 					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
-						<Image alt="image" src="/logo80x80.png" fill />
+						<Image alt="image" src="/logo80x80.png" fill sizes='any' />
 					</div>
 					<div className="flex-1">
 						<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">

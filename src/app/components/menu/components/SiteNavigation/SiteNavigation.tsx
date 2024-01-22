@@ -47,7 +47,7 @@ export const SiteNavigation = (props: Props) => {
       <div className="flex gap-3">
         {currentPath.split("/")[1] === "marketplace" && (
           <div
-            className="relative flex p-3 cursor-pointer justify-center items-center gap-1 rounded-2xl bg-[#232631] cursor-pointer"
+            className="relative flex p-3 cursor-pointer justify-center items-center gap-1 rounded-2xl bg-[#232631]"
             onClick={() => props.openModalCart(true)}
           >
             <CartIcon />

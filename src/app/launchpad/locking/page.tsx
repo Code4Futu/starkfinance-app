@@ -4,23 +4,16 @@ import clsx from "clsx";
 import dayjs from "dayjs";
 import Image from "next/image";
 import Link from "next/link";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-
-type Inputs = {
-	tokenLock: string;
-	amount: number;
-	title?: string;
-	owner?: string;
-	tgeDate: Date;
-	vestingTime?: number[];
-	vestingPercent?: number[];
-};
+import { useAccount } from "@starknet-react/core";
+import { LockInputs, lock } from "../state/locking";
+import { ToastContainer, toast } from "react-toastify";
 
 const schema = yup.object().shape({
 	tokenLock: yup
@@ -28,14 +21,16 @@ const schema = yup.object().shape({
 		.matches(/^0x[a-zA-Z0-9]{63,64}$/, "Invalid address")
 		.required(),
 	amount: yup.number().required("amount required"),
-	title: yup.string().optional(),
-	owner: yup.string().optional(),
-	tgeDate: yup.date().required("tgeDate required"),
+	owner: yup.string().required(),
+	tge: yup.date().required("tge required"),
+	tgePercent: yup.number().min(1).max(100000).required("tge required"),
 	vestingTime: yup.array(),
 	vestingPercent: yup.array(),
 });
 
 export default function CreateLock() {
+	const { account, address } = useAccount();
+
 	const {
 		control,
 		handleSubmit,
@@ -43,39 +38,32 @@ export default function CreateLock() {
 		formState: { errors, isSubmitting },
 		setValue,
 		getValues,
-	} = useForm<Inputs>({
+	} = useForm<LockInputs>({
 		resolver: yupResolver(schema),
 		defaultValues: {
-			tgeDate: new Date(), // Default value here
+			tge: new Date(), // Default value here
+			tgePercent: 100,
 		},
 	});
 
-	// console.log(dayjs(new Date()).format("YYYY-MM-DD"));
-
 	const inputDateRef = useRef<HTMLInputElement>(null);
 
+	const [isOtherOwner, setIsOtherOwner] = useState<boolean>(false);
 	const [isVesting, setIsVesting] = useState<boolean>(false);
 	const [vesting, setVesting] = useState<number>(1);
 
-	const onSubmit = (values: any) => {
-		console.log(values);
-		// axiosInstance
-		//   .post("/auth/login", values)
-		//   .then((res) => {
-		//     const { token } = res.data;
-		//     if (token) {
-		//       try {
-		//         const decoded = jwtDecode(token);
-		//         setCurrentUser(decoded);
-		//         localStorage.setItem("token", token);
-		//         if (location.state.prePath) {
-		//           history.push(location.state.prePath);
-		//         }
-		//       } catch (err) {}
-		//     }
-		//   })
-		//   .catch((err) => console.error(err));
+	const onSubmit = async (values: LockInputs) => {
+		try {
+			const tx = await lock({ ...values, isVesting }, account);
+			alert(`Lock success. TxHash is ${tx.transaction_hash}`);
+		} catch (error: any) {
+			alert(error.message ?? error);
+		}
 	};
+
+	useEffect(() => {
+		address && setValue("owner", address);
+	}, [address]);
 
 	return (
 		<div>
@@ -122,48 +110,38 @@ export default function CreateLock() {
 
 					<div className="flex flex-col">
 						<div className="flex items-center gap-1.5">
-							<input type="checkbox" className="toggle" />
+							<input
+								checked={isOtherOwner}
+								onChange={() => setIsOtherOwner((pre) => !pre)}
+								type="checkbox"
+								className="toggle"
+							/>
 							<div>use another owner?</div>
 						</div>
 					</div>
 
-					<div className="flex flex-col justify-stretch gap-[8px]">
-						<label htmlFor="owner">Owner</label>
-						<input
-							className={clsx(
-								"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
-								{
-									"border-[#2D313E]": true,
-									"border-[#FF6C6C]": false,
-								}
-							)}
-							id="owner"
-							type="text"
-							placeholder="Enter owner address"
-							{...register("owner")}
-						/>
-						<p className="text-[#24C3BC] text-xs mt-2">
-							the address you input here will be receive the tokens once they
-							are unlocked
-						</p>
-					</div>
-
-					<div className="flex flex-col justify-stretch gap-[8px]">
-						<label htmlFor="title">Title</label>
-						<input
-							className={clsx(
-								"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
-								{
-									"border-[#2D313E]": !errors.title,
-									"border-[#FF6C6C]": !!errors.title,
-								}
-							)}
-							id="title"
-							type="text"
-							placeholder="Ex: My lock"
-							{...register("title")}
-						/>
-					</div>
+					{isOtherOwner && (
+						<div className="flex flex-col justify-stretch gap-[8px]">
+							<label htmlFor="owner">Owner</label>
+							<input
+								className={clsx(
+									"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
+									{
+										"border-[#2D313E]": true,
+										"border-[#FF6C6C]": false,
+									}
+								)}
+								id="owner"
+								type="text"
+								placeholder="Enter owner address"
+								{...register("owner")}
+							/>
+							<p className="text-[#24C3BC] text-xs mt-2">
+								the address you input here will be receive the tokens once they
+								are unlocked
+							</p>
+						</div>
+					)}
 
 					<div className="flex flex-col justify-stretch gap-[8px]">
 						<label htmlFor="amount">
@@ -208,7 +186,7 @@ export default function CreateLock() {
 								"col-span-2": !isVesting,
 							})}
 						>
-							<label htmlFor="tgeDate">
+							<label htmlFor="tge">
 								{isVesting ? "TGE Date" : "Lock until"} (UTC time)
 								<span className="text-[#FF6C6C]">*</span>
 							</label>
@@ -226,13 +204,13 @@ export default function CreateLock() {
 								// defaultValue={dayjs().format("DD/MM/YYYY")}
 								// onChange={(e) => console.log(e.target.value)}
 								placeholder="Enter amount"
-								{...register("tgeDate")}
+								{...register("tge")}
 								ref={inputDateRef}
 							/> */}
 
 							<Controller
 								control={control}
-								name="tgeDate"
+								name="tge"
 								render={({ field }) => (
 									<ReactDatePicker
 										className={clsx(
@@ -244,7 +222,7 @@ export default function CreateLock() {
 										)}
 										showIcon
 										showTimeSelect
-										id="tgeDate"
+										id="tge"
 										icon={
 											<svg
 												xmlns="http://www.w3.org/2000/svg"
@@ -301,7 +279,7 @@ export default function CreateLock() {
 										id="tgePercent"
 										type="text"
 										placeholder="Ex 10"
-										// {...register("tgePercent")}
+										{...register("tgePercent")}
 									/>
 								</div>
 
@@ -386,7 +364,7 @@ export default function CreateLock() {
 							type="submit"
 							className="w-full md:max-w-[80px] text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3"
 						>
-							Lock
+							{!account ? "Please connect wallet" : "Lock"}
 						</button>
 					</div>
 				</form>
