@@ -122,7 +122,7 @@ function getDeadlineTime() {
 	return newUnixTimeSeconds;
 }
 
-export const FormSwap = ({
+const FormSwap = ({
 	historicalPrices,
 	setHistoricalPrices,
 	setVol,
@@ -373,7 +373,7 @@ export const FormSwap = ({
 	return <SwapForm />;
 };
 
-export const SwapPage = () => {
+const SwapPage = () => {
 	const { account, address, status } = useCurrentAccount();
 	const [vol, setVol] = useState(0);
 	const [historicalPrices, setHistoricalPrices] = useState<any[]>([]);

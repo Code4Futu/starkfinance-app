@@ -109,7 +109,7 @@ function getDeadlineTime() {
 	return newUnixTimeSeconds;
 }
 
-export const FormSwap = ({
+const FormSwap = ({
 	historicalPrices,
 	setHistoricalPrices,
 	setVol,

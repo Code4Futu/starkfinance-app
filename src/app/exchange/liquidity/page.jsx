@@ -27,7 +27,7 @@ const provider = new RpcProvider({
 });
 
 // randomed not truth
-export const tokenNameSymbol = [
+const tokenNameSymbol = [
 	{
 		name: "WBTC",
 		id: "bitcoin",
@@ -529,7 +529,7 @@ const TransactionMobile = ({ allPairs, loading }) => {
 	);
 };
 
-export const LiquidityPage = () => {
+const LiquidityPage = () => {
 	const { address, status } = useCurrentAccount();
 	// 1. get_all_pairs​ in FACTORY
 	const [allPairs, setAllPairs] = useState([]);

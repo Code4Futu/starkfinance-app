@@ -471,7 +471,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							<div className="flex justify-between">
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
+										<span
+											// @ts-expect-error
+											style={{ "--value": timeStartDiff?.d ?? 0 }}
+										></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
 										days
@@ -479,7 +482,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
+										<span
+											// @ts-expect-error
+											style={{ "--value": timeStartDiff?.h ?? 0 }}
+										></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
 										hrs
@@ -487,7 +493,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
+										<span
+											// @ts-expect-error
+											style={{ "--value": timeStartDiff?.m ?? 0 }}
+										></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
 										mins
@@ -495,7 +504,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 								<div className="flex items-center gap-[2px]">
 									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
+										<span
+											// @ts-expect-error
+											style={{ "--value": timeStartDiff?.s ?? 0 }}
+										></span>
 									</span>
 									<div className="font-[400] text-[14px] text-[#F1F1F1]">
 										secs
