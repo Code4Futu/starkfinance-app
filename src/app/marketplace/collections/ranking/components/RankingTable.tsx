@@ -156,6 +156,7 @@ export const RankingTable = ({
               title="Load more"
               isIconHidden
               className="max-w-[189px]"
+              url="/"
             />
           </div>
         </div>
@@ -195,6 +196,7 @@ export const RankingTable = ({
               title="Load more"
               isIconHidden
               className="max-w-[189px]"
+              url="/"
             />
           </div>
         </div>

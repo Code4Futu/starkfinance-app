@@ -198,7 +198,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
         />
         <div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll">
           <div className="w-full flex justify-center">
-            <div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
+            <div className="max-w-[1088px] flex-1 text-[#F1F1F1]">
               {children}
             </div>
           </div>

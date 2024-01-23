@@ -9,12 +9,14 @@ export const RankingHeader = () => {
           title="Volume"
           className="py-3 px-6 w-full"
           isIconHidden
+          url="/"
         />
         <ViewCollectionButton
           title="Trending"
           className="py-3 px-6 w-full !bg-transparent border-[1px] border-[#2D313E]"
           textStyle="text-[#f1f1f1]"
           isIconHidden
+          url="/"
         />
       </div>
     </div>

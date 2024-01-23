@@ -1,4 +1,5 @@
 "use client";
+import Link from "next/link";
 import { twMerge } from "tailwind-merge";
 
 const ArrowRight = () => {
@@ -26,20 +27,22 @@ export const ViewCollectionButton = ({
   textStyle,
   isIconHidden,
   onClick,
+  url,
 }: {
   title: string;
   className?: string;
   textStyle?: string;
   isIconHidden?: boolean;
   onClick?: any;
+  url: string;
 }) => {
   return (
-    <div
+    <Link
       className={twMerge(
         "flex items-center justify-center gap-1 self-stretch rounded-2xl px-6 py-3 cursor-pointer h-[48px] button-linear-2 transition-all",
         className
       )}
-      // onClick={() => onClick()}
+      href={url}
     >
       <span
         className={twMerge(
@@ -50,6 +53,6 @@ export const ViewCollectionButton = ({
         {title}
       </span>
       {!isIconHidden && <ArrowRight />}
-    </div>
+    </Link>
   );
 };

@@ -8,6 +8,7 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --p-gc1: linear-gradient(135deg, #24c3bc 0%, #adfffb 100%);
 }
 
 @media (prefers-color-scheme: dark) {
@@ -394,13 +395,13 @@ input::placeholder {
 }
 
 .promote_banner_md {
-  background: url("/svg/promote_md.svg"), lightgray 50%;
+  background: url("/svg/promote_md.svg"), lightgray 100%;
   background-repeat: no-repeat;
   background-size: cover;
 }
 
 .event_banner_md {
-  background: url("/svg/event_promote.svg"), lightgray 50%;
+  background: url("/svg/event_promote.svg"), lightgray 100%;
   background-repeat: no-repeat;
   background-size: cover;
 }
@@ -422,4 +423,24 @@ input::placeholder {
       ),
       url("/svg/promote_md.svg"), lightgray 50% / cover no-repeat;
   }
+}
+
+.ant-progress-line {
+  margin-bottom: 0px !important;
+  margin-inline-end: 0px !important;
+}
+
+.ant-progress-bg {
+  background: var(
+    --p-gc1,
+    linear-gradient(135deg, #24c3bc 0%, #adfffb 100%)
+  ) !important;
+  height: 16px !important;
+}
+
+.ant-progress-inner {
+  height: 16px !important;
+  border-radius: 8px !important;
+  border: 1px solid #2d313e !important;
+  background: #0d0e12 !important;
 }

@@ -67,6 +67,7 @@ export const TopCollection = () => {
                   title="View all collections"
                   isIconHidden
                   className="max-w-[189px]"
+                  url="/"
                 />
               </div>
             </div>
@@ -138,6 +139,7 @@ export const TopCollection = () => {
                 title="View all collections"
                 isIconHidden
                 className="max-w-[189px]"
+                url="/"
               />
             </div>
           </div>

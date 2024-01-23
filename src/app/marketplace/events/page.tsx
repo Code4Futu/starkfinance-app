@@ -1,11 +1,10 @@
 "use client";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { FilterEventSwiper, LatestEvent } from "./components";
-import { IEvent, EventStatus } from "@/app/models/events";
+import { IEvent, EventStatus, mocktEvent } from "@/app/models/events";
 import { useState } from "react";
 import { Divider } from "@/app/components/Divider";
 import { Event } from "./components/Event";
-import { mock } from "node:test";
 
 export default function Events() {
   const [eventFilter, setEventFilter] = useState<string>("All");
@@ -23,7 +22,7 @@ export default function Events() {
       <Breadcrumbs
         items={[
           { text: "Marketplace", icon: "/svg/market.svg", url: "/" },
-          { text: "Activity" },
+          { text: "Events" },
         ]}
       />
       <div className="flex pt-6 flex-col gap-3 md:gap-6 justify-between items-start mb-6 md:mb-[500px] lg:mb-9 w-full">
@@ -44,7 +43,7 @@ export default function Events() {
 
         <Divider />
 
-        <div className="w-full grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 flex-col items-start gap-6 pb-6">
+        <div className="w-full grid grid-cols-1 md:grid-cols-2 justify-center gap-6 pb-6 mx-auto">
           {mocktEvent().map((item, idx) => (
             <Event key={idx} event={item} />
           ))}
@@ -53,98 +52,3 @@ export default function Events() {
     </div>
   );
 }
-
-const mocktEvent = (): IEvent[] => [
-  {
-    chainKey: "starknet",
-
-    name: "Starksport NFT",
-
-    owner: "STARKFINANCE",
-
-    status: "Live",
-
-    totalItem: "10,000",
-
-    floor: 0.0001,
-
-    volume: 40.55,
-
-    logo: "/svg/event_avatar.svg",
-
-    banner: "/svg/event_promote.svg",
-
-    minted: 1622,
-
-    price: 0.0013,
-  },
-  {
-    chainKey: "starknet",
-
-    name: "Premier League 2023 - 2024",
-
-    owner: "STARKFINANCE",
-
-    status: "Live",
-
-    totalItem: "No limit",
-
-    floor: 0.0001,
-
-    volume: 40.55,
-
-    logo: "/svg/manchesterUnited.svg",
-
-    banner: "/svg/manchesterCity.svg",
-
-    minted: 1622,
-
-    price: 0.0013,
-  },
-  {
-    chainKey: "starknet",
-
-    name: "Premier League 2023 - 2024",
-
-    owner: "STARKFINANCE",
-
-    status: "Live",
-
-    totalItem: "No limit",
-
-    floor: 0.0001,
-
-    volume: 40.55,
-
-    logo: "/svg/manchesterUnited.svg",
-
-    banner: "/svg/manchesterCity.svg",
-
-    minted: 1622,
-
-    price: 0.0013,
-  },
-  {
-    chainKey: "starknet",
-
-    name: "Premier League 2023 - 2024",
-
-    owner: "STARKFINANCE",
-
-    status: "Live",
-
-    totalItem: "No limit",
-
-    floor: 0.0001,
-
-    volume: 40.55,
-
-    logo: "/svg/manchesterUnited.svg",
-
-    banner: "/svg/manchesterCity.svg",
-
-    minted: 1622,
-
-    price: 0.0013,
-  },
-];
