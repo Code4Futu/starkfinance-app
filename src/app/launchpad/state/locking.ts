@@ -46,12 +46,12 @@ export const lock = async (
 				: [],
 	});
 
-	console.log(
-		values.isVesting,
-		values.vestingTime,
-		values.tgePercent * 1000,
-		values.vestingPercent?.map((e) => (e * 1000).toString())
-	);
+	// console.log(
+	// 	values.isVesting,
+	// 	values.vestingTime,
+	// 	values.tgePercent * 1000,
+	// 	values.vestingPercent?.map((e) => (e * 1000).toString())
+	// );
 
 	let tx = await library.execute([approveCalldata, lockCalldata]);
 

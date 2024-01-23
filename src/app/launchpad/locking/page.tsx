@@ -362,7 +362,13 @@ export default function CreateLock() {
 						<button
 							id="btnSubmit"
 							type="submit"
-							className="w-full md:max-w-[80px] text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3"
+							className={clsx(
+								"w-full text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3",
+								{
+									"md:max-w-[80px]": !!account,
+									"md:max-w-[280px]": !account,
+								}
+							)}
 						>
 							{!account ? "Please connect wallet" : "Lock"}
 						</button>

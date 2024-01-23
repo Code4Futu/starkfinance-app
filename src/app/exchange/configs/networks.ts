@@ -2,6 +2,7 @@ import { StarknetChainId, Token, Percent, JSBI } from "l0k_swap-sdk";
 import sample from "lodash/sample";
 import { RpcProvider } from "starknet";
 import icons from "../assets/icons";
+import { validateAndParseAddress } from "starknet";
 
 export const APP_CHAIN_ID =
 	process.env.NODE_ENV === "production"
@@ -66,6 +67,13 @@ export const TOKEN_LIST = {
 			"USDC",
 			"USDC"
 		),
+		new Token(
+			StarknetChainId.TESTNET,
+			"0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
+			18,
+			"SFN",
+			"StarkFinance Test"
+		),
 	],
 	// [CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP]: [
 	// 	WETH[CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP],
@@ -86,11 +94,11 @@ export const TOKEN_ICON_LIST = {
 	[StarknetChainId.TESTNET]: {
 		[WETH[StarknetChainId.TESTNET].address]: icons.v2.eth.src,
 		[TOKEN_LIST[StarknetChainId.TESTNET][1].address]: icons.v2.usdc.src,
+		[TOKEN_LIST[StarknetChainId.TESTNET][2].address]: "/logo80x80.png",
 	},
 };
 
-export const UNKNOWN_TOKEN_ICON =
-	"https://icones.pro/wp-content/uploads/2021/05/icone-point-d-interrogation-question-noir.png";
+export const UNKNOWN_TOKEN_ICON = "/unknown-token.png";
 
 // export const MULTICALL_ADDRESS = {
 // 	[CHAIN_ID.ZETA_TESTNET]: "0x4aF8d9Ab04EA63C621C729EFd95d6BDCB8B15cf9",
@@ -134,6 +142,7 @@ export const SN_RPC_PROVIDER = () =>
 
 export const getTokenIcon = (address: string | undefined) => {
 	return address
-		? TOKEN_ICON_LIST[APP_CHAIN_ID][address] ?? UNKNOWN_TOKEN_ICON
+		? TOKEN_ICON_LIST[APP_CHAIN_ID][validateAndParseAddress(address)] ??
+				UNKNOWN_TOKEN_ICON
 		: UNKNOWN_TOKEN_ICON;
 };

@@ -66,9 +66,9 @@ const ModalWallet = ({
 }) => {
 	// const dispatch = useDispatch();
 
-	const { setWalletConnected } = useGlobalContext();
+	// const { setWalletConnected } = useGlobalContext();
 
-	const { connect: connectEvm } = useWallet();
+	// const { connect: connectEvm } = useWallet();
 
 	//   const handleArgent = () => {};
 
@@ -106,20 +106,20 @@ const ModalWallet = ({
 				return;
 			}
 			// @ts-ignore
-			if (window?.okxwallet.starknet.isConnected) {
-				setWalletConnected(
-					WALLETS.OKX,
-					// @ts-ignore
-					window?.okxwallet.starknet.selectedAddress,
-					WALLET_TYPES.STARKNET
-				);
-			}
+			// if (window?.okxwallet.starknet.isConnected) {
+			// 	setWalletConnected(
+			// 		WALLETS.OKX,
+			// 		// @ts-ignore
+			// 		window?.okxwallet.starknet.selectedAddress,
+			// 		WALLET_TYPES.STARKNET
+			// 	);
+			// }
 			// @ts-ignore
 			const [address] = await window?.okxwallet.starknet.enable();
-			setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
+			// setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
 		} else if (isEvm) {
-			connectEvm(connector, _chainId);
-			setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
+			// connectEvm(connector, _chainId);
+			// setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
 		} else {
 			const isWalletConnected = available.find(
 				// @ts-ignore
@@ -127,7 +127,7 @@ const ModalWallet = ({
 			);
 			if (isWalletConnected) {
 				await connect(connector);
-				setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
+				// setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
 			} else alert(`Please install ${connector.id()} wallet!`);
 		}
 		// @ts-ignore

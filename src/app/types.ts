@@ -60,6 +60,12 @@ export interface ILaunchpad {
 	desc: string;
 }
 
+export interface Eligible {
+	chainKey: string;
+	airdropAddress: string;
+	spender: string;
+}
+
 export interface IAirdrop {
 	chainKey: string;
 
@@ -83,6 +89,8 @@ export interface IAirdrop {
 
 	vestingPercent: number[];
 
+	eligibles: Eligible[];
+
 	logo: string;
 
 	banner: string;
@@ -99,3 +107,25 @@ export interface IAirdrop {
 
 	desc: string;
 }
+
+export type ILocking = {
+	address: string;
+	amount: string;
+	name: string;
+	symbol: string;
+	decimals: number;
+};
+
+export type ILockingPool = {
+	chainKey: string;
+	tokenAddress: string;
+	lockId: string;
+	owner: string;
+	amount: string;
+	tge: string;
+	isVesting: boolean;
+	tgePercent: number;
+	vestingTime: number[];
+	vestingPercent: number[];
+	token: Token;
+};

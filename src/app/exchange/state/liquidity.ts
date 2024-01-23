@@ -34,7 +34,6 @@ export const getPoolInfo = async (
 ): Promise<PoolState | undefined> => {
 	// if (!WETH || !FACTORY_ADDRESS) return undefined;
 
-	console.log("123");
 	const [tokenA, tokenB] = currencies;
 	if (!tokenA || !tokenB || tokenA.equals(tokenB)) return undefined;
 

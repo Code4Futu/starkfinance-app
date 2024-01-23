@@ -1,7 +1,11 @@
 "use client";
 import Image from "next/image";
 import Link from "next/link";
-import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
+import {
+	numberWithCommas,
+	airdropStatusToText,
+	timeDiffAirdrop,
+} from "@/app/utils";
 import { useEffect, useState } from "react";
 import { LAUNCHPAD_STATUS } from "@/app/constants";
 import { ethers } from "ethers";
@@ -27,11 +31,7 @@ const LatestAirdrop = ({ airdrop }: { airdrop: IAirdrop }) => {
 	useEffect(() => {
 		const interval = setInterval(() => {
 			if (!airdrop) return;
-			const time = timeDiff(
-				Date.now(),
-				airdrop.start * 1000,
-				airdrop.end * 1000
-			);
+			const time = timeDiffAirdrop(Date.now(), airdrop.start * 1000);
 			setTimeStartDiff(time);
 		}, 1000);
 
@@ -148,7 +148,7 @@ const LatestAirdrop = ({ airdrop }: { airdrop: IAirdrop }) => {
 					</div>
 					<div className="border-t border-t-[#2D313E] pt-3">
 						<div className="mb-2.5">
-							Airdrop {statusToText(timeStartDiff.status)}
+							Airdrop {airdropStatusToText(timeStartDiff.status)}
 						</div>
 						<div className="flex justify-between md:justify-start gap-4">
 							<div>

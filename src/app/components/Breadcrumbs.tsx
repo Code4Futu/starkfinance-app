@@ -27,6 +27,8 @@ export default function Breadcrumbs({ items }: { items: BreadcrumbChild[] }) {
 						<div
 							className={clsx({
 								"ml-1.5": !!i.icon,
+								hidden: !!i.icon,
+								// "md:hidden": i.icon,
 							})}
 						>
 							{i.url ? (

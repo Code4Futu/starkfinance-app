@@ -6,7 +6,7 @@ import { IAirdrop } from "../../types";
 import { BASE_API } from "../../constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 
-async function getAirdrops(): Promise<IAirdrop[]> {
+async function getAirdrops(): Promise<[IAirdrop[], number]> {
 	const res = await fetch(`${BASE_API}/airdrops`, {
 		next: { revalidate: 60 },
 	});
@@ -14,7 +14,11 @@ async function getAirdrops(): Promise<IAirdrop[]> {
 }
 
 export default async function AirdropList() {
-	const airdrops = await getAirdrops();
+	const res = await getAirdrops();
+
+	let airdrops = res[0];
+
+	let totalAirdrop = res[1];
 
 	return (
 		<div>
