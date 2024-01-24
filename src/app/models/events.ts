@@ -1,4 +1,4 @@
-import { CollectionChain } from "./collectionRanking";
+import { CollectionChain } from "./collections";
 
 export type EventStatus = "Live" | "Upcoming" | "Ended";
 

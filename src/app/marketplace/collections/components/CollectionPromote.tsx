@@ -77,7 +77,7 @@ export const CollectionPromote = () => {
                 </span>
               </div>
             </div>
-            <ViewCollectionButton title={"View Collection"} />
+            <ViewCollectionButton url="/" title={"View Collection"} />
           </div>
         </div>
       </div>
@@ -150,7 +150,7 @@ export const CollectionPromote = () => {
                   </span>
                 </div>
               </div>
-              <ViewCollectionButton title={"View Collection"} />
+              <ViewCollectionButton url="/" title={"View Collection"} />
             </div>
           </div>
         </div>

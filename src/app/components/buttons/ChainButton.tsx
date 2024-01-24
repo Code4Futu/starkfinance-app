@@ -3,7 +3,7 @@ import { Popover } from "antd";
 import { useState } from "react";
 import clsx from "clsx";
 
-import { CollectionChain } from "@/app/models/collectionRanking";
+import { CollectionChain } from "@/app/models/collections";
 import { DropdownBoldIcon } from "../icons";
 
 export const ChainButton = ({

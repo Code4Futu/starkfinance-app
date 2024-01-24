@@ -13,7 +13,7 @@ import {
   CollectionCategory,
   CollectionChain,
   collectionCategories,
-} from "@/app/models/collectionRanking";
+} from "@/app/models/collections";
 
 const mockArray = [0, 1, 2, 3, 4];
 

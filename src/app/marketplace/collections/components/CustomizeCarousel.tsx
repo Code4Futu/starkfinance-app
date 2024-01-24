@@ -47,19 +47,19 @@ const SlideCard = () => {
           className="flex p-[6px] md:p-3 items-start gap-3 self-stretch rounded-xl border-[1px] border-[#5e5e5e]"
         >
           <div className="flex justify-center md:justify-normal items-center gap-1 flex-1 flex-wrap">
-            <span className="text-sm text-[#c6c6c6] font-normal leading-[16px]">
+            <span className="text-xs text-[#c6c6c6] leading-[14px] md:leading-[16px] md:text-sm">
               Floor
             </span>
-            <span className="text-base text-[#f1f1f1] font-bold leading-[19px]">
+            <span className="text-xs leading-[12px] text-[#f1f1f1] font-medium md:text-base md:leading-[19px]">
               0.02 ETH
             </span>
           </div>
           <div className="w-[1px] h-full bg-[#5e5e5e]"></div>
           <div className="flex justify-center md:justify-normal items-center gap-1 flex-1 flex-wrap">
-            <span className="text-sm text-[#c6c6c6] font-normal leading-[16px]">
+            <span className="text-xs text-[#c6c6c6] leading-[14px] md:leading-[16px] md:text-sm">
               Volume
             </span>
-            <span className="text-base text-[#f1f1f1] font-bold leading-[19px] whitespace-nowrap">
+            <span className="text-xs leading-[12px] text-[#f1f1f1] font-medium md:text-base md:leading-[19px]">
               68.68 ETH
             </span>
           </div>

@@ -7,7 +7,7 @@ import {
   ActivityEvent,
   CollectionActivity,
 } from "@/app/models/marketplaceActivity";
-import { CollectionChain } from "@/app/models/collectionRanking";
+import { CollectionChain } from "@/app/models/collections";
 import { CurrencyType } from "@/app/models/currency";
 import clsx from "clsx";
 
@@ -160,7 +160,7 @@ export default function Activity() {
   );
 }
 
-const CloseIcon = () => {
+export const CloseIcon = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"

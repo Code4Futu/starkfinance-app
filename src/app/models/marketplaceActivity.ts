@@ -60,6 +60,12 @@ export interface CollectionFilter {
   value: CollectionActivity;
 }
 
+export interface boardData {
+  action: string;
+  label: string;
+  collectionName: string;
+}
+
 export const collectionFilterList = (): CollectionFilter[] => [
   {
     label: "Vietnam1 Cypher Collections",
@@ -75,5 +81,38 @@ export const collectionFilterList = (): CollectionFilter[] => [
     label: "Vietnam3 Cypher Collections",
     total: 10000,
     value: "VN3",
+  },
+];
+
+export const boardDataMockup = (): boardData[] => [
+  {
+    action: "Sale",
+    label: "VN Soldier #6868",
+    collectionName: "Vietnam Cypher Collections",
+  },
+  {
+    action: "Listing",
+    label: "Starksport #6868",
+    collectionName: "Starksport NFT",
+  },
+  {
+    action: "Offer",
+    label: "StarkRock NFT #6868",
+    collectionName: "StarkRock NFT",
+  },
+  {
+    action: "Transfers",
+    label: "Starkpunks #6868",
+    collectionName: "Starkpunks NFT",
+  },
+  {
+    action: "Auction",
+    label: "VN Soldier #6868",
+    collectionName: "Vietnam Cypher Collections",
+  },
+  {
+    action: "Bid",
+    label: "VN Soldier #6868",
+    collectionName: "Vietnam Cypher Collections",
   },
 ];

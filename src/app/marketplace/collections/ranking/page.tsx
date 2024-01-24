@@ -10,7 +10,7 @@ import {
   CollectionOrder,
   CollectionCategory,
   CollectionChain,
-} from "@/app/models/collectionRanking";
+} from "@/app/models/collections";
 import { DateFilter } from "@/app/models/dateFilter";
 
 const defaultTab: CollectionOrder = "volume";

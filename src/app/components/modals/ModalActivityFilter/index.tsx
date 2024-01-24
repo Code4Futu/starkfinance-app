@@ -8,16 +8,13 @@ import {
   collectionFilterList,
   eventTypeList,
 } from "@/app/models/marketplaceActivity";
-import "./style.scss";
 import clsx from "clsx";
 import { SearchIcon } from "@/app/marketplace/collections/components";
 import { Checkbox } from "antd";
 import Image from "next/image";
-import {
-  CollectionChain,
-  collectionChainList,
-} from "@/app/models/collectionRanking";
+import { CollectionChain, collectionChainList } from "@/app/models/collections";
 import { CurrencyType, currencyList } from "@/app/models/currency";
+import "./style.scss";
 
 interface Props {
   isShowing: boolean;

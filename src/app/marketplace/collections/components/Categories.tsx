@@ -2,9 +2,9 @@ const CategoryCard = ({ title, image }: { title: string; image: string }) => {
   return (
     <div
       style={{
-        background: `url(${image}), lightgray 50% / cover no-repeat`,
+        background: `url(${image})`,
       }}
-      className="rounded-xl"
+      className="rounded-xl bg-[length:100%_100%] bg-no-repeat"
     >
       <div
         style={{ background: "rgba(13, 14, 18, 0.50)" }}

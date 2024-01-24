@@ -1,4 +1,4 @@
-import { CollectionChain } from "@/app/models/collectionRanking";
+import { CollectionChain } from "@/app/models/collections";
 import { CurrencyType } from "@/app/models/currency";
 import {
   ActivityEvent,
