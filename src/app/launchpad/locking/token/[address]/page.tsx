@@ -11,7 +11,7 @@ async function getLocksOfToken(params: {
 	return res.json();
 }
 
-export default async function AirdropPage({
+export default async function LockingTokenPage({
 	params,
 }: {
 	params: { address: string };

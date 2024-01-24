@@ -13,7 +13,7 @@ import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { CallData, cairo, num } from "starknet";
+import { CallData, Contract, TransactionStatus, cairo, num } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import dayjs from "dayjs";
 import useSWR from "swr";
@@ -23,8 +23,15 @@ import { useWeb3Store } from "@/app/store";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import axios from "axios";
 import Button from "@/app/components/Button";
+import AirdropAbi from "@/app/launchpad/abis/starknet/SFAirdrop.json";
 
-export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
+export default function Airdrop({
+	airdrop,
+}: {
+	airdrop: IAirdrop | undefined;
+}) {
+	if (!airdrop) return null;
+
 	const { account, address } = useAccount();
 	const txHash = useWeb3Store((s) => s.txHash);
 
@@ -174,23 +181,24 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 		if (!accountStatistics?.signature) return alert("Account are not eligible");
 		try {
 			setSubmitting(true);
-			const calls = [
-				{
-					contractAddress: airdrop.address,
-					entrypoint: "claim",
-					calldata: CallData.compile({
-						signature: [
-							accountStatistics.signature.r,
-							accountStatistics.signature.s,
-						],
-					}),
-				},
-			];
 
-			const tx = await account.execute(calls);
-			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
+			const airdropContract = new Contract(
+				AirdropAbi,
+				airdrop.address,
+				account
+			);
 
-			alert(`Commit success. TxHash is ${tx.transaction_hash}`);
+			const claimCalldata = airdropContract.populate("claim", {
+				signature: [
+					accountStatistics.signature.r,
+					accountStatistics.signature.s,
+				],
+			});
+
+			const tx = await account.execute(claimCalldata);
+			const txRes = await account.waitForTransaction(tx.transaction_hash);
+			if (TransactionStatus.RECEIVED != txRes.status) return alert("Tx failed");
+			else alert(`Claim success. TxHash is ${tx.transaction_hash}`);
 
 			setCommitAmount("");
 			setSubmitting(false);

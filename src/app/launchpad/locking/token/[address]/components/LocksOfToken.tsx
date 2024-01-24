@@ -1,12 +1,13 @@
 "use client";
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import { getTokenIcon } from "@/app/exchange/configs/networks";
+import { getTokenIcon } from "@/app/configs/networks";
 import { ILockingPool } from "@/app/types";
 import { numberWithCommas } from "@/app/utils";
 import { ethers } from "ethers";
 import Image from "next/image";
 import { useMemo } from "react";
+import LockRecord from "./LockRecord";
 
 export default function LocksOfToken({ locks }: { locks: ILockingPool[] }) {
 	const latestLock = locks[0];
@@ -118,6 +119,26 @@ export default function LocksOfToken({ locks }: { locks: ILockingPool[] }) {
 							</div>
 						</div>
 					</div>
+				</div>
+
+				{/* lock records */}
+				<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-4">
+					<div className="border-b border-b-[#2D313E] pb-3">
+						<div className="text-[20px] font-bold text-[#F1F1F1]">
+							Lock Records
+						</div>
+					</div>
+
+					<div className="grid grid-cols-5 border-b border-b-[#2D313E] pb-3 text-[12px] text-[#C6C6C6] font-[500]">
+						<div>Wallet</div>
+						<div>Amount</div>
+						<div>TGE (%)</div>
+						<div>Unlock time (UTC)</div>
+						<div className="text-right">Details</div>
+					</div>
+					{locks.map((lock, idx) => (
+						<LockRecord key={idx} lock={lock} />
+					))}
 				</div>
 			</div>
 		</div>

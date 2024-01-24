@@ -6,7 +6,7 @@ import { ILaunchpad } from "@/app/types";
 import { BASE_API } from "@/app/constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 
-async function getLaunchpads(): Promise<ILaunchpad[]> {
+async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
 	const res = await fetch(`${BASE_API}/launchpads`, {
 		next: { revalidate: 60 },
 	});
@@ -14,7 +14,8 @@ async function getLaunchpads(): Promise<ILaunchpad[]> {
 }
 
 export default async function LaunchpadList() {
-	const launchpads = await getLaunchpads();
+	const res = await getLaunchpads();
+	const launchpads = res[0];
 
 	return (
 		<div>

@@ -2,21 +2,31 @@
 
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { BASE_API } from "@/app/constants";
-import { getTokenIcon } from "@/app/exchange/configs/networks";
+import { getTokenIcon } from "@/app/configs/networks";
 import { ILocking } from "@/app/types";
 import { numberWithCommas } from "@/app/utils";
+import { useAccount } from "@starknet-react/core";
 import axios from "axios";
+import clsx from "clsx";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
+import { useState } from "react";
 import useSWR from "swr";
 
 export default function TokenLocking() {
+	const { address } = useAccount();
+	const [isOwn, setIsOwn] = useState<boolean>(false);
+
 	const { data, isLoading } = useSWR<ILocking[]>(
-		["locking-token"],
+		["locking-token", address, isOwn],
 		async () => {
 			try {
-				let { data } = await axios.get<ILocking[]>(`${BASE_API}/locking`);
+				if (isOwn && !address) return [];
+
+				let { data } = await axios.get<ILocking[]>(
+					`${BASE_API}/locking${isOwn ? `?owner=${address}` : ""}`
+				);
 
 				return data;
 			} catch (error) {
@@ -41,13 +51,26 @@ export default function TokenLocking() {
 			{/* filters */}
 			<div className="flex justify-end items-center mb-6 lg:mb-9">
 				<div className="flex gap-3">
-					<div className="border rounded-2xl border-[#2D313E] px-[24px] flex items-center font-bold">
+					<div
+						className={clsx(
+							"block border border-[#2D313E] rounded-2xl py-3 px-6 font-bold cursor-pointer",
+							{
+								"bg-[#F1F1F1] text-[#0D0E12]": !isOwn,
+							}
+						)}
+						onClick={() => setIsOwn(false)}
+					>
 						All
 					</div>
 
 					<div
-						// href="/launchpad/launchpad-list/your-pools"
-						className="hidden md:block border rounded-2xl py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
+						className={clsx(
+							"block border border-[#2D313E] rounded-2xl py-3 px-6 font-bold cursor-pointer",
+							{
+								"bg-[#F1F1F1] text-[#0D0E12]": isOwn,
+							}
+						)}
+						onClick={() => setIsOwn(true)}
 					>
 						My Lock
 					</div>

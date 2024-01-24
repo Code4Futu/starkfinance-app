@@ -4,7 +4,7 @@ import { IAirdrop, ILaunchpad } from "./types";
 import { BASE_API } from "./constants";
 import { HomepageCarousel } from "./components/HomepageCarousel";
 
-async function getLaunchpads(): Promise<ILaunchpad[]> {
+async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
 	const res = await fetch(`${BASE_API}/launchpads`, {
 		next: { revalidate: 60 },
 	});
@@ -19,7 +19,10 @@ async function getAirdrops(): Promise<IAirdrop[]> {
 }
 
 export default async function Home() {
-	const launchpads = await getLaunchpads();
+	const res = await getLaunchpads();
+
+	const launchpads = res[0];
+
 	const airdrops = await getAirdrops();
 
 	return (
@@ -97,14 +100,16 @@ export default async function Home() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad launchpad={launchpads[0] ?? undefined} />
+			<LatestLaunchpad
+				launchpad={launchpads?.length ? launchpads[0] : undefined}
+			/>
 
 			{/* top fundrasing */}
 			<div className="flex flex-col gap-3 md:gap-6">
 				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
 					Top Fundrasing
 				</div>
-				<HomepageCarousel launchpads={launchpads} />
+				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
 			</div>
 
 			{/* top airdrop */}
@@ -112,7 +117,7 @@ export default async function Home() {
 				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
 					Top Airdrop
 				</div>
-				<HomepageCarousel launchpads={launchpads} />
+				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
 			</div>
 
 			{/* <div className="flex flex-wrap gap-1 md:gap-4">

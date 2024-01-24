@@ -1,0 +1,115 @@
+[
+	{
+		"type": "impl",
+		"name": "ISFAirdropImp",
+		"interface_name": "starkfinance::interfaces::launchpad::airdrop::ISFAirdrop"
+	},
+	{
+		"type": "struct",
+		"name": "core::integer::u256",
+		"members": [
+			{ "name": "low", "type": "core::integer::u128" },
+			{ "name": "high", "type": "core::integer::u128" }
+		]
+	},
+	{
+		"type": "struct",
+		"name": "starkfinance::interfaces::launchpad::airdrop::AirdropStats",
+		"members": [
+			{ "name": "total_claimed", "type": "core::integer::u256" },
+			{ "name": "end", "type": "core::integer::u64" }
+		]
+	},
+	{
+		"type": "interface",
+		"name": "starkfinance::interfaces::launchpad::airdrop::ISFAirdrop",
+		"items": [
+			{
+				"type": "function",
+				"name": "get_stats",
+				"inputs": [],
+				"outputs": [
+					{
+						"type": "starkfinance::interfaces::launchpad::airdrop::AirdropStats"
+					}
+				],
+				"state_mutability": "view"
+			},
+			{
+				"type": "function",
+				"name": "get_user_stats",
+				"inputs": [
+					{
+						"name": "spender",
+						"type": "core::starknet::contract_address::ContractAddress"
+					}
+				],
+				"outputs": [{ "type": "core::array::Array::<core::integer::u256>" }],
+				"state_mutability": "view"
+			},
+			{
+				"type": "function",
+				"name": "claim",
+				"inputs": [
+					{
+						"name": "signature",
+						"type": "core::array::Array::<core::felt252>"
+					}
+				],
+				"outputs": [],
+				"state_mutability": "external"
+			}
+		]
+	},
+	{
+		"type": "constructor",
+		"name": "constructor",
+		"inputs": [
+			{
+				"name": "verifier",
+				"type": "core::starknet::contract_address::ContractAddress"
+			},
+			{
+				"name": "token",
+				"type": "core::starknet::contract_address::ContractAddress"
+			},
+			{ "name": "start", "type": "core::integer::u64" },
+			{ "name": "total_airdrop", "type": "core::integer::u256" },
+			{ "name": "total_airdrop_amount", "type": "core::integer::u256" },
+			{
+				"name": "vesting_time",
+				"type": "core::array::Array::<core::integer::u64>"
+			},
+			{
+				"name": "vesting_percent",
+				"type": "core::array::Array::<core::integer::u256>"
+			}
+		]
+	},
+	{
+		"type": "event",
+		"name": "starkfinance::launchpad::airdrop::Airdrop::ClaimAirdrop",
+		"kind": "struct",
+		"members": [
+			{
+				"name": "claimer",
+				"type": "core::starknet::contract_address::ContractAddress",
+				"kind": "data"
+			},
+			{ "name": "amount", "type": "core::integer::u256", "kind": "data" },
+			{ "name": "timestamp", "type": "core::integer::u64", "kind": "data" }
+		]
+	},
+	{
+		"type": "event",
+		"name": "starkfinance::launchpad::airdrop::Airdrop::Event",
+		"kind": "enum",
+		"variants": [
+			{
+				"name": "ClaimAirdrop",
+				"type": "starkfinance::launchpad::airdrop::Airdrop::ClaimAirdrop",
+				"kind": "nested"
+			}
+		]
+	}
+]

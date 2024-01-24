@@ -1,3 +1,5 @@
+'use client'
+
 import { MouseEventHandler, useState } from "react";
 import {
   DocumentationIcon,
@@ -34,6 +36,7 @@ export const DrawerItemMobile = ({
     setHover(false);
   };
 
+
   const checkIcon = (id: number, currentPath?: string) => {
     switch (id) {
       case 1:
@@ -65,7 +68,7 @@ export const DrawerItemMobile = ({
           router.push("/");
         }
         if (item.id === 5) {
-          window.location.replace(
+          router.replace(
             "https://starkfinance.gitbook.io/starkfinance/"
           );
         }

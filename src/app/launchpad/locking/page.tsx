@@ -102,9 +102,9 @@ export default function CreateLock() {
 							{...register("tokenLock")}
 						/>
 						{errors.tokenLock?.message && (
-							<p className="text-[#FF6C6C] text-xs mt-2">
+							<div className="text-[#FF6C6C] text-xs mt-2">
 								{errors.tokenLock.message}
-							</p>
+							</div>
 						)}
 					</div>
 
@@ -136,10 +136,10 @@ export default function CreateLock() {
 								placeholder="Enter owner address"
 								{...register("owner")}
 							/>
-							<p className="text-[#24C3BC] text-xs mt-2">
+							<div className="text-[#24C3BC] text-xs mt-2">
 								the address you input here will be receive the tokens once they
 								are unlocked
-							</p>
+							</div>
 						</div>
 					)}
 
@@ -162,9 +162,9 @@ export default function CreateLock() {
 						/>
 
 						{errors.amount?.message && (
-							<p className="text-[#FF6C6C] text-xs mt-2">
+							<div className="text-[#FF6C6C] text-xs mt-2">
 								{errors.amount.message}
-							</p>
+							</div>
 						)}
 					</div>
 
@@ -330,13 +330,13 @@ export default function CreateLock() {
 										</div>
 									</div>
 								))}
-								<div className="col-span-2">
-									<button
+								<div className="col-span-2 flex">
+									<div
 										onClick={() => setVesting((pre) => pre + 1)}
-										className="text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3"
+										className="cursor-pointer text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3"
 									>
 										Add
-									</button>
+									</div>
 								</div>
 							</>
 						)}

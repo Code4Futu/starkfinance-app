@@ -1,3 +1,5 @@
+"use client";
+
 import { useConnectors } from "@starknet-react/core";
 import React, { MouseEventHandler, useRef, useState, useEffect } from "react";
 import "./style.scss";
@@ -5,13 +7,13 @@ import { Divider } from "../../Divider";
 import Image from "next/image";
 
 // import { useWallet } from "../../evm/hooks/useWallet";
-import { injected } from "@/app/exchange/evm/utils/web3React";
+// import { injected } from "@/app/exchange/evm/utils/web3React";
 // import { useDispatch } from "react-redux";
-import { useGlobalContext } from "@/app/context/GlobalContext";
-import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
+// import { useGlobalContext } from "@/app/context/GlobalContext";
+// import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
 // import actions from "../../redux/action";
-import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
-import { WALLETS, WALLET_TYPES } from "@/app/context/types";
+// import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
+// import { WALLETS, WALLET_TYPES } from "@/app/context/types";
 // import { WALLET_TYPES, WALLETS } from "../../context/types";
 // import { useGlobalContext } from "../../context/GlobalContext";
 // import { Divider } from "../Divider";
@@ -94,7 +96,7 @@ const ModalWallet = ({
 		connector,
 		okx = false,
 		isEvm = false,
-		_chainId = CHAIN_ID.ZETA_TESTNET,
+		_chainId,
 	}: {
 		connector: any;
 		okx?: boolean;
@@ -102,9 +104,6 @@ const ModalWallet = ({
 		_chainId?: number;
 	}) => {
 		if (okx) {
-			if (typeof window === "undefined") {
-				return;
-			}
 			// @ts-ignore
 			// if (window?.okxwallet.starknet.isConnected) {
 			// 	setWalletConnected(
@@ -211,14 +210,14 @@ const ModalWallet = ({
 							</div>
 							<div
 								className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-								onClick={() =>
-									handleConnect({
-										connector: injected,
-										okx: false,
-										isEvm: true,
-										_chainId: CHAIN_ID.ZETA_TESTNET,
-									})
-								}
+								// onClick={() =>
+								// 	handleConnect({
+								// 		connector: injected,
+								// 		okx: false,
+								// 		isEvm: true,
+								// 		_chainId: CHAIN_ID.ZETA_TESTNET,
+								// 	})
+								// }
 							>
 								<Image src="/zeta.png" alt="" width={24} height={24} />
 								<span className="text-base font-bold  text-[#F1F1F1]">
@@ -227,14 +226,14 @@ const ModalWallet = ({
 							</div>
 							<div
 								className="flex h-12 py-3 pl-3 pr-6 items-center gap-3 self-stretch rounded-2xl border-[1px] border-[#2D313E] hover:bg-[#2D313E] cursor-pointer"
-								onClick={() =>
-									handleConnect({
-										connector: injected,
-										okx: false,
-										isEvm: true,
-										_chainId: CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP,
-									})
-								}
+								// onClick={() =>
+								// 	handleConnect({
+								// 		connector: injected,
+								// 		okx: false,
+								// 		isEvm: true,
+								// 		_chainId: CHAIN_ID.STARKSPRT_OPSIDE_ROLLUP,
+								// 	})
+								// }
 							>
 								<Image src="/opside.png" alt="" width={24} height={24} />
 								<span className="text-base font-bold  text-[#F1F1F1]">
