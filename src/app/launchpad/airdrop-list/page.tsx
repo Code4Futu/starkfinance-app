@@ -185,7 +185,7 @@ export default async function AirdropList() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestAirdrop airdrop={airdrops[0]} />
+			{airdrops.length && <LatestAirdrop airdrop={airdrops[0]} />}
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">

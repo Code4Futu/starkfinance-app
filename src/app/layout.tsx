@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { StarknetProvider } from "./components/starknet-provider";
 import Menu from "./components/menu/Menu";
-import { GlobalProvider } from "./context/GlobalProvider";
+
+import "./globals.css";
 
 export const metadata: Metadata = {
 	title: "StarkFinance App",
@@ -41,9 +41,7 @@ export default function RootLayout({
 			</head>
 			<body>
 				<StarknetProvider>
-					<GlobalProvider>
-						<Menu>{children}</Menu>
-					</GlobalProvider>
+					<Menu>{children}</Menu>
 				</StarknetProvider>
 			</body>
 		</html>

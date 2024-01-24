@@ -1,21 +1,34 @@
 "use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
 import { useEffect, useState } from "react";
-import { LAUNCHPAD_STATUS } from "@/app/constants";
+import { BASE_API, LAUNCHPAD_STATUS } from "@/app/constants";
 import { ethers } from "ethers";
 import { ILaunchpad } from "@/app/types";
 import dayjs from "dayjs";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
+import useSWR from "swr";
+import axios from "axios";
 
-const LatestLaunchpad = ({
-	launchpad,
-}: {
-	launchpad: ILaunchpad | undefined;
-}) => {
+const LatestLaunchpad = () => {
+	const { data: launchpad, isLoading } = useSWR<ILaunchpad | undefined>(
+		["Home"],
+		async () => {
+			try {
+				const { data } = await axios.get<[ILaunchpad[], number]>(
+					`${BASE_API}/launchpads`
+				);
+				return data[0]?.[0] ?? undefined;
+			} catch (error) {
+				return undefined;
+			}
+		}
+	);
+
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -46,13 +59,11 @@ const LatestLaunchpad = ({
 		return () => clearInterval(interval);
 	}, [launchpad?.start, launchpad?.end]);
 
-	if (!launchpad) return null;
-
-	return !!launchpad ? (
+	return !isLoading && !!launchpad ? (
 		<div className="flex flex-col rounded-3xl bg-[#1A1C24]">
 			<div
 				className={clsx(
-					"relative md:hidden w-full rounded-t-3xl flex flex-col h-[114px]",
+					"relative md:hidden w-full rounded-t-3xl flex flex-col h-[50%]",
 					currentPath !== "/" && "hidden"
 				)}
 			>
@@ -302,7 +313,9 @@ const LatestLaunchpad = ({
 				</Link>
 			</div>
 		</div>
-	) : null;
+	) : (
+		<div className="skeleton w-full min-h-32"></div>
+	);
 };
 
 export default LatestLaunchpad;

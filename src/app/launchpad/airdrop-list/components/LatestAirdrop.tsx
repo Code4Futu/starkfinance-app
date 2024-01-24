@@ -38,8 +38,6 @@ const LatestAirdrop = ({ airdrop }: { airdrop: IAirdrop }) => {
 		return () => clearInterval(interval);
 	}, [airdrop?.start, airdrop?.end]);
 
-	if (!airdrop) return null;
-
 	return (
 		<div className="flex flex-col gap-6 p-3 md:p-6 border rounded-3xl border-[#24C3BC] bg-[#1A1C24] ">
 			<div className="block lg:hidden w-full pt-[50%] relative rounded-2xl overflow-hidden">

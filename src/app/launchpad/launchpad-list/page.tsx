@@ -13,7 +13,7 @@ async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
 	return res.json();
 }
 
-export default async function LaunchpadList() {
+export default async function LaunchpadListPage() {
 	const res = await getLaunchpads();
 	const launchpads = res[0];
 
@@ -181,7 +181,8 @@ export default async function LaunchpadList() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad launchpad={launchpads[0]} />
+
+			<LatestLaunchpad />
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">

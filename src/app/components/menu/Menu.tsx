@@ -9,7 +9,6 @@ import { drawerData, drawerDataMobile, socialData } from "./drawData";
 import { SiteNavigation } from "./components/SiteNavigation/SiteNavigation";
 import { DrawerDesktop } from "./components/DrawerDesktop";
 import { socialLink } from "./drawData";
-import { usePathname } from "next/navigation";
 import { DrawerMobile } from "./components/DrawerMobile/DrawerMobile";
 import { ModalYourCart } from "../modals/ModalYourCart";
 import { useDrawerStore } from "@/app/store";

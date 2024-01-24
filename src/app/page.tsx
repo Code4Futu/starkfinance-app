@@ -1,30 +1,10 @@
+"use client";
+
 import Image from "next/image";
+// import { HomepageCarousel } from "./components/HomepageCarousel";
 import LatestLaunchpad from "./launchpad/launchpad-list/components/LatestLaunchpad";
-import { IAirdrop, ILaunchpad } from "./types";
-import { BASE_API } from "./constants";
-import { HomepageCarousel } from "./components/HomepageCarousel";
-
-async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
-	const res = await fetch(`${BASE_API}/launchpads`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
-
-async function getAirdrops(): Promise<IAirdrop[]> {
-	const res = await fetch(`${BASE_API}/airdrops`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
 
 export default async function Home() {
-	const res = await getLaunchpads();
-
-	const launchpads = res[0];
-
-	const airdrops = await getAirdrops();
-
 	return (
 		<div className="flex flex-col gap-6">
 			{/* Overall stats */}
@@ -100,25 +80,23 @@ export default async function Home() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad
-				launchpad={launchpads?.length ? launchpads[0] : undefined}
-			/>
+			<LatestLaunchpad />
 
 			{/* top fundrasing */}
-			<div className="flex flex-col gap-3 md:gap-6">
+			{/* <div className="flex flex-col gap-3 md:gap-6">
 				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
 					Top Fundrasing
 				</div>
 				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
-			</div>
+			</div> */}
 
 			{/* top airdrop */}
-			<div className="flex flex-col gap-3 md:gap-6">
+			{/* <div className="flex flex-col gap-3 md:gap-6">
 				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
 					Top Airdrop
 				</div>
 				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
-			</div>
+			</div> */}
 
 			{/* <div className="flex flex-wrap gap-1 md:gap-4">
         <div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] border-2 font-bold text-[#1A1C24]  rounded-2xl">

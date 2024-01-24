@@ -25,13 +25,7 @@ import axios from "axios";
 import Button from "@/app/components/Button";
 import AirdropAbi from "@/app/launchpad/abis/starknet/SFAirdrop.json";
 
-export default function Airdrop({
-	airdrop,
-}: {
-	airdrop: IAirdrop | undefined;
-}) {
-	if (!airdrop) return null;
-
+export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 	const { account, address } = useAccount();
 	const txHash = useWeb3Store((s) => s.txHash);
 
