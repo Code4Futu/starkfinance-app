@@ -40,10 +40,9 @@ export const Event = ({ event }: { event: IEvent | undefined }) => {
         <div
           style={{
             background: `url(${event.banner})`,
-            backgroundSize: "100% 100%",
           }}
           className={clsx(
-            "relative w-full h-full bg-no-repeat",
+            "relative w-full h-full bg-no-repeat bg-[leng:100%_100%]",
             isShown && "scale-110 duration-500"
           )}
         ></div>

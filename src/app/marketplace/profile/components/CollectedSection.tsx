@@ -8,6 +8,7 @@ import { ProfileFilter } from "@/app/models/user";
 import { Listing, Transfer } from ".";
 import { ModalTransfer } from "@/app/components/modals/ModalTransfer";
 import { ModalListing } from "@/app/components/modals/ModalListing";
+import Link from "next/link";
 
 export const CollectedSection = ({
   profileFilter,
@@ -41,7 +42,8 @@ export const CollectedSection = ({
                 "!border-[#24C3BC]"
             )}
           >
-            <div
+            <Link
+              href={`/marketplace/profile/${item.address}`}
               className={clsx(
                 "relative w-[165px] h-[165px]",
                 view === "small" &&
@@ -73,7 +75,7 @@ export const CollectedSection = ({
                   onChange={() => handleSelectItem(item.address)}
                 ></Checkbox>
               </div>
-            </div>
+            </Link>
             <div
               style={{ backdropFilter: "blur(20px)" }}
               className="flex flex-col justify-end items-start gap-3 p-3 self-stretch"
