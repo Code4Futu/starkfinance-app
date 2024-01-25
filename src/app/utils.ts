@@ -44,12 +44,17 @@ export const formatSmartNumber = (num: number | string): string => {
 };
 
 export function numberWithCommas(x: number | string | undefined) {
+	// return !x
+	// 	? "0"
+	// 	: formatSmartNumber(x)
+	// 			.toString()
+	// 			.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
+	// 			.replace(/\.0$/, "");
 	return !x
 		? "0"
-		: formatSmartNumber(x)
-				.toString()
-				.replace(/\B(?<!\.\d*)(?=(\d{3})+(?!\d))/g, ",")
-				.replace(/\.0$/, "");
+		: new Intl.NumberFormat().format(
+				+formatSmartNumber(parseFloat(x.toString()).toFixed(7)).toString()
+		  );
 }
 
 // time in milliseconds
