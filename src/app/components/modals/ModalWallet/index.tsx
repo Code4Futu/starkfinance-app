@@ -1,9 +1,7 @@
 import { useConnectors } from "@starknet-react/core";
 import React, { MouseEventHandler, useRef, useState, useEffect } from "react";
-import "./style.scss";
 import { Divider } from "../../Divider";
 import Image from "next/image";
-
 // import { useWallet } from "../../evm/hooks/useWallet";
 import { injected } from "@/app/exchange/evm/utils/web3React";
 // import { useDispatch } from "react-redux";

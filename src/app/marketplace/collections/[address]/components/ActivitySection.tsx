@@ -4,19 +4,20 @@ import {
 	ACTIVITY_STATUS,
 	boardDataMockup,
 } from "@/app/models/marketplaceActivity";
-import { ProfileFilter } from "@/app/models/user";
-import { Open } from ".";
+import { CollectionDetailTab } from "@/app/models/collections";
+import { Open } from "@/app/marketplace/profile/components";
 
 export const ActivitySection = ({
-	profileFilter,
+	collectionDetailTab,
 }: {
-	profileFilter: ProfileFilter;
+	collectionDetailTab: CollectionDetailTab;
 }) => {
 	return (
 		<div
 			className={clsx(
 				"hidden w-full flex-col justify-center items-center p-6 gap-3 self-stretch rounded-3xl bg-[#1A1C24]",
-				profileFilter === "activity" && "!flex"
+				collectionDetailTab === "activity" &&
+					"!flex"
 			)}
 		>
 			<div className="hidden md:flex justify-between items-center py-3 self-stretch">

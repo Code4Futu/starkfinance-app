@@ -7,22 +7,22 @@ import {
 // import { FreeMode, Pagination } from "swiper/modules";
 import { useDrawerStore } from "@/app/store";
 import clsx from "clsx";
-import {
-	ProfileDetailFilter,
-	profileDetailFilterMockup,
-} from "@/app/models/user";
 import { Divider } from "@/app/components/Divider";
+import {
+	CollectionDetailTab,
+	collectionDetailTab,
+} from "@/app/models/collections";
 import "swiper/css";
 // import "swiper/css/free-mode";
 // import "swiper/css/pagination";
 
 export const FilterProfileDetailSwiper = ({
-	profileDetailFilter,
-	setProfileDetailFilter,
+	detailProfileFilter,
+	setDetailProfileFilter,
 }: {
-	profileDetailFilter: ProfileDetailFilter;
-	setProfileDetailFilter: React.Dispatch<
-		React.SetStateAction<ProfileDetailFilter>
+	detailProfileFilter: CollectionDetailTab;
+	setDetailProfileFilter: React.Dispatch<
+		React.SetStateAction<CollectionDetailTab>
 	>;
 }) => {
 	const { open } = useDrawerStore();
@@ -31,7 +31,7 @@ export const FilterProfileDetailSwiper = ({
 		<>
 			<div
 				className={clsx(
-					"max-w-[calc(100vw-48px)] min-[1400px]:max-w-[1080px] gap-3 flex flex-col w-full justify-start overflow-hidden",
+					"max-w-[calc(100vw-48px)] min-[1400px]:max-w-[1080px] gap-3 flex flex-col w-full justify-start",
 					!open && "lg:max-w-[calc(100vw-335px)]",
 					open && "lg:max-w-[calc(100vw-151px)]"
 				)}
@@ -46,26 +46,24 @@ export const FilterProfileDetailSwiper = ({
 					// modules={[FreeMode, Pagination]}
 					className="mySwiper !ml-0"
 				>
-					{profileDetailFilterMockup().map(
+					{collectionDetailTab().map(
 						(item, idx) => (
 							<SwiperSlide
 								key={idx}
 								className={clsx(
 									"flex rounded-2xl py-3 px-6 border-[1px] border-[#2D313E] cursor-pointer hover:bg-[#3C3D4D] transition-all",
-									item.value === "information" &&
-										"max-w-[135px]",
-									item.value === "priceHistory" &&
-										"max-w-[142px]",
-									item.value === "offers" &&
-										"max-w-[96px]",
+									item.value === "overview" &&
+										"max-w-[117px]",
 									item.value === "activity" &&
 										"max-w-[105px]",
+									item.value === "item" &&
+										"max-w-[83px]",
 									item.value ===
-										profileDetailFilter &&
+										detailProfileFilter &&
 										"!bg-[#F1F1F1]"
 								)}
 								onClick={() =>
-									setProfileDetailFilter(
+									setDetailProfileFilter(
 										item.value
 									)
 								}
@@ -74,7 +72,7 @@ export const FilterProfileDetailSwiper = ({
 									className={clsx(
 										"text-base font-bold text-[#f1f1f1] leading-[19px]",
 										item.value ===
-											profileDetailFilter &&
+											detailProfileFilter &&
 											"!text-[#0D0E12]"
 									)}
 								>

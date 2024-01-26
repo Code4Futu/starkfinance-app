@@ -2,11 +2,12 @@
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import { Divider } from "@/app/components/Divider";
 import { mockupCollections } from "@/app/models/collections";
-import Image from "next/image";
 import {
+	ActivitySection,
 	Description,
 	FilterProfileDetailSwiper,
 	Information,
+	OfferSection,
 	ProfileDetailHeader,
 } from "./components";
 import { useState } from "react";
@@ -14,6 +15,8 @@ import {
 	ProfileDetailFilter,
 	userTraitMockup,
 } from "@/app/models/user";
+import { ExampleChart } from "@/app/exchange/add-liquidity/components/Chart/ExampleChart";
+import clsx from "clsx";
 
 export default function MyCollectedDetailPage({
 	params,
@@ -59,8 +62,13 @@ export default function MyCollectedDetailPage({
 						setProfileDetailFilter
 					}
 				/>
-				<div className="w-full flex flex-col items-start pb-6 gap-6">
-					{/* Properties */}
+				<div
+					className={clsx(
+						"w-full flex flex-col items-start pb-6 gap-6",
+						profileDetailFilter !==
+							"information" && "hidden"
+					)}
+				>
 					<div className="w-full flex flex-col items-start p-6 gap-6 self-stretch rounded-3xl border-[1px] border-[#2D313E] bg-[#1A1C24]">
 						<div className="w-full flex flex-col items-start gap-3 self-stretch">
 							<span className="text-xl font-bold leading-[23px]">
@@ -94,6 +102,25 @@ export default function MyCollectedDetailPage({
 						<Description />
 					</div>
 				</div>
+				<div
+					className={clsx(
+						"w-full flex items-start px-6 pt-12 pb-6 rounded-2xl border-[1px] border-[#2D313E] bg-[#1A1C24] h-[394px]",
+						profileDetailFilter !==
+							"priceHistory" && "hidden"
+					)}
+				>
+					<ExampleChart />
+				</div>
+				<OfferSection
+					profileDetailFilter={
+						profileDetailFilter
+					}
+				/>
+				<ActivitySection
+					profileDetailFilter={
+						profileDetailFilter
+					}
+				/>
 			</div>
 		</div>
 	);

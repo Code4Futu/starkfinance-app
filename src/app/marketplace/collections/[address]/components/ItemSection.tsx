@@ -3,20 +3,26 @@ import { useState } from "react";
 import clsx from "clsx";
 import Image from "next/image";
 import { Checkbox } from "antd";
-import { mockupCollections } from "@/app/models/collections";
+import {
+	CollectionDetailTab,
+	mockupCollections,
+} from "@/app/models/collections";
 import { ProfileFilter } from "@/app/models/user";
-import { Listing, Transfer } from ".";
+import {
+	Listing,
+	Transfer,
+} from "@/app/marketplace/profile/components";
 import { ModalTransfer } from "@/app/components/modals/ModalTransfer";
 import { ModalListing } from "@/app/components/modals/ModalListing";
 import Link from "next/link";
 
-export const CollectedSection = ({
+export const ItemSection = ({
 	profileFilter,
 	view,
 	selectedItem,
 	handleSelectItem,
 }: {
-	profileFilter: ProfileFilter;
+	profileFilter: CollectionDetailTab;
 	view: string;
 	selectedItem: string[];
 	handleSelectItem: (address: string) => void;
@@ -32,7 +38,7 @@ export const CollectedSection = ({
 			<div
 				className={clsx(
 					"hidden w-full flex-wrap gap-3 md:gap-5 lg:gap-6 self-stretch",
-					profileFilter === "collected" && "!flex"
+					profileFilter === "item" && "!flex"
 				)}
 			>
 				{mockupCollections().map((item, idx) => (
