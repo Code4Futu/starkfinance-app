@@ -8,6 +8,7 @@ import { ethers } from "ethers";
 import { ILaunchpad } from "@/app/types";
 import dayjs from "dayjs";
 import clsx from "clsx";
+import Status from "../../components/Status";
 
 export default function LaunchpadItem({
 	launchpad,
@@ -58,31 +59,7 @@ export default function LaunchpadItem({
 				</div>
 
 				<div className="absolute top-3 right-3 rounded-2xl flex flex-wrap items-center gap-2 bg-gradient-to-r bg-dark">
-					<div
-						className={clsx("flex items-center gap-1 py-1.5 px-3 rounded-2xl", {
-							"from-[#61b3ff26] to-[#61b3ff26]": LAUNCHPAD_STATUS.UPCOMING,
-							"from-[#6cff7b26] to-[#6cff7b26]": LAUNCHPAD_STATUS.INPROGRESS,
-							"from-[#FFE86C26] to-[#FFE86C26]": LAUNCHPAD_STATUS.END,
-						})}
-					>
-						<Image
-							src={`/svg/${timeStartDiff.status}.svg`}
-							alt={`${timeStartDiff.status}`}
-							width={8}
-							height={8}
-						/>
-						<div
-							className={clsx("text-[12px] capitalize", {
-								"text-[#61B3FF]":
-									timeStartDiff.status == LAUNCHPAD_STATUS.UPCOMING,
-								"text-[#6CFF7B]":
-									timeStartDiff.status == LAUNCHPAD_STATUS.INPROGRESS,
-								"text-[#FFE86C]": timeStartDiff.status == LAUNCHPAD_STATUS.END,
-							})}
-						>
-							{timeStartDiff.status}
-						</div>
-					</div>
+					<Status status={timeStartDiff.status} />
 				</div>
 			</div>
 
@@ -95,7 +72,7 @@ export default function LaunchpadItem({
 						{launchpad.name}
 					</div>
 					<div className="flex flex-wrap items-center gap-2">
-						<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
+						<div className="flex items-center bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 							<div className="w-[18px] h-[18px] relative">
 								<Image
 									src={`/wallets/${launchpad.chainKey}.png`}
@@ -157,16 +134,16 @@ export default function LaunchpadItem({
 						<div className="text-[12px] text-[#C6C6C6]">Rate</div>
 						<div className="text-[14px] font-bold">
 							1 {launchpad.tokenRaise.symbol} ={" "}
-							{(
+							{numberWithCommas(
 								+ethers.formatUnits(
 									launchpad.totalSale,
 									launchpad.tokenSale.decimals
 								) /
-								+ethers.formatUnits(
-									launchpad.totalRaise,
-									launchpad.tokenRaise.decimals
-								)
-							).toFixed(3)}
+									+ethers.formatUnits(
+										launchpad.totalRaise,
+										launchpad.tokenRaise.decimals
+									)
+							)}{" "}
 							{launchpad.tokenSale.symbol}
 						</div>
 					</div>

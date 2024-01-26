@@ -4,11 +4,7 @@ import {
 	LAUNCHPAD_STATUS,
 	StarknetRpcProvider,
 } from "@/app/constants";
-import {
-	numberWithCommas,
-	airdropStatusToText,
-	timeDiffAirdrop,
-} from "@/app/utils";
+import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
 import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
@@ -24,6 +20,7 @@ import Breadcrumbs from "@/app/components/Breadcrumbs";
 import axios from "axios";
 import Button from "@/app/components/Button";
 import AirdropAbi from "@/app/launchpad/abis/starknet/SFAirdrop.json";
+import Status from "@/app/launchpad/components/Status";
 
 export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 	const { account, address } = useAccount();
@@ -51,7 +48,6 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 	const { data: accountStatistics, isLoading: accountStatisticsLoading } =
 		useSWR<{
-			allocation: string | undefined;
 			claimed: string | undefined;
 			claimedCount: string | undefined;
 			signature:
@@ -89,14 +85,12 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 				} catch (error) {}
 
 				return {
-					allocation: num.hexToDecimalString(userStats.result[1]),
-					claimed: num.hexToDecimalString(userStats.result[5]),
-					claimedCount: num.hexToDecimalString(userStats.result[3]),
+					claimedCount: num.hexToDecimalString(userStats.result[1]),
+					claimed: num.hexToDecimalString(userStats.result[3]),
 					signature,
 				};
 			} catch (error) {
 				return {
-					allocation: undefined,
 					claimed: undefined,
 					claimedCount: undefined,
 					signature: undefined,
@@ -106,15 +100,8 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 	const [commitAmount, setCommitAmount] = useState<string>("");
 	const [submitting, setSubmitting] = useState<boolean>(false);
-	const [allocation, setAllocation] = useState<{
-		allocation: string | undefined;
-		deducted: string | undefined;
-		remaining: string | undefined;
-	}>({
-		allocation: undefined,
-		deducted: undefined,
-		remaining: undefined,
-	});
+
+	console.log(accountStatistics);
 
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
@@ -132,7 +119,11 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 	useEffect(() => {
 		const interval = setInterval(() => {
-			const time = timeDiffAirdrop(Date.now(), airdrop.start * 1000);
+			const time = timeDiff(
+				Date.now(),
+				airdrop.start * 1000,
+				airdrop.end * 1000
+			);
 			setTimeStartDiff(time);
 		}, 1000);
 
@@ -213,9 +204,9 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 			/>
 
 			<div className="flex flex-col gap-8">
-				<div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
+				{/* <div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
-				</div>
+				</div> */}
 
 				<div className="flex justify-stretch gap-3">
 					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
@@ -226,37 +217,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 							{airdrop.name}
 						</div>
 						<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
-							{timeStartDiff.status && (
-								<div
-									className={clsx(
-										"flex items-center gap-1 py-1.5 px-3 rounded-2xl",
-										{
-											"bg-[#61b3ff26]": LAUNCHPAD_STATUS.UPCOMING,
-											"bg-[#6cff7b26]": LAUNCHPAD_STATUS.INPROGRESS,
-											"bg-[#FFE86C26]": LAUNCHPAD_STATUS.END,
-										}
-									)}
-								>
-									<Image
-										src={`/svg/${timeStartDiff.status}.svg`}
-										alt={`${timeStartDiff.status}`}
-										width={8}
-										height={8}
-									/>
-									<div
-										className={clsx("text-[12px] capitalize", {
-											"text-[#61B3FF]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.UPCOMING,
-											"text-[#6CFF7B]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.INPROGRESS,
-											"text-[#FFE86C]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.END,
-										})}
-									>
-										{timeStartDiff.status}
-									</div>
-								</div>
-							)}
+							<Status status={timeStartDiff.status} />
 							<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 								<div className="w-[18px] h-[18px] relative">
 									<Image
@@ -282,11 +243,11 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 					</div>
 				</div>
 
-				<div className="flex flex-col lg:flex-row gap-6">
-					<div className="flex flex-col gap-6 w-full lg:w-[368px]">
+				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+					<div className="flex flex-col gap-6 w-full">
 						<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl py-9 px-6">
 							<div className="mb-2.5 font-bold text-xl text-[#F1F1F1]">
-								Airdrop {airdropStatusToText(timeStartDiff.status)}
+								Airdrop {statusToText(timeStartDiff.status)}
 							</div>
 
 							<div className="flex justify-between">
@@ -450,7 +411,53 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 						</div>
 					</div>
 
-					<div className="flex-1 flex flex-col gap-6">
+					<div className="col-span-1 lg:col-span-2 flex-1 flex flex-col gap-6">
+						{/* project info */}
+						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="border-b border-b-[#2D313E] pb-3">
+								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
+									Project information
+								</div>
+								<div className="flex gap-3">
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/x.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/telegram.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/discord.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/medium.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/github.svg" fill />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
+								<Image alt="image" src="/mocks/banner.png" fill />
+							</div>
+
+							<div
+								className="text-[#C6C6C6]"
+								dangerouslySetInnerHTML={{ __html: airdrop.desc }}
+							/>
+						</div>
+
+						{/* your allocation */}
 						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 								<div className="text-xl font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
@@ -545,6 +552,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 							</div>
 						)}
 
+						{/* vesting schedule */}
 						<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 							<div className="text-xl font-bold text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
 								Vesting Schedule
@@ -570,50 +578,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 							</ul>
 						</div>
 
-						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="border-b border-b-[#2D313E] pb-3">
-								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
-									Project information
-								</div>
-								<div className="flex gap-3">
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/x.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/telegram.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/discord.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/medium.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/github.svg" fill />
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
-								<Image alt="image" src="/mocks/banner.png" fill />
-							</div>
-
-							<div
-								className="text-[#C6C6C6]"
-								dangerouslySetInnerHTML={{ __html: airdrop.desc }}
-							/>
-						</div>
-
+						{/* eligible users */}
 						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 							<div className="border-b border-b-[#2D313E] pb-3 flex justify-between">
 								<div className="text-xl font-bold text-[#F1F1F1] mb-3">

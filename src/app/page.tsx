@@ -3,8 +3,21 @@
 import Image from "next/image";
 // import { HomepageCarousel } from "./components/HomepageCarousel";
 import LatestLaunchpad from "./launchpad/launchpad-list/components/LatestLaunchpad";
+import { BASE_API } from "./constants";
+import { ILaunchpad } from "./types";
+import { HomepageCarousel } from "./components/HomepageCarousel";
+
+async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
+	const res = await fetch(`${BASE_API}/launchpads`, {
+		next: { revalidate: 60 },
+	});
+	return res.json();
+}
 
 export default async function Home() {
+	const res = await getLaunchpads();
+	const launchpads = res[0];
+
 	return (
 		<div className="flex flex-col gap-6">
 			{/* Overall stats */}
@@ -28,7 +41,7 @@ export default async function Home() {
 						</div>
 						<div className="flex flex-col justify-center items-start gap-1">
 							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
-								1
+								{res[1]}
 							</div>
 							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
 								Projects Launched
@@ -80,15 +93,15 @@ export default async function Home() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad />
+			<LatestLaunchpad launchpad={launchpads[0]} />
 
 			{/* top fundrasing */}
-			{/* <div className="flex flex-col gap-3 md:gap-6">
+			<div className="flex flex-col gap-3 md:gap-6">
 				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
 					Top Fundrasing
 				</div>
 				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
-			</div> */}
+			</div>
 
 			{/* top airdrop */}
 			{/* <div className="flex flex-col gap-3 md:gap-6">

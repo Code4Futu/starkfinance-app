@@ -182,7 +182,7 @@ export default async function LaunchpadListPage() {
 
 			{/* latest launchpad */}
 
-			<LatestLaunchpad />
+			<LatestLaunchpad launchpad={launchpads[0]} />
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">

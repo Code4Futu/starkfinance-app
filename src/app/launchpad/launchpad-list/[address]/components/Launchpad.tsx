@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { CallData, cairo, num } from "starknet";
+import { CallData, Contract, cairo, num } from "starknet";
 import { useAccount } from "@starknet-react/core";
 import dayjs from "dayjs";
 import useSWR from "swr";
@@ -21,6 +21,9 @@ import { ToastContainer, toast } from "react-toastify";
 
 import "react-toastify/dist/ReactToastify.css";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import Status from "@/app/launchpad/components/Status";
+import SFLaunchpadAbi from "@/app/launchpad/abis/starknet/SFLaunchpad.json";
+import ERC20Abi from "@/app/launchpad/abis/starknet/ERC20.json";
 
 export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const { account, address } = useAccount();
@@ -59,34 +62,47 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			claimed: string | undefined;
 			claimedCount: string | undefined;
 			lastCommittedTime: string | undefined;
+			claimable: string | undefined;
+			stakedNft: boolean;
+			nftId: string | undefined;
+			claimedNft: boolean;
 		}>(
 			[launchpad.address, launchpad.tokenRaise.address, address, txHash],
 			async () => {
 				try {
-					const [tokenRaiseBalance, userStats] = await Promise.all([
-						StarknetRpcProvider.callContract({
-							contractAddress: launchpad.tokenRaise.address,
-							entrypoint: "balanceOf",
-							calldata: [address!],
+					const tokenRaiseContract = new Contract(
+						ERC20Abi,
+						launchpad.tokenRaise.address,
+						StarknetRpcProvider
+					);
+					const launchpadContract = new Contract(
+						SFLaunchpadAbi,
+						launchpad.address,
+						StarknetRpcProvider
+					);
+
+					const [balanceOf, userStats] = await Promise.all([
+						tokenRaiseContract.balanceOf(address!, {
+							parseResponse: true,
 						}),
-						StarknetRpcProvider.callContract({
-							contractAddress: launchpad.address,
-							entrypoint: "get_user_stats",
-							calldata: [address!],
+						launchpadContract.get_user_stats(address!, {
+							parseResponse: true,
 						}),
 					]);
 
 					return {
-						tokenRaiseBalance: num.hexToDecimalString(
-							tokenRaiseBalance.result[0]
-						),
-						committed: num.hexToDecimalString(userStats.result[1]),
-						allocation: num.hexToDecimalString(userStats.result[3]),
-						deducted: num.hexToDecimalString(userStats.result[5]),
-						remaining: num.hexToDecimalString(userStats.result[7]),
-						claimed: num.hexToDecimalString(userStats.result[9]),
-						claimedCount: num.hexToDecimalString(userStats.result[11]),
-						lastCommittedTime: num.hexToDecimalString(userStats.result[13]),
+						tokenRaiseBalance: balanceOf.toString(),
+						committed: userStats.committed.toString(),
+						allocation: userStats.allocation.toString(),
+						deducted: userStats.deducted.toString(),
+						remaining: userStats.remaining.toString(),
+						claimed: userStats.claimed.toString(),
+						claimedCount: userStats.claimed_count.toString(),
+						lastCommittedTime: userStats.last_committed_time.toString(),
+						claimable: userStats.claimable.toString(),
+						stakedNft: userStats.staked_nft,
+						nftId: userStats.nft_id.toString(),
+						claimedNft: userStats.claimed_nft,
 					};
 				} catch (error) {
 					return {
@@ -98,6 +114,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 						claimed: undefined,
 						claimedCount: undefined,
 						lastCommittedTime: undefined,
+						claimable: undefined,
+						stakedNft: false,
+						nftId: undefined,
+						claimedNft: false,
 					};
 				}
 			}
@@ -114,6 +134,8 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const [claiming, setClaiming] = useState<boolean>(false);
 	const [claimingRemaining, setClaimingRemaining] = useState<boolean>(false);
 	const [stakingNft, setStakingNft] = useState<boolean>(false);
+
+	const [searchNft, setSearchNft] = useState<string>("");
 
 	const modalRef = useRef<HTMLButtonElement>(null);
 
@@ -203,12 +225,18 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				commitAmount,
 				launchpad.tokenRaise.decimals
 			);
+			if (amount < BigInt(launchpad.minCommit)) {
+				return toast.error("Not enough MIN commit");
+			}
 
 			if (
-				amount < BigInt(launchpad.minCommit) ||
-				amount > BigInt(launchpad.maxCommit)
+				amount > BigInt(launchpad.maxCommit) ||
+				amount >
+					BigInt(launchpad.maxCommit) -
+						BigInt(accountStatistics?.committed ?? 0)
 			)
-				return toast.error("Must in range MIN/MAX commit");
+				return toast.error("Only can commit less than MAX commit");
+
 			setSubmitting(true);
 			const calls = [
 				{
@@ -238,7 +266,16 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			setSubmitting(false);
 			toast.error(error.message);
 		}
-	}, [account, launchpad.address, launchpad.tokenRaise.address, commitAmount]);
+	}, [
+		account,
+		launchpad.address,
+		launchpad.tokenRaise.address,
+		launchpad.tokenRaise.decimals,
+		commitAmount,
+		launchpad.minCommit,
+		launchpad.maxCommit,
+		accountStatistics?.committed,
+	]);
 
 	const handleClaim = useCallback(async () => {
 		if (!account) return toast.error("Connect wallet first");
@@ -331,40 +368,65 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		[account, launchpad.address, claimableRemaining, modalRef]
 	);
 
+	const handleOpenStakeNftModal = useCallback(() => {
+		// @ts-expect-error
+		document.getElementById("my_modal_2").showModal();
+	}, []);
+
 	return (
 		<div>
 			<dialog id="my_modal_2" className="modal">
 				<div className="modal-box bg-[#1A1C24] p-6 md:max-w-[560px] lg:max-w-[1200px]">
-					<div className="">Your NFT</div>
+					<div className="flex justify-between items-center py-3 border-b border-b-[#2D313E]">
+						<div className="">Your StarkFinance NFT</div>
+
+						<div>
+							<input
+								type="text"
+								value={searchNft}
+								placeholder="Search"
+								onChange={(e) => setSearchNft(e.target.value)}
+								className="input placeholder:opacity-50 w-full bg-[#0D0E12] border-[#2D313E] rounded-2xl outline-0 focus:outline-0 focus:border-solid focus:border-[#2D313E]"
+							/>
+						</div>
+					</div>
 
 					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
-						{nfts?.length ? (
-							nfts.map((nft) => (
-								<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#232631] rounded-3xl pb-6">
-									<div className="w-full pt-[100%] relative">
-										<Image src="/nft/stark_nft.png" alt="nft" fill />
-									</div>
+						{nfts?.filter((nft) => nft.nftId.toString().includes(searchNft))
+							.length ? (
+							nfts
+								.filter((nft) => nft.nftId.toString().includes(searchNft))
+								.map((nft) => (
+									<div
+										key={nft.nftId}
+										className="flex flex-col gap-6 border border-[#2D313E] bg-[#232631] rounded-3xl pb-6"
+									>
+										<div className="w-full pt-[100%] relative">
+											<Image src="/nft/stark_nft.png" alt="nft" fill />
+										</div>
 
-									<div className="text-center text-[20px] text-[#F1F1F1]">
-										<div>StarkFinance NFT</div>
-										<div>#{nft.nftId}</div>
-									</div>
+										<div className="text-center text-[20px] text-[#F1F1F1]">
+											<div>StarkFinance NFT</div>
+											<div>#{nft.nftId}</div>
+										</div>
 
-									<div className="w-full flex justify-center">
-										<div>
-											<Button
-												handler={() => handleStakeNft(nft.nftId)}
-												claimable={true}
-												text="Stake NFT"
-												loading={stakingNft}
-												loadingText="Staking"
-											/>
+										<div className="w-full flex justify-center">
+											<div>
+												<Button
+													handler={() => handleStakeNft(nft.nftId)}
+													claimable={true}
+													text="Stake NFT"
+													loading={stakingNft}
+													loadingText=""
+												/>
+											</div>
 										</div>
 									</div>
-								</div>
-							))
+								))
 						) : (
-							<div>You don't have any StarkFinance NFT</div>
+							<div className="col-span-1 md:col-span-2 lg:col-span-4 text-center">
+								You don't have StarkFinance NFT
+							</div>
 						)}
 					</div>
 				</div>
@@ -392,9 +454,9 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			/>
 
 			<div className="flex flex-col gap-8">
-				<div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
+				{/* <div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
-				</div>
+				</div> */}
 
 				<div className="flex justify-stretch gap-3">
 					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
@@ -405,37 +467,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							{launchpad.name}
 						</div>
 						<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
-							{timeStartDiff.status && (
-								<div
-									className={clsx(
-										"flex items-center gap-1 py-1.5 px-3 rounded-2xl",
-										{
-											"bg-[#61b3ff26]": LAUNCHPAD_STATUS.UPCOMING,
-											"bg-[#6cff7b26]": LAUNCHPAD_STATUS.INPROGRESS,
-											"bg-[#FFE86C26]": LAUNCHPAD_STATUS.END,
-										}
-									)}
-								>
-									<Image
-										src={`/svg/${timeStartDiff.status}.svg`}
-										alt={`${timeStartDiff.status}`}
-										width={8}
-										height={8}
-									/>
-									<div
-										className={clsx("text-[12px] capitalize", {
-											"text-[#61B3FF]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.UPCOMING,
-											"text-[#6CFF7B]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.INPROGRESS,
-											"text-[#FFE86C]":
-												timeStartDiff.status == LAUNCHPAD_STATUS.END,
-										})}
-									>
-										{timeStartDiff.status}
-									</div>
-								</div>
-							)}
+							<Status status={timeStartDiff.status} />
 							<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 								<div className="w-[18px] h-[18px] relative">
 									<Image
@@ -625,7 +657,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 							{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
 								<div className="py-3">
-									<div className="flex justify-between">
+									<div className="flex justify-between mb-1">
 										<div className="text-[12px] text-[#C6C6C6]">
 											{launchpad.tokenRaise.symbol} balance:
 										</div>
@@ -643,39 +675,39 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										type="text"
 										value={commitAmount}
 										onChange={(e) => setCommitAmount(e.target.value)}
-										className="input w-full focus:outline-none bg-[#0D0E12] border-[#2D313E] rounded-2xl focus-within:border-[#2D313E] focus:border-[#2D313E]"
+										className="input w-full bg-[#0D0E12] border-[#2D313E] rounded-2xl outline-0 focus:outline-0 focus:border-solid focus:border-[#2D313E]"
 									/>
 
 									<div className="flex justify-between gap-5 mt-6">
-										<div
-											onClick={handleCommit}
-											className={clsx(
-												"flex gap-1.5 justify-center cursor-pointer flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl",
-												{
-													"cursor-not-allowed": !account || nftsLoading,
-												}
-											)}
-										>
-											{submitting && (
-												<span className="loading loading-spinner loading-xl"></span>
-											)}
-											<span>Commit</span>
-										</div>
-										<button
-											onClick={() =>
-												// @ts-expect-error
-												document.getElementById("my_modal_2").showModal()
+										<Button
+											handler={handleCommit}
+											claimable={
+												!!account &&
+												!!accountStatistics?.committed &&
+												+commitAmount <
+													BigInt(launchpad.maxCommit) -
+														BigInt(accountStatistics?.committed ?? 0)
 											}
-											className={clsx(
-												"flex gap-1.5 justify-center flex-1 px-6 py-3 font-xl font-bold text-[#1A1C24] bg-[#F1F1F1] rounded-2xl",
-												{
-													"cursor-not-allowed": !account || nftsLoading,
-												}
-											)}
-											disabled={!account || nftsLoading}
-										>
-											<span>Stake NFT</span>
-										</button>
+											text="Commit"
+											loading={submitting}
+											loadingText=""
+										/>
+
+										<Button
+											handler={handleOpenStakeNftModal}
+											claimable={
+												!!account &&
+												!nftsLoading &&
+												!!launchpadStatistics?.committed &&
+												+launchpadStatistics.committed >
+													+launchpad.totalRaise &&
+												typeof accountStatistics?.stakedNft !== undefined &&
+												!accountStatistics?.stakedNft
+											}
+											text="Stake NFT"
+											loading={false}
+											loadingText=""
+										/>
 									</div>
 								</div>
 							)}
@@ -683,10 +715,61 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					</div>
 
 					<div className="flex-1 flex flex-col gap-6">
+						{/* project info */}
+						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="border-b border-b-[#2D313E] pb-3">
+								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
+									Project information
+								</div>
+								<div className="flex gap-3">
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/x.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/telegram.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/discord.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/medium.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/github.svg" fill />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
+								<Image alt="image" src="/mocks/banner.png" fill />
+							</div>
+
+							<div
+								className="text-[#C6C6C6]"
+								dangerouslySetInnerHTML={{ __html: launchpad.desc }}
+							/>
+						</div>
+
+						{/* user allocation */}
 						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-								<div className="text-xl font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
-									Your Allocation
+								<div className="text-[24px] font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
+									Your Allocation{" "}
+									{accountStatistics?.stakedNft ? (
+										<span className="text-[16px] font-[500]">
+											(Starksport NFT #{accountStatistics?.nftId})
+										</span>
+									) : null}
 								</div>
 
 								<div className="grid grid-cols-2 gap-y-6 border-b border-b-[#2D313E] py-6">
@@ -716,6 +799,14 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 													launchpad.tokenSale.decimals
 												)
 											)}{" "}
+											{!!accountStatistics?.stakedNft
+												? `( +${numberWithCommas(
+														+ethers.formatUnits(
+															accountStatistics?.allocation ?? "0",
+															launchpad.tokenSale.decimals
+														) / 10
+												  )} )`
+												: null}{" "}
 											{launchpad.tokenSale.symbol}
 										</div>
 									</div>
@@ -737,14 +828,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<div className="text-[12px] text-[#C6C6C6]">Claimable</div>
 										<div className="text-[14px] text-[#F1F1F1] font-bold">
 											{numberWithCommas(
-												+ethers.formatUnits(
-													accountStatistics?.allocation ?? "0",
+												ethers.formatUnits(
+													accountStatistics?.claimable ?? "0",
 													launchpad.tokenSale.decimals
-												) -
-													+ethers.formatUnits(
-														accountStatistics?.claimed ?? "0",
-														launchpad.tokenSale.decimals
-													)
+												)
 											)}{" "}
 											{launchpad.tokenSale.symbol}
 										</div>
@@ -768,7 +855,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 													claimable={claimable}
 													text="Claim"
 													loading={claiming}
-													loadingText="Claiming"
+													loadingText=""
 												/>
 											</div>
 										</>
@@ -821,13 +908,14 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 											claimable={claimableRemaining}
 											text="Claim"
 											loading={claimingRemaining}
-											loadingText="Claiming"
+											loadingText=""
 										/>
 									</div>
 								</div>
 							</div>
 						)}
 
+						{/*  vesting schedule */}
 						<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 							<div className="text-xl font-bold text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
 								Vesting Schedule
@@ -851,50 +939,6 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 									</li>
 								))}
 							</ul>
-						</div>
-
-						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="border-b border-b-[#2D313E] pb-3">
-								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
-									Project information
-								</div>
-								<div className="flex gap-3">
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/x.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/telegram.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/discord.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/medium.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/github.svg" fill />
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
-								<Image alt="image" src="/mocks/banner.png" fill />
-							</div>
-
-							<div
-								className="text-[#C6C6C6]"
-								dangerouslySetInnerHTML={{ __html: launchpad.desc }}
-							/>
 						</div>
 					</div>
 				</div>

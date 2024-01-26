@@ -13,22 +13,9 @@ import { usePathname } from "next/navigation";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
 import useSWR from "swr";
 import axios from "axios";
+import Status from "../../components/Status";
 
-const LatestLaunchpad = () => {
-	const { data: launchpad, isLoading } = useSWR<ILaunchpad | undefined>(
-		["Home"],
-		async () => {
-			try {
-				const { data } = await axios.get<[ILaunchpad[], number]>(
-					`${BASE_API}/launchpads`
-				);
-				return data[0]?.[0] ?? undefined;
-			} catch (error) {
-				return undefined;
-			}
-		}
-	);
-
+const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -59,7 +46,7 @@ const LatestLaunchpad = () => {
 		return () => clearInterval(interval);
 	}, [launchpad?.start, launchpad?.end]);
 
-	return !isLoading && !!launchpad ? (
+	return (
 		<div className="flex flex-col rounded-3xl bg-[#1A1C24]">
 			<div
 				className={clsx(
@@ -107,41 +94,7 @@ const LatestLaunchpad = () => {
 								{launchpad.name}
 							</div>
 							<div className="flex flex-wrap items-center gap-2">
-								{timeStartDiff.status && (
-									<div
-										className={clsx(
-											"flex items-center gap-1 py-1.5 px-3 rounded-2xl h-[30px]",
-											{
-												"bg-[#61b3ff26]": LAUNCHPAD_STATUS.UPCOMING,
-												"bg-[#6cff7b26]": LAUNCHPAD_STATUS.INPROGRESS,
-												"bg-[#FFE86C26] border-[#FFE86C] border-[1px]":
-													LAUNCHPAD_STATUS.END,
-											}
-										)}
-									>
-										<Image
-											src={`/svg/${timeStartDiff.status}.svg`}
-											alt={`${timeStartDiff.status}`}
-											width={8}
-											height={8}
-										/>
-										<div
-											className={clsx(
-												"text-[12px] font-medium leading-[14px] capitalize",
-												{
-													"text-[#61B3FF]":
-														timeStartDiff.status == LAUNCHPAD_STATUS.UPCOMING,
-													"text-[#6CFF7B]":
-														timeStartDiff.status == LAUNCHPAD_STATUS.INPROGRESS,
-													"text-[#FFE86C]":
-														timeStartDiff.status == LAUNCHPAD_STATUS.END,
-												}
-											)}
-										>
-											{timeStartDiff.status}
-										</div>
-									</div>
-								)}
+								<Status status={timeStartDiff.status} />
 								<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 									<div className="w-[18px] h-[18px] relative">
 										<Image
@@ -313,8 +266,6 @@ const LatestLaunchpad = () => {
 				</Link>
 			</div>
 		</div>
-	) : (
-		<div className="skeleton w-full min-h-32"></div>
 	);
 };
 
