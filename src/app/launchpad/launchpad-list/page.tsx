@@ -181,7 +181,6 @@ export default async function LaunchpadListPage() {
 			</div>
 
 			{/* latest launchpad */}
-
 			<LatestLaunchpad launchpad={launchpads[0]} />
 
 			{/* list launchpad */}

@@ -1,6 +1,9 @@
+"use client";
+
 import { LAUNCHPAD_STATUS } from "@/app/constants";
 import clsx from "clsx";
 import Image from "next/image";
+import { useMemo } from "react";
 
 const statusToColor = (status: LAUNCHPAD_STATUS | undefined) => {
 	switch (status) {
@@ -35,7 +38,7 @@ export default function Status({
 }: {
 	status: LAUNCHPAD_STATUS | undefined;
 }) {
-	const { text, bg } = statusToColor(status);
+	const { text, bg } = useMemo(() => statusToColor(status), [status]);
 
 	return !status ? (
 		<div className="skeleton w-[80px] h-[30px] rounded-2xl bg-[#2D313E]" />

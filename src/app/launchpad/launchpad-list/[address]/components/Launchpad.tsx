@@ -1,32 +1,29 @@
 "use client";
+import Breadcrumbs from "@/app/components/Breadcrumbs";
+import Button from "@/app/components/Button";
 import {
 	BASE_API,
 	LAUNCHPAD_STATUS,
 	StarknetRpcProvider,
 } from "@/app/constants";
+import { useWeb3 } from "@/app/hooks";
+import ERC20Abi from "@/app/launchpad/abis/starknet/ERC20.json";
+import SFLaunchpadAbi from "@/app/launchpad/abis/starknet/SFLaunchpad.json";
+import Status from "@/app/launchpad/components/Status";
+import { useWeb3Store } from "@/app/store";
+import { ILaunchpad } from "@/app/types";
 import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
+import dayjs from "dayjs";
 import { ethers } from "ethers";
 import Image from "next/image";
-import Link from "next/link";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { toast } from "react-toastify";
 import { CallData, Contract, cairo, num } from "starknet";
-import { useAccount } from "@starknet-react/core";
-import dayjs from "dayjs";
 import useSWR from "swr";
-import clsx from "clsx";
-import { ILaunchpad } from "@/app/types";
-import Button from "@/app/components/Button";
-import { useWeb3Store } from "@/app/store";
-import { ToastContainer, toast } from "react-toastify";
-
-import "react-toastify/dist/ReactToastify.css";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import Status from "@/app/launchpad/components/Status";
-import SFLaunchpadAbi from "@/app/launchpad/abis/starknet/SFLaunchpad.json";
-import ERC20Abi from "@/app/launchpad/abis/starknet/ERC20.json";
 
 export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
-	const { account, address } = useAccount();
+	const { account, library, isConnected } = useWeb3();
+
 	const txHash = useWeb3Store((s) => s.txHash);
 
 	const { data: launchpadStatistics, isLoading: launchpadStatisticsLoading } =
@@ -67,7 +64,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			nftId: string | undefined;
 			claimedNft: boolean;
 		}>(
-			[launchpad.address, launchpad.tokenRaise.address, address, txHash],
+			[launchpad.address, launchpad.tokenRaise.address, account, txHash],
 			async () => {
 				try {
 					const tokenRaiseContract = new Contract(
@@ -82,10 +79,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					);
 
 					const [balanceOf, userStats] = await Promise.all([
-						tokenRaiseContract.balanceOf(address!, {
+						tokenRaiseContract.balanceOf(account!, {
 							parseResponse: true,
 						}),
-						launchpadContract.get_user_stats(address!, {
+						launchpadContract.get_user_stats(account!, {
 							parseResponse: true,
 						}),
 					]);
@@ -124,8 +121,8 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 		);
 
 	const { data: nfts, isLoading: nftsLoading } = useSWR<any[]>(
-		[address],
-		() => fetch(`${BASE_API}/nfts?address=${address}`).then((r) => r.json()),
+		[account],
+		() => fetch(`${BASE_API}/nfts?address=${account}`).then((r) => r.json()),
 		{ refreshInterval: 300 }
 	);
 
@@ -208,6 +205,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 		return [claimable, claimableRemaining];
 	}, [
+		account,
 		accountStatistics?.allocation,
 		accountStatistics?.claimed,
 		timeStartDiff.status,
@@ -217,7 +215,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	]);
 
 	const handleCommit = useCallback(async () => {
-		if (!account) return toast.error("Connect wallet first");
+		if (!isConnected) return toast.error("Connect wallet first");
 		try {
 			if (!commitAmount || isNaN(+commitAmount))
 				return toast.error("Invalid commit amount");
@@ -256,7 +254,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				},
 			];
 
-			const tx = await account.execute(calls);
+			const tx = await library.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 			useWeb3Store.setState({ txHash: tx.transaction_hash });
 			setCommitAmount("");
@@ -267,7 +265,8 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			toast.error(error.message);
 		}
 	}, [
-		account,
+		isConnected,
+		library,
 		launchpad.address,
 		launchpad.tokenRaise.address,
 		launchpad.tokenRaise.decimals,
@@ -278,7 +277,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	]);
 
 	const handleClaim = useCallback(async () => {
-		if (!account) return toast.error("Connect wallet first");
+		if (!library) return toast.error("Connect wallet first");
 		try {
 			if (!claimable) return toast.error("Nothing to claim");
 
@@ -292,7 +291,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					calldata: [],
 				},
 			];
-			const tx = await account.execute(calls);
+			const tx = await library.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 			useWeb3Store.setState({ txHash: tx.transaction_hash });
 			setClaiming(false);
@@ -301,10 +300,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			setClaiming(false);
 			toast.error(error.message);
 		}
-	}, [account, launchpad.address, claimable]);
+	}, [library, launchpad.address, claimable]);
 
 	const handleClaimRemaining = useCallback(async () => {
-		if (!account) return toast.error("Connect wallet first");
+		if (!library) return toast.error("Connect wallet first");
 		try {
 			if (!claimableRemaining) return toast.error("Nothing to claim");
 
@@ -318,7 +317,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					calldata: [],
 				},
 			];
-			const tx = await account.execute(calls);
+			const tx = await library.execute(calls);
 			await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 			useWeb3Store.setState({ txHash: tx.transaction_hash });
 			setClaimingRemaining(false);
@@ -329,11 +328,11 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			setClaimingRemaining(false);
 			toast.error(error.message);
 		}
-	}, [account, launchpad.address, claimableRemaining]);
+	}, [library, launchpad.address, claimableRemaining]);
 
 	const handleStakeNft = useCallback(
 		async (nftId: string) => {
-			if (!account) return toast.error("Connect wallet first");
+			if (!library) return toast.error("Connect wallet first");
 			try {
 				if (!launchpad.address || !modalRef.current) return;
 				setStakingNft(true);
@@ -354,7 +353,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 						}),
 					},
 				];
-				const tx = await account.execute(calls);
+				const tx = await library.execute(calls);
 				await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
 				modalRef.current.click();
 				useWeb3Store.setState({ txHash: tx.transaction_hash });
@@ -365,7 +364,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 				toast.error(error.message);
 			}
 		},
-		[account, launchpad.address, claimableRemaining, modalRef]
+		[library, launchpad.address, claimableRemaining, modalRef]
 	);
 
 	const handleOpenStakeNftModal = useCallback(() => {
@@ -434,16 +433,6 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 					<button ref={modalRef}>close</button>
 				</form>
 			</dialog>
-			<ToastContainer
-				position="bottom-right"
-				autoClose={3000}
-				hideProgressBar={false}
-				newestOnTop={false}
-				rtl={false}
-				pauseOnFocusLoss
-				pauseOnHover
-				theme="light"
-			/>
 
 			<Breadcrumbs
 				items={[
@@ -682,7 +671,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<Button
 											handler={handleCommit}
 											claimable={
-												!!account &&
+												!!library &&
 												!!accountStatistics?.committed &&
 												+commitAmount <
 													BigInt(launchpad.maxCommit) -
@@ -696,7 +685,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										<Button
 											handler={handleOpenStakeNftModal}
 											claimable={
-												!!account &&
+												!!library &&
 												!nftsLoading &&
 												!!launchpadStatistics?.committed &&
 												+launchpadStatistics.committed >
@@ -784,6 +773,14 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 													launchpad.tokenRaise.decimals
 												)
 											)}{" "}
+											{!!accountStatistics?.stakedNft
+												? `( +${numberWithCommas(
+														+ethers.formatUnits(
+															accountStatistics?.committed ?? "0",
+															launchpad.tokenSale.decimals
+														) / 10
+												  )} )`
+												: null}{" "}
 											{launchpad.tokenRaise.symbol}
 										</div>
 									</div>
@@ -799,14 +796,6 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 													launchpad.tokenSale.decimals
 												)
 											)}{" "}
-											{!!accountStatistics?.stakedNft
-												? `( +${numberWithCommas(
-														+ethers.formatUnits(
-															accountStatistics?.allocation ?? "0",
-															launchpad.tokenSale.decimals
-														) / 10
-												  )} )`
-												: null}{" "}
 											{launchpad.tokenSale.symbol}
 										</div>
 									</div>

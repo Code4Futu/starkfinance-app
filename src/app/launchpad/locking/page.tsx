@@ -1,19 +1,16 @@
 "use client";
 
+import Breadcrumbs from "@/app/components/Breadcrumbs";
+import { yupResolver } from "@hookform/resolvers/yup";
+import { useAccount } from "@starknet-react/core";
 import clsx from "clsx";
 import dayjs from "dayjs";
-import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import ReactDatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import Breadcrumbs from "@/app/components/Breadcrumbs";
-import { useAccount } from "@starknet-react/core";
+import * as yup from "yup";
 import { LockInputs, lock } from "../state/locking";
-import { ToastContainer, toast } from "react-toastify";
 
 const schema = yup.object().shape({
 	tokenLock: yup

@@ -187,7 +187,7 @@ export const drawerData = [
 ];
 
 export const socialLink = {
-	discord: "https://discord.com/invite/starksport",
+	discord: "https://discord.gg/starkfinance",
 	tw: "https://twitter.com/starkfinance",
 	teleChannel: "https://t.me/starksportchanel",
 	teleGlobal: "https://t.me/starksportglobal",

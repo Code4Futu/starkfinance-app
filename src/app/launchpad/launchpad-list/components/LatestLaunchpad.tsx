@@ -50,7 +50,7 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 		<div className="flex flex-col rounded-3xl bg-[#1A1C24]">
 			<div
 				className={clsx(
-					"relative md:hidden w-full rounded-t-3xl flex flex-col h-[50%]",
+					"relative md:hidden w-full rounded-t-3xl flex flex-col h-[33.33%]",
 					currentPath !== "/" && "hidden"
 				)}
 			>
@@ -65,7 +65,7 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 			>
 				<div
 					className={clsx(
-						"lg:hidden w-full pt-[50%] relative rounded-2xl overflow-hidden",
+						"lg:hidden w-full pt-[33.33%] relative rounded-2xl overflow-hidden",
 						currentPath === "/" ? "hidden md:block h-[224px] pt-0" : ""
 					)}
 				>
@@ -132,20 +132,22 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 					</Link>
 				</div>
 
-				<div className="flex gap-6 flex-col lg:flex-row">
-					<div className="hidden lg:block w-[360px] h-[180px] 2xl:w-[400px] 2xl:h-[200px] relative">
-						<Image alt="image" src="/mocks/banner.png" fill />
-						<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
-							<div className="text-[36px]">
-								{dayjs(launchpad.start * 1000).format("DD")}
+				<div className="grid grid-cols-1 lg:grid-cols-11 gap-6">
+					<div className="col-span-1 lg:col-span-5 hidden lg:flex ">
+						<div className="w-full  pt-[33.33%] relative">
+							<Image alt="image" src="/mocks/banner.png" fill />
+							<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
+								<div className="text-[36px]">
+									{dayjs(launchpad.start * 1000).format("DD")}
+								</div>
+								<div>{dayjs(launchpad.start * 1000).format("MMM")}</div>
 							</div>
-							<div>{dayjs(launchpad.start * 1000).format("MMM")}</div>
 						</div>
 					</div>
 
-					<div className="flex-1 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
+					<div className="col-span-1 lg:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
 						<div className="flex flex-col md:flex-row justify-between gap-4">
-							<div className="flex flex-col gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
+							<div className="flex flex-1 flex-col  gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Total raise
 								</div>
@@ -162,7 +164,7 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-col gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
+							<div className="flex flex-1 flex-col gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Total sale
 								</div>
@@ -179,7 +181,7 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-col gap-1 pb-3">
+							<div className="flex flex-1 flex-col gap-1 pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Rate
 								</div>

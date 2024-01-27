@@ -48,7 +48,7 @@ export default function LaunchpadItem({
 			className="flex flex-col gap-6 p-3 border rounded-3xl border-[#24C3BC] bg-[#1A1C24]"
 		>
 			<div className="w-full pt-[50%] relative rounded-2xl overflow-hidden">
-				<Image alt="image" src="/mocks/banner.png" fill />
+				<Image alt="image" src="/mocks/banner_mobile.png" fill />
 				<div className="absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12] ">
 					<div className="text-2xl text-[#F1F1F1] font-bold">
 						{dayjs(launchpad.start * 1000).format("DD")}

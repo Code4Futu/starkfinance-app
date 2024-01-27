@@ -38,7 +38,7 @@ body {
 	background: no-repeat url("/bg.png");
 	background-size: cover;
 	width: 100vw;
-	height: 100vh;
+	height: 100dvh;
 	overflow: hidden;
 	/* color: rgb(var(--foreground-rgb));
 	background: linear-gradient(

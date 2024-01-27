@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://testnet.starkfinance.co/
+
+# Sitemaps
+Sitemap: https://testnet.starkfinance.co/sitemap.xml

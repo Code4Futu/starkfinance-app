@@ -30,7 +30,6 @@ interface Props {
 
 export const SiteNavigation = (props: Props) => {
 	const { address } = useAccount();
-	const { connect, connectors } = useConnectors();
 	const currentPath = usePathname();
 
 	return (
@@ -40,10 +39,10 @@ export const SiteNavigation = (props: Props) => {
 			)}
 		>
 			<div className="flex items-center gap-2">
-				<Link href={"/"} passHref className="block lg:hidden ">
-					<div className="w-[48px] h-[48px] relative">
+				<Link href="/" passHref prefetch legacyBehavior>
+					<a className="block lg:hidden w-[48px] h-[48px] relative">
 						<Image src="/logo.png" alt="logo" fill sizes="48px" />
-					</div>
+					</a>
 				</Link>
 			</div>
 			<div className="flex gap-3">
