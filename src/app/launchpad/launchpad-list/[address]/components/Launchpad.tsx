@@ -13,6 +13,7 @@ import Status from "@/app/launchpad/components/Status";
 import { useWeb3Store } from "@/app/store";
 import { ILaunchpad } from "@/app/types";
 import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
+import clsx from "clsx";
 import dayjs from "dayjs";
 import { ethers } from "ethers";
 import Image from "next/image";
@@ -20,6 +21,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "react-toastify";
 import { CallData, Contract, cairo, num } from "starknet";
 import useSWR from "swr";
+import utc from "dayjs/plugin/utc";
+
+dayjs.extend(utc);
 
 export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 	const { account, library, isConnected } = useWeb3();
@@ -205,6 +209,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 		return [claimable, claimableRemaining];
 	}, [
+		accountStatistics?.lastCommittedTime,
 		account,
 		accountStatistics?.allocation,
 		accountStatistics?.claimed,
@@ -544,13 +549,17 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 								<div className="text-[12px] text-[#C6C6C6]">Start time</div>
 								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{dayjs(launchpad.start * 1000).format("HH:mm DD MMM YYYY")}
+									{dayjs
+										.utc(launchpad.start * 1000)
+										.format("MMM DD YYYY HH:mm")}{" "}
+									UTC
 								</div>
 							</div>
 							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
 								<div className="text-[12px] text-[#C6C6C6]">End time</div>
 								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{dayjs(launchpad.end * 1000).format("HH:mm DD MMM YYYY")}
+									{dayjs.utc(launchpad.end * 1000).format("MMM DD YYYY HH:mm")}{" "}
+									UTC
 								</div>
 							</div>
 							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
@@ -761,7 +770,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 									) : null}
 								</div>
 
-								<div className="grid grid-cols-2 gap-y-6 border-b border-b-[#2D313E] py-6">
+								<div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 border-b border-b-[#2D313E] py-6">
 									<div>
 										<div className="text-[12px] text-[#C6C6C6]">
 											Committed SFN
@@ -826,19 +835,8 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										</div>
 									</div>
 									{!isNaN(claimableTime) && (
-										<>
-											<div>
-												<div className="text-[12px] text-[#C6C6C6]">
-													Time to unlock
-												</div>
-												<div className="text-[14px] text-[#F1F1F1] font-bold">
-													{dayjs(claimableTime * 1000).format(
-														"HH:mm DD MMM YYYY"
-													)}
-												</div>
-											</div>
-
-											<div>
+										<div className="col-span-2 md:col-span-1 flex justify-end">
+											<div className="flex-1 md:flex-none flex">
 												<Button
 													handler={handleClaim}
 													claimable={claimable}
@@ -847,11 +845,11 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 													loadingText=""
 												/>
 											</div>
-										</>
+										</div>
 									)}
 								</div>
 
-								<div className="grid grid-cols-2 pt-6 gap-y-6">
+								<div className="grid grid-cols-2 md:grid-cols-5 pt-6 gap-y-6">
 									<div>
 										<div className="text-[12px] text-[#C6C6C6]">
 											Your deducted SFN
@@ -882,23 +880,38 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										</div>
 									</div>
 
-									<div>
+									<div className="col-span-2">
 										<div className="text-[12px] text-[#C6C6C6]">
 											Time to unlock
 										</div>
 										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{dayjs(launchpad.end * 1000).format("HH:mm DD MMM YYYY")}
+											{dayjs
+												.utc(
+													(+(accountStatistics?.lastCommittedTime ?? 0) +
+														259200) *
+														1000
+												)
+												.format("MMM DD YYYY HH:mm")}{" "}
+											UTC
 										</div>
 									</div>
 
-									<div>
-										<Button
-											handler={handleClaimRemaining}
-											claimable={claimableRemaining}
-											text="Claim"
-											loading={claimingRemaining}
-											loadingText=""
-										/>
+									<div className="col-span-2 md:col-span-1 flex justify-end">
+										<div className="flex-1 md:flex-none flex">
+											<Button
+												handler={handleClaimRemaining}
+												claimable={
+													claimableRemaining &&
+													typeof accountStatistics?.lastCommittedTime !==
+														"undefined" &&
+													+accountStatistics.lastCommittedTime + 259200 <
+														Math.floor(Date.now() / 1000)
+												}
+												text="Claim"
+												loading={claimingRemaining}
+												loadingText=""
+											/>
+										</div>
 									</div>
 								</div>
 							</div>
@@ -912,16 +925,25 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 							<ul className="steps steps-vertical">
 								{launchpad.vestingTime.map((time: number, idx: number) => (
-									<li key={idx} data-content="" className="step">
+									<li
+										key={idx}
+										data-content=""
+										className={clsx("step", {
+											"step-success":
+												typeof accountStatistics?.claimedCount !==
+													"undefined" && +accountStatistics.claimedCount > idx,
+										})}
+									>
 										<div>
 											<div className="flex gap-3 items-center">
 												<div className="py-1 px-3 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] text-[12px] text-[#0D0E12] rounded-xl text-center">
 													{launchpad.vestingPercent[idx] / 1000}%
 												</div>
 												<div className="text-[12px] text-[#C6C6C6]">
-													{dayjs((launchpad.end + time) * 1000).format(
-														"HH:mm DD MMM YYYY"
-													)}
+													{dayjs
+														.utc((launchpad.end + time) * 1000)
+														.format("MMM DD YYYY HH:mm")}{" "}
+													UTC
 												</div>
 											</div>
 										</div>

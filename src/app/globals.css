@@ -440,3 +440,8 @@ input::placeholder {
 		),
 		#0d0e12;
 }
+
+.steps .step-success::before,
+.steps .step-success:after {
+	background: linear-gradient(135deg, #24c3bc 0%, #adfffb 100%);
+}
