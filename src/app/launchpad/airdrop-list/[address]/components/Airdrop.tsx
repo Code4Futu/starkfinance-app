@@ -46,6 +46,8 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 			}
 		});
 
+	console.log(address);
+
 	const { data: accountStatistics, isLoading: accountStatisticsLoading } =
 		useSWR<{
 			claimed: string | undefined;
@@ -100,8 +102,6 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 	const [commitAmount, setCommitAmount] = useState<string>("");
 	const [submitting, setSubmitting] = useState<boolean>(false);
-
-	console.log(accountStatistics);
 
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
@@ -210,7 +210,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 				<div className="flex justify-stretch gap-3">
 					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
-						<Image alt="image" src="/logo80x80.png" fill sizes="any" />
+						<Image alt="image" src="/tokens/sfn.png" fill sizes="any" />
 					</div>
 					<div className="flex-1">
 						<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
@@ -409,53 +409,6 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 									</div>
 								</div> */}
 						</div>
-					</div>
-
-					<div className="col-span-1 lg:col-span-2 flex-1 flex flex-col gap-6">
-						{/* project info */}
-						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="border-b border-b-[#2D313E] pb-3">
-								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
-									Project information
-								</div>
-								<div className="flex gap-3">
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/x.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/telegram.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/discord.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/medium.svg" fill />
-										</div>
-									</div>
-									<div className="p-1 bg-[#ffffff26] rounded-lg">
-										<div className="w-[24px] h-[24px] relative">
-											<Image alt="image" src="/svg/github.svg" fill />
-										</div>
-									</div>
-								</div>
-							</div>
-
-							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
-								<Image alt="image" src="/mocks/banner.png" fill />
-							</div>
-
-							<div
-								className="text-[#C6C6C6]"
-								dangerouslySetInnerHTML={{ __html: airdrop.desc }}
-							/>
-						</div>
 
 						{/* your allocation */}
 						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
@@ -469,8 +422,8 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 										You are not eligible
 									</div>
 								) : (
-									<div className="grid grid-cols-4 gap-y-6 border-b border-b-[#2D313E] py-6">
-										<div className="flex flex-col justify-center">
+									<div className="grid grid-cols-1 gap-6 pt-3">
+										<div className="w-full flex flex-row justify-between items-center border-b border-b-[#2D313E] pb-3">
 											<div className="text-[12px] text-[#C6C6C6]">
 												Your airdrop
 											</div>
@@ -485,7 +438,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 											</div>
 										</div>
 
-										<div className="flex flex-col justify-center">
+										<div className="w-full flex flex-row justify-between items-center border-b border-b-[#2D313E] pb-3">
 											<div className="text-[12px] text-[#C6C6C6]">Claimed</div>
 											<div className="text-[14px] text-[#F1F1F1] font-bold">
 												{numberWithCommas(
@@ -498,7 +451,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 											</div>
 										</div>
 
-										<div className="flex flex-col justify-center">
+										<div className="w-full flex flex-row justify-between items-center border-b border-b-[#2D313E] pb-3">
 											<div className="text-[12px] text-[#C6C6C6]">
 												Claimable
 											</div>
@@ -520,24 +473,8 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 											</div>
 										</div>
 
-										<div className="flex justify-end">
-											{/* <span
-												className={clsx(
-													"cursor-pointer flex-1 text-center px-6 py-3 font-xl font-bold  rounded-2xl",
-													{
-														"bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB]":
-															false,
-														"text-[#1A1C24]": false,
-														"bg-[#2D313E]": true,
-														"text-[#C6C6C6]": true,
-													}
-												)}
-												onClick={handleClaim}
-											>
-												Claim
-											</span> */}
-
-											<div>
+										<div className="flex">
+											<div className="flex w-full">
 												<Button
 													handler={handleClaim}
 													claimable={true}
@@ -577,10 +514,57 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 								))}
 							</ul>
 						</div>
+					</div>
+
+					<div className="col-span-1 lg:col-span-2 flex-1 flex flex-col gap-6">
+						{/* project info */}
+						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="border-b border-b-[#2D313E] pb-3">
+								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
+									Project information
+								</div>
+								<div className="flex gap-3">
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/x.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/telegram.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/discord.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/medium.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/github.svg" fill />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="w-full pt-[50%] relative">
+								<Image alt="image" src="/mocks/banner2.png" fill />
+							</div>
+
+							<div
+								className="text-[#C6C6C6]"
+								dangerouslySetInnerHTML={{ __html: airdrop.desc }}
+							/>
+						</div>
 
 						{/* eligible users */}
-						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="border-b border-b-[#2D313E] pb-3 flex justify-between">
+						<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="border-b border-b-[#2D313E] pb-3 flex justify-between mb-3">
 								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
 									Eligible Users
 								</div>
@@ -602,7 +586,10 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 							{airdrop.eligibles.map((e, idx) => (
 								<div
 									key={idx}
-									className="text-center max-w-[200px] overflow-hidden"
+									className={clsx(
+										"text-center max-w-full overflow-hidden line-clamp-1 py-2 mt",
+										idx % 2 === 0 && "bg-[#232631]"
+									)}
 								>
 									{e.spender}
 								</div>

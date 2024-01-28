@@ -94,7 +94,7 @@ export const TOKEN_ICON_LIST = {
 	[StarknetChainId.TESTNET]: {
 		[WETH[StarknetChainId.TESTNET].address]: icons.v2.eth.src,
 		[TOKEN_LIST[StarknetChainId.TESTNET][1].address]: icons.v2.usdc.src,
-		[TOKEN_LIST[StarknetChainId.TESTNET][2].address]: "/logo80x80.png",
+		[TOKEN_LIST[StarknetChainId.TESTNET][2].address]: "/tokens/sfn.png",
 	},
 };
 

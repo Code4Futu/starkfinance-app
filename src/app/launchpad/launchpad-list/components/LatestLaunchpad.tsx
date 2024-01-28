@@ -9,13 +9,14 @@ import { ethers } from "ethers";
 import { ILaunchpad } from "@/app/types";
 import dayjs from "dayjs";
 import clsx from "clsx";
-import { usePathname } from "next/navigation";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
-import useSWR from "swr";
-import axios from "axios";
 import Status from "../../components/Status";
 
-const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
+export default function LatestLaunchpad({
+	launchpad,
+}: {
+	launchpad: ILaunchpad;
+}) {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -29,8 +30,6 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 		s: 0,
 		status: undefined,
 	});
-
-	const currentPath = usePathname();
 
 	useEffect(() => {
 		const interval = setInterval(() => {
@@ -47,50 +46,23 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 	}, [launchpad?.start, launchpad?.end]);
 
 	return (
-		<div className="flex flex-col rounded-3xl bg-[#1A1C24]">
+		<div className="rounded-3xl bg-[#1A1C24] overflow-hidden border-2 border-[#24C3BC]">
 			<div
 				className={clsx(
-					"relative md:hidden w-full rounded-t-3xl flex flex-col h-[33.33%]",
-					currentPath !== "/" && "hidden"
+					"lg:hidden w-[calc(100% + 10px)] pt-[33.33%] relative rounded-2xl "
 				)}
 			>
-				<Image alt="image" src="/mocks/banner_mobile.png" fill />
+				<Image alt="image" src="/mocks/banner.jpeg" fill />
 			</div>
-			<div
-				className={clsx(
-					"flex flex-col gap-3 md:gap-6 p-6 rounded-3xl bg-[#1A1C24] border-2 border-[#24C3BC]",
-					currentPath === "/" &&
-						"border-t-0 rounded-t-none md:border-t md:rounded-3xl"
-				)}
-			>
-				<div
-					className={clsx(
-						"lg:hidden w-full pt-[33.33%] relative rounded-2xl overflow-hidden",
-						currentPath === "/" ? "hidden md:block h-[224px] pt-0" : ""
-					)}
-				>
-					<Image alt="image" src="/mocks/banner.png" fill />
-					<div
-						className={clsx(
-							"absolute top-3 left-3 p-3 rounded-xl bg-[#0D0E12]",
-							currentPath === "/" ? "hidden" : ""
-						)}
-					>
-						<div className="text-2xl text-[#F1F1F1] font-bold">
-							{dayjs(launchpad.start * 1000).format("DD")}
-						</div>
-						<div className="text-sm text-[#C6C6C6]">
-							{dayjs(launchpad.start).format("MMM")}
-						</div>
-					</div>
-				</div>
+
+			<div className="p-6 flex flex-col gap-3 md:gap-6">
 				<div className="flex justify-between items-end self-stretch">
 					<div className="flex justify-stretch gap-3">
 						<div className="w-[55px] h-[55px] md:w-[66px] md:h-[66px] relative">
-							<Image alt="image" src="/logo80x80.png" fill />
+							<Image alt="image" src="/tokens/sfn.png" fill />
 						</div>
 						<div className="flex-1 flex flex-col justify-between gap-2">
-							<div className="text-base md:text-2xl leading-[19px] font-bold line-clamp-1 ">
+							<div className="text-base md:text-2xl leading-[19px] font-bold line-clamp-1">
 								{launchpad.name}
 							</div>
 							<div className="flex flex-wrap items-center gap-2">
@@ -107,14 +79,6 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 										{launchpad.chainKey}
 									</div>
 								</div>
-								<div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
-									<div className="w-[18px] h-[18px] relative">
-										<Image src="/logo.png" alt="token" fill />
-									</div>
-									<div className=" text-[12px] text-[#F1F1F1]">
-										{launchpad.tokenRaise.symbol}
-									</div>
-								</div>
 								<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] uppercase">
 									{launchpad.type}
 								</div>
@@ -124,11 +88,10 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 					<Link
 						href={`/launchpad/launchpad-list/${launchpad.address}`}
 						className={clsx(
-							"hidden w-full md:flex md:max-w-[206px] text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl",
-							currentPath !== "/" && "hidden"
+							"hidden w-full md:flex md:max-w-[206px] text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
 						)}
 					>
-						Go to Launchpad Now
+						Go to Launchpad now
 					</Link>
 				</div>
 
@@ -136,18 +99,12 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 					<div className="col-span-1 lg:col-span-5 hidden lg:flex ">
 						<div className="w-full  pt-[33.33%] relative">
 							<Image alt="image" src="/mocks/banner.png" fill />
-							<div className="absolute top-3 left-3 p-3 rounded-2xl bg-[#0D0E12] text-[#F1F1F1]">
-								<div className="text-[36px]">
-									{dayjs(launchpad.start * 1000).format("DD")}
-								</div>
-								<div>{dayjs(launchpad.start * 1000).format("MMM")}</div>
-							</div>
 						</div>
 					</div>
 
 					<div className="col-span-1 lg:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
 						<div className="flex flex-col md:flex-row justify-between gap-4">
-							<div className="flex flex-1 flex-col  gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start  gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Total raise
 								</div>
@@ -164,7 +121,7 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-1 flex-col gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Total sale
 								</div>
@@ -181,32 +138,27 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-1 flex-col gap-1 pb-3">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start gap-1 pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Rate
 								</div>
 								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
 									1 {launchpad.tokenRaise.symbol} ={" "}
 									{numberWithCommas(
-										+ethers.formatUnits(
-											launchpad.totalSale,
-											launchpad.tokenSale.decimals
-										) /
+										launchpad.totalRaiseUSD /
 											+ethers.formatUnits(
 												launchpad.totalRaise,
 												launchpad.tokenRaise.decimals
 											)
 									)}{" "}
-									{launchpad.tokenSale.symbol}
+									USDT
 								</div>
 							</div>
 						</div>
 						<div className="border-t border-t-[#2D313E] pt-3">
-							<div className="mb-2.5">
-								<span className="text-xs font-normal leading-[14px] text-[#c6c6c6] md:text-sm md:leading-[16px]">
-									Launchpad {statusToText(timeStartDiff.status)}
-								</span>
-							</div>
+							<span className="text-xs font-normal leading-[14px] text-[#c6c6c6] md:text-sm md:leading-[16px]">
+								Launchpad {statusToText(timeStartDiff.status)}
+							</span>
 							<div className="flex items-center justify-between md:justify-start gap-1.5 md:gap-6">
 								<div>
 									<span className="countdown font-bold text-xs md:text-base">
@@ -260,15 +212,12 @@ const LatestLaunchpad = ({ launchpad }: { launchpad: ILaunchpad }) => {
 				<Link
 					href={`/launchpad/launchpad-list/${launchpad.address}`}
 					className={clsx(
-						"w-full md:max-w-[280px] text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl",
-						currentPath === "/" && "md:hidden"
+						"block md:hidden w-full text-center px-6 py-3 font-xl font-bold text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl"
 					)}
 				>
-					Go to Launchpad Now
+					Go to Launchpad now
 				</Link>
 			</div>
 		</div>
 	);
-};
-
-export default LatestLaunchpad;
+}

@@ -454,7 +454,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 				<div className="flex justify-stretch gap-3">
 					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
-						<Image alt="image" src="/logo80x80.png" fill />
+						<Image alt="image" src="/tokens/sfn.png" fill />
 					</div>
 					<div className="flex-1">
 						<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
@@ -748,8 +748,8 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 								</div>
 							</div>
 
-							<div className="w-full h-[113px] md:h-[378px] lg:h-[300px] relative">
-								<Image alt="image" src="/mocks/banner.png" fill />
+							<div className="w-full pt-[50%] rounded-2xl relative overflow-hidden">
+								<Image alt="image" src="/mocks/banner2.png" fill />
 							</div>
 
 							<div

@@ -35,6 +35,8 @@ export interface ILaunchpad {
 
 	totalRaise: string;
 
+	totalRaiseUSD: number;
+
 	minCommit: string;
 
 	maxCommit: string;

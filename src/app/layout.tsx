@@ -41,7 +41,7 @@ export const metadata: Metadata = {
 		},
 	},
 	icons: {
-		icon: "/favicon.ico",
+		icon: "/tokens/sfn.png",
 		shortcut: "/logo.png",
 		apple: "/apple-touch-icon.png",
 		other: {
@@ -71,8 +71,8 @@ export default function RootLayout({
 		<html lang="en">
 			<head>
 				<title>StarkFinance</title>
-				<link rel="shortcut icon" href="/favicon.ico" />
-				<link rel="icon" href="/favicon.ico" sizes="any" />
+				<link rel="shortcut icon" href="/tokens/sfn.png" />
+				<link rel="icon" href="/tokens/sfn.png" sizes="any" />
 				<meta
 					name="viewport"
 					content="width=device-width, initial-scale=1, maximum-scale=5, minimum-scale=1, viewport-fit=cover"
