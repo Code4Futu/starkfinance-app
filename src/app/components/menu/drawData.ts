@@ -58,10 +58,10 @@ export const drawerDataMobile = [
 			// 	title: "Airdrop List",
 			// 	path: "/launchpad/airdrop-list",
 			// },
-			{
-				title: "Your Pools",
-				path: "/launchpad/your-pools",
-			},
+			// {
+			// 	title: "Your Pools",
+			// 	path: "/launchpad/your-pools",
+			// },
 		],
 	},
 	{
@@ -148,10 +148,10 @@ export const drawerData = [
 			// 	title: "Airdrop List",
 			// 	path: "/launchpad/airdrop-list",
 			// },
-			{
-				title: "Your Pools",
-				path: "/launchpad/your-pools",
-			},
+			// {
+			// 	title: "Your Pools",
+			// 	path: "/launchpad/your-pools",
+			// },
 		],
 	},
 	{

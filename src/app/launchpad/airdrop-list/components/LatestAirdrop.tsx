@@ -68,7 +68,7 @@ export default function LatestAirdrop({
 								{airdrop.name}
 							</div>
 							<div className="flex flex-wrap items-center gap-2">
-								<Status status={timeStartDiff.status} />
+								<Status start={airdrop.start} end={airdrop.end} />
 								<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 									<div className="w-[18px] h-[18px] relative">
 										<Image

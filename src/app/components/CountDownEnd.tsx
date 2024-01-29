@@ -35,7 +35,7 @@ export default function CountDownEnd({
 	}, [start]);
 
 	if (typeof timeStats.status === "undefined")
-		return <div className="skeleton min-w-full h-6"></div>;
+		return <div className="skeleton min-w-full h-6 bg-[#2D313E]"></div>;
 
 	return (
 		<>

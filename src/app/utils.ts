@@ -61,7 +61,7 @@ export function numberWithCommas(x: number | string | undefined) {
 export function timeDiff(current: number, start: number, end: number) {
 	let status = LAUNCHPAD_STATUS.END;
 	if (current < start) status = LAUNCHPAD_STATUS.UPCOMING;
-	if (current < end) status = LAUNCHPAD_STATUS.INPROGRESS;
+	else if (current < end) status = LAUNCHPAD_STATUS.INPROGRESS;
 
 	const diff =
 		status === LAUNCHPAD_STATUS.UPCOMING

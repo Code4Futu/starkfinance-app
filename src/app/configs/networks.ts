@@ -3,10 +3,7 @@ import sample from "lodash/sample";
 import { RpcProvider } from "starknet";
 import { validateAndParseAddress } from "starknet";
 
-export const APP_CHAIN_ID =
-	process.env.NODE_ENV === "production"
-		? StarknetChainId.MAINNET
-		: StarknetChainId.TESTNET;
+export const APP_CHAIN_ID = StarknetChainId.TESTNET;
 
 export const NETWORKS_SUPPORTED = {
 	[StarknetChainId.MAINNET]: {
@@ -61,14 +58,14 @@ export const TOKEN_LIST = {
 		WETH[StarknetChainId.TESTNET],
 		new Token(
 			StarknetChainId.TESTNET,
-			"0x3e12863b90018323688173f044f6684f79389c626864f9f876a865d97513c1d",
+			"0x03e12863b90018323688173f044f6684f79389c626864f9f876a865d97513c1d",
 			18,
 			"USDC",
 			"USDC"
 		),
 		new Token(
 			StarknetChainId.TESTNET,
-			"0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
+			"0x03f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
 			18,
 			"SFN",
 			"StarkFinance Test"
@@ -85,11 +82,6 @@ export const TOKEN_LIST = {
 	// 	),
 	// ],
 };
-
-console.log(
-	TOKEN_LIST[StarknetChainId.TESTNET][2].address,
-	validateAndParseAddress(TOKEN_LIST[StarknetChainId.TESTNET][2].address)
-);
 
 export const TOKEN_ICON_LIST = {
 	[StarknetChainId.MAINNET]: {

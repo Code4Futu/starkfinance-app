@@ -1,15 +1,16 @@
 "use client";
 
 import { LAUNCHPAD_STATUS } from "@/app/constants";
+import { timeDiff } from "@/app/utils";
 import clsx from "clsx";
 import Image from "next/image";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 const statusToColor = (status: LAUNCHPAD_STATUS | undefined) => {
 	switch (status) {
 		case LAUNCHPAD_STATUS.UPCOMING:
 			return {
-				text: "text-[#61B3FF]",
+				text: "text-[#FFE86C]",
 				bg: "status-upcoming-bg",
 			};
 
@@ -34,10 +35,24 @@ const statusToColor = (status: LAUNCHPAD_STATUS | undefined) => {
 };
 
 export default function Status({
-	status,
+	start,
+	end,
 }: {
-	status: LAUNCHPAD_STATUS | undefined;
+	start: number | undefined;
+	end: number | undefined;
 }) {
+	const [status, setStatus] = useState<undefined | LAUNCHPAD_STATUS>(undefined);
+
+	useEffect(() => {
+		const interval = setInterval(() => {
+			if (!start || !end) return;
+			const time = timeDiff(Date.now(), start * 1000, end * 1000);
+			setStatus(time.status);
+		}, 1000);
+
+		return () => clearInterval(interval);
+	}, [start, end]);
+
 	const { text, bg } = useMemo(() => statusToColor(status), [status]);
 
 	return !status ? (

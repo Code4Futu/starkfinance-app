@@ -61,7 +61,7 @@ export default function LaunchpadItem({
 				</div> */}
 
 				<div className="absolute  top-[6px] left-[6px] rounded-2xl flex flex-wrap items-center gap-2 bg-gradient-to-r bg-dark">
-					<Status status={timeStartDiff.status} />
+					<Status start={launchpad.start} end={launchpad.end} />
 				</div>
 			</div>
 
@@ -109,15 +109,7 @@ export default function LaunchpadItem({
 								Total raise
 							</div>
 							<div className="text-[14px] md:text-[16px] font-medium">
-								{numberWithCommas(
-									ethers
-										.formatUnits(
-											launchpad.totalRaise,
-											launchpad.tokenRaise.decimals
-										)
-										.toString()
-								)}{" "}
-								{launchpad.tokenRaise.symbol}
+								{numberWithCommas(launchpad.totalRaiseUSD)} USDT
 							</div>
 						</div>
 						<div className="flex flex-1 justify-between gap-1 border-b border-b-[#2D313E] pb-3">
@@ -141,15 +133,18 @@ export default function LaunchpadItem({
 								Rate
 							</div>
 							<div className="text-[14px] md:text-[16px] font-medium">
-								1 {launchpad.tokenRaise.symbol} ={" "}
+								1 {launchpad.tokenSale.symbol} ={" "}
 								{numberWithCommas(
-									launchpad.totalRaiseUSD /
+									+ethers.formatUnits(
+										launchpad.totalRaise,
+										launchpad.tokenRaise.decimals
+									) /
 										+ethers.formatUnits(
-											launchpad.totalRaise,
-											launchpad.tokenRaise.decimals
+											launchpad.totalSale,
+											launchpad.tokenSale.decimals
 										)
 								)}{" "}
-								USDT
+								{launchpad.tokenRaise.symbol}
 							</div>
 						</div>
 					</div>

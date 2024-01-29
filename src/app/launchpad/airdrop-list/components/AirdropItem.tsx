@@ -56,7 +56,7 @@ export default function AirdropItem({ airdrop }: { airdrop: IAirdrop }) {
 				</div> */}
 
 				<div className="absolute  top-[6px] left-[6px] rounded-2xl flex flex-wrap items-center gap-2 bg-gradient-to-r bg-dark">
-					<Status status={timeStartDiff.status} />
+					<Status start={airdrop.start} end={airdrop.end} />
 				</div>
 			</div>
 
