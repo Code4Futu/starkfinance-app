@@ -204,16 +204,16 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 			/>
 
 			<div className="flex flex-col gap-8">
-				{/* <div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
+				{/* <div className="w-full h-[113px] md:h-[239px] xl:h-[363px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
 				</div> */}
 
 				<div className="flex justify-stretch gap-3">
-					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
+					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  xl:w-[80px] xl:h-[80px] relative">
 						<Image alt="image" src="/tokens/sfn.png" fill sizes="any" />
 					</div>
 					<div className="flex-1">
-						<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
+						<div className="text-xl md:text-[32px] xl:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
 							{airdrop.name}
 						</div>
 						<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
@@ -243,7 +243,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 					</div>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+				<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
 					<div className="flex flex-col gap-6 w-full">
 						<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl py-9 px-6">
 							<div className="mb-2.5 font-bold text-xl text-[#F1F1F1]">
@@ -516,7 +516,7 @@ export default function Airdrop({ airdrop }: { airdrop: IAirdrop }) {
 						</div>
 					</div>
 
-					<div className="col-span-1 lg:col-span-2 flex-1 flex flex-col gap-6">
+					<div className="col-span-1 xl:col-span-2 flex-1 flex flex-col gap-6">
 						{/* project info */}
 						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
 							<div className="border-b border-b-[#2D313E] pb-3">

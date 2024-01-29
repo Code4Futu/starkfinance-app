@@ -22,6 +22,9 @@ import { toast } from "react-toastify";
 import { CallData, Contract, cairo, num } from "starknet";
 import useSWR from "swr";
 import utc from "dayjs/plugin/utc";
+import { getTokenIcon } from "@/app/configs/networks";
+import CountDown from "@/app/components/CountDown";
+import CountDownEnd from "@/app/components/CountDownEnd";
 
 dayjs.extend(utc);
 
@@ -43,7 +46,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 				return {
 					participants: num.hexToDecimalString(launchpadStatistics.result[0]),
-					committed: num.hexToDecimalString(launchpadStatistics.result[2]),
+					committed: num.hexToDecimalString(launchpadStatistics.result[4]),
 				};
 			} catch (error) {
 				return {
@@ -374,13 +377,13 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 
 	const handleOpenStakeNftModal = useCallback(() => {
 		// @ts-expect-error
-		document.getElementById("my_modal_2").showModal();
+		document.getElementById("nft_modal").showModal();
 	}, []);
 
 	return (
 		<div>
-			<dialog id="my_modal_2" className="modal">
-				<div className="modal-box bg-[#1A1C24] p-6 md:max-w-[560px] lg:max-w-[1200px]">
+			<dialog id="nft_modal" className="modal">
+				<div className="modal-box bg-[#1A1C24] p-6 md:max-w-[560px] xl:max-w-[1200px]">
 					<div className="flex justify-between items-center py-3 border-b border-b-[#2D313E]">
 						<div className="">Your StarkFinance NFT</div>
 
@@ -395,7 +398,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 						</div>
 					</div>
 
-					<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 p-8">
+					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-8">
 						{nfts?.filter((nft) => nft.nftId.toString().includes(searchNft))
 							.length ? (
 							nfts
@@ -428,7 +431,7 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 									</div>
 								))
 						) : (
-							<div className="col-span-1 md:col-span-2 lg:col-span-4 text-center">
+							<div className="col-span-1 md:col-span-2 xl:col-span-4 text-center">
 								You don't have StarkFinance NFT
 							</div>
 						)}
@@ -448,16 +451,16 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 			/>
 
 			<div className="flex flex-col gap-8">
-				{/* <div className="w-full h-[113px] md:h-[239px] lg:h-[363px] relative">
+				{/* <div className="w-full h-[113px] md:h-[239px] xl:h-[363px] relative">
 					<Image alt="image" src="/mocks/banner.png" fill />
 				</div> */}
 
-				<div className="flex justify-stretch gap-3">
-					<div className="w-[59px] h-[59px] md:w-[74px] md:h-[74px]  lg:w-[80px] lg:h-[80px] relative">
+				<div className="flex justify-stretch gap-3 items-center">
+					<div className="w-[59px] h-[59px] md:w-[66px] md:h-[66px] xl:w-[76px] xl:h-[76px] relative">
 						<Image alt="image" src="/tokens/sfn.png" fill />
 					</div>
-					<div className="flex-1">
-						<div className="text-xl md:text-[32px] lg:text-[36px] font-bold line-clamp-1 mb-1.5 md:mb-3">
+					<div className="flex-1 flex flex-col justify-between">
+						<div className="text-[20px] md:text-[24px] xl:text-[32px] font-bold line-clamp-1">
 							{launchpad.name}
 						</div>
 						<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
@@ -468,9 +471,10 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										src={`/wallets/${launchpad.chainKey}.png`}
 										alt="starknet"
 										fill
+										sizes="any"
 									/>
 								</div>
-								<div className="text-[12px] text-[#F1F1F1] capitalize">
+								<div className="text-[12px] text-[#F1F1F1] capitalize font-medium">
 									{launchpad.chainKey}
 								</div>
 							</div>
@@ -480,243 +484,30 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 										SFN
 									</div>
 								</div> */}
-							<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] capitalize">
+							<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] capitalize font-medium">
 								{launchpad.type}
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<div className="flex flex-col lg:flex-row gap-6">
-					<div className="flex flex-col gap-6 w-full lg:w-[368px]">
-						<div className="border border-[#2D313E] bg-[#0D0E12] rounded-3xl py-9 px-6">
-							<div className="mb-2.5 font-bold text-xl text-[#F1F1F1]">
+				<div className="grid grid-cols-1 xl:grid-cols-3 gap-6">
+					<div className="col-span-1 flex flex-col gap-6 w-full xl:w-[368px]">
+						{/* countdown */}
+						<div className="grid grid-cols-1 gap-3 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="font-bold text-[16px] md:text-[20px] xl:text-[24px] text-[#F1F1F1] pb-3 border-b border-b-[#2D313E]">
 								Launchpad {statusToText(timeStartDiff.status)}
 							</div>
 
-							<div className="flex justify-between">
-								<div className="flex items-center gap-[2px]">
-									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span
-											// @ts-expect-error
-											style={{ "--value": timeStartDiff?.d ?? 0 }}
-										></span>
-									</span>
-									<div className="font-[400] text-[14px] text-[#F1F1F1]">
-										days
-									</div>
-								</div>
-								<div className="flex items-center gap-[2px]">
-									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span
-											// @ts-expect-error
-											style={{ "--value": timeStartDiff?.h ?? 0 }}
-										></span>
-									</span>
-									<div className="font-[400] text-[14px] text-[#F1F1F1]">
-										hrs
-									</div>
-								</div>
-								<div className="flex items-center gap-[2px]">
-									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span
-											// @ts-expect-error
-											style={{ "--value": timeStartDiff?.m ?? 0 }}
-										></span>
-									</span>
-									<div className="font-[400] text-[14px] text-[#F1F1F1]">
-										mins
-									</div>
-								</div>
-								<div className="flex items-center gap-[2px]">
-									<span className="countdown font-bold text-[16px] text-[#F1F1F1]">
-										<span
-											// @ts-expect-error
-											style={{ "--value": timeStartDiff?.s ?? 0 }}
-										></span>
-									</span>
-									<div className="font-[400] text-[14px] text-[#F1F1F1]">
-										secs
-									</div>
-								</div>
+							<div className="flex justify-between md:justify-start xl:justify-between gap-0 md:gap-6 xl:gap-0">
+								<CountDown start={launchpad.start} end={launchpad.end} />
 							</div>
 						</div>
 
-						<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="text-xl font-bold text-[#F1F1F1]">
-								Sale information
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">Start time</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{dayjs
-										.utc(launchpad.start * 1000)
-										.format("MMM DD YYYY HH:mm")}{" "}
-									UTC
-								</div>
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">End time</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{dayjs.utc(launchpad.end * 1000).format("MMM DD YYYY HH:mm")}{" "}
-									UTC
-								</div>
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">Total raise</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{numberWithCommas(
-										ethers.formatUnits(
-											launchpad.totalRaise,
-											launchpad.tokenRaise.decimals
-										)
-									)}{" "}
-									{launchpad.tokenRaise.symbol}
-								</div>
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">Total sales</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{numberWithCommas(
-										ethers.formatUnits(
-											launchpad.totalSale,
-											launchpad.tokenSale.decimals
-										)
-									)}{" "}
-									{launchpad.tokenSale.symbol}
-								</div>
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">Min/Max commit</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{numberWithCommas(
-										ethers.formatUnits(
-											launchpad.minCommit,
-											launchpad.tokenRaise.decimals
-										)
-									)}{" "}
-									/{" "}
-									{numberWithCommas(
-										ethers.formatUnits(
-											launchpad.maxCommit,
-											launchpad.tokenRaise.decimals
-										)
-									)}{" "}
-									{launchpad.tokenRaise.symbol}
-								</div>
-							</div>
-							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
-								<div className="text-[12px] text-[#C6C6C6]">
-									Total participial
-								</div>
-								<div className="text-[14px] text-[#F1F1F1] font-bold">
-									{numberWithCommas(launchpadStatistics?.participants ?? 0)}
-								</div>
-							</div>
-							<div className="py-3 border-b border-b-[#2D313E]">
-								<div className="flex justify-between">
-									<div className="text-[12px] text-[#C6C6C6]">
-										Total Commited SFN
-									</div>
-									<div className="text-[14px] text-[#F1F1F1] font-bold">
-										{numberWithCommas(
-											ethers.formatUnits(
-												launchpadStatistics?.committed ?? "0",
-												launchpad.tokenRaise.decimals
-											)
-										)}{" "}
-										{launchpad.tokenRaise.symbol}
-									</div>
-								</div>
-
-								<div>
-									<progress
-										className="progress progress-accent"
-										value={
-											(+(launchpadStatistics?.committed ?? "0") /
-												+launchpad.totalRaise) *
-											100
-										}
-										max="100"
-									></progress>
-									<div className="flex justify-between">
-										<div className="text-[12px] text-[#C6C6C6]">Process</div>
-										<div className="text-[12px] text-[#C6C6C6]">
-											{numberWithCommas(
-												(+(launchpadStatistics?.committed ?? "0") /
-													+launchpad.totalRaise) *
-													100
-											)}
-											%
-										</div>
-									</div>
-								</div>
-							</div>
-
-							{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
-								<div className="py-3">
-									<div className="flex justify-between mb-1">
-										<div className="text-[12px] text-[#C6C6C6]">
-											{launchpad.tokenRaise.symbol} balance:
-										</div>
-										<div className="text-[14px] text-[#C6C6C6]">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.tokenRaiseBalance ?? "0",
-													launchpad.tokenRaise.decimals
-												)
-											)}
-										</div>
-									</div>
-
-									<input
-										type="text"
-										value={commitAmount}
-										onChange={(e) => setCommitAmount(e.target.value)}
-										className="input w-full bg-[#0D0E12] border-[#2D313E] rounded-2xl outline-0 focus:outline-0 focus:border-solid focus:border-[#2D313E]"
-									/>
-
-									<div className="flex justify-between gap-5 mt-6">
-										<Button
-											handler={handleCommit}
-											claimable={
-												!!library &&
-												!!accountStatistics?.committed &&
-												+commitAmount <
-													BigInt(launchpad.maxCommit) -
-														BigInt(accountStatistics?.committed ?? 0)
-											}
-											text="Commit"
-											loading={submitting}
-											loadingText=""
-										/>
-
-										<Button
-											handler={handleOpenStakeNftModal}
-											claimable={
-												!!library &&
-												!nftsLoading &&
-												!!launchpadStatistics?.committed &&
-												+launchpadStatistics.committed >
-													+launchpad.totalRaise &&
-												typeof accountStatistics?.stakedNft !== undefined &&
-												!accountStatistics?.stakedNft
-											}
-											text="Stake NFT"
-											loading={false}
-											loadingText=""
-										/>
-									</div>
-								</div>
-							)}
-						</div>
-					</div>
-
-					<div className="flex-1 flex flex-col gap-6">
-						{/* project info */}
-						<div className="flex flex-col gap-6 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="border-b border-b-[#2D313E] pb-3">
-								<div className="text-xl font-bold text-[#F1F1F1] mb-3">
+						{/* project info (mobile + tablet) */}
+						<div className="flex xl:hidden flex-col gap-3 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="flex flex-col md:flex-row items-start justify-start md:items-center md:justify-between gap-3 border-b border-b-[#2D313E] pb-3">
+								<div className="font-bold text-[16px] md:text-[20px] xl:text-[24px] text-[#F1F1F1]">
 									Project information
 								</div>
 								<div className="flex gap-3">
@@ -753,201 +544,580 @@ export default function Launchpad({ launchpad }: { launchpad: ILaunchpad }) {
 							</div>
 
 							<div
-								className="text-[#C6C6C6]"
+								className="text-[#F1F1F1] text-[14px] md:text-[16px]"
+								dangerouslySetInnerHTML={{ __html: launchpad.desc }}
+							/>
+						</div>
+
+						{/* launchpad info */}
+						<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="text-[16px] md:text-[20px] xl:text-[24px] pb-3 border-b border-b-[#2D313E] font-bold text-[#F1F1F1]">
+								Launchpad information
+							</div>
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Start time
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									{dayjs
+										.utc(launchpad.start * 1000)
+										.format("MMM DD YYYY HH:mm")}{" "}
+									UTC
+								</div>
+							</div>
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									End time
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									{dayjs.utc(launchpad.end * 1000).format("MMM DD YYYY HH:mm")}{" "}
+									UTC
+								</div>
+							</div>
+
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Total raise
+								</div>
+								<div className="flex items-center gap-1">
+									<div className="w-[19px] h-[19px] relative">
+										<Image
+											src={getTokenIcon(launchpad.tokenRaise.address)}
+											alt="tokenRaise"
+											fill
+											sizes="any"
+										/>
+									</div>
+									<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+										{numberWithCommas(
+											ethers.formatUnits(
+												launchpad.totalRaise,
+												launchpad.tokenRaise.decimals
+											)
+										)}{" "}
+										{/* {launchpad.tokenRaise.symbol} */}
+									</div>
+
+									<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+										{launchpad.tokenRaise.symbol}
+									</div>
+								</div>
+							</div>
+
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Total sale
+								</div>
+								<div className="flex items-center gap-1">
+									<div className="w-[19px] h-[19px] relative">
+										<Image
+											src={getTokenIcon(launchpad.tokenSale.address)}
+											alt="tokenSale"
+											fill
+											sizes="any"
+										/>
+									</div>
+									<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+										{numberWithCommas(
+											ethers.formatUnits(
+												launchpad.totalSale,
+												launchpad.tokenSale.decimals
+											)
+										)}{" "}
+										{/* {launchpad.tokenSale.symbol} */}
+									</div>
+
+									<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+										{launchpad.tokenSale.symbol}
+									</div>
+								</div>
+							</div>
+
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Rate
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									1 {launchpad.tokenRaise.symbol} ={" "}
+									{numberWithCommas(
+										launchpad.totalRaiseUSD /
+											+ethers.formatUnits(
+												launchpad.totalRaise,
+												launchpad.tokenRaise.decimals
+											)
+									)}{" "}
+									USDT
+								</div>
+							</div>
+
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Vesting
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									{launchpad.vestingPercent[0] / 1000}% on TGE
+								</div>
+							</div>
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Min / Max commit
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									{numberWithCommas(
+										ethers.formatUnits(
+											launchpad.minCommit,
+											launchpad.tokenRaise.decimals
+										)
+									)}{" "}
+									/{" "}
+									{numberWithCommas(
+										ethers.formatUnits(
+											launchpad.maxCommit,
+											launchpad.tokenRaise.decimals
+										)
+									)}{" "}
+									{launchpad.tokenRaise.symbol}
+								</div>
+							</div>
+							<div className="flex justify-between py-3 border-b border-b-[#2D313E]">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+									Total participants
+								</div>
+								<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+									{numberWithCommas(launchpadStatistics?.participants ?? 0)}
+								</div>
+							</div>
+							<div className="mt-3">
+								<div className="flex justify-between">
+									<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+										Total committed
+									</div>
+									<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+										{numberWithCommas(
+											ethers.formatUnits(
+												launchpadStatistics?.committed ?? "0",
+												launchpad.tokenRaise.decimals
+											)
+										)}{" "}
+										{launchpad.tokenRaise.symbol}
+									</div>
+								</div>
+
+								<div className="flex flex-col gap-1">
+									<progress
+										className="progress progress-accent h-[16px] mt-3"
+										value={
+											(+(launchpadStatistics?.committed ?? "0") /
+												+launchpad.totalRaise) *
+											100
+										}
+										max="100"
+									></progress>
+									<div className="flex justify-between">
+										<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+											Process
+										</div>
+										<div className="text-[12px] md:text-[14px] text-[#F1F1F1]">
+											{numberWithCommas(
+												(+(launchpadStatistics?.committed ?? "0") /
+													+launchpad.totalRaise) *
+													100
+											)}
+											%
+										</div>
+									</div>
+								</div>
+							</div>
+
+							{timeStartDiff.status !== LAUNCHPAD_STATUS.END && (
+								<div className="py-3 mt-3 border-t border-t-[#2D313E]">
+									<div className="flex justify-between mb-1">
+										<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+											{launchpad.tokenRaise.symbol} balance:
+										</div>
+										<div className="text-[14px] md:text-[16px] font-medium text-[#C6C6C6]">
+											{numberWithCommas(
+												ethers.formatUnits(
+													accountStatistics?.tokenRaiseBalance ?? "0",
+													launchpad.tokenRaise.decimals
+												)
+											)}
+										</div>
+									</div>
+
+									<input
+										type="text"
+										value={commitAmount}
+										onChange={(e) => setCommitAmount(e.target.value)}
+										className="input w-full bg-[#0D0E12] border-[#2D313E] rounded-2xl outline-0 focus:outline-0 focus:border-solid focus:border-[#2D313E]"
+									/>
+
+									<div className="flex justify-between gap-5 mt-6">
+										<Button
+											handler={handleCommit}
+											claimable={
+												!!library &&
+												!!accountStatistics?.committed &&
+												timeStartDiff.status === LAUNCHPAD_STATUS.INPROGRESS &&
+												+commitAmount <
+													BigInt(launchpad.maxCommit) -
+														BigInt(accountStatistics?.committed ?? 0)
+											}
+											text="Commit"
+											loading={submitting}
+											loadingText=""
+										/>
+
+										<Button
+											handler={handleOpenStakeNftModal}
+											claimable={
+												!!library &&
+												!nftsLoading &&
+												!!launchpadStatistics?.committed &&
+												+launchpadStatistics.committed >
+													+launchpad.totalRaise &&
+												typeof accountStatistics?.stakedNft !== undefined &&
+												!accountStatistics?.stakedNft
+											}
+											text="Stake NFT"
+											loading={false}
+											loadingText=""
+										/>
+									</div>
+								</div>
+							)}
+						</div>
+					</div>
+
+					<div className="xl:col-span-2 flex flex-col gap-6">
+						{/* project info (pc) */}
+						<div className="hidden xl:flex flex-col gap-3 border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
+							<div className="flex flex-col md:flex-row items-start justify-start md:items-center md:justify-between gap-3 border-b border-b-[#2D313E] pb-3">
+								<div className="text-[16px] md:text-[20px] xl:text-[24px] font-bold text-[#F1F1F1]">
+									Project information
+								</div>
+								<div className="flex gap-3">
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/x.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/telegram.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/discord.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/medium.svg" fill />
+										</div>
+									</div>
+									<div className="p-1 bg-[#ffffff26] rounded-lg">
+										<div className="w-[24px] h-[24px] relative">
+											<Image alt="image" src="/svg/github.svg" fill />
+										</div>
+									</div>
+								</div>
+							</div>
+
+							<div className="w-full pt-[50%] rounded-2xl relative overflow-hidden">
+								<Image alt="image" src="/mocks/banner2.png" fill />
+							</div>
+
+							<div
+								className="text-[#F1F1F1]"
 								dangerouslySetInnerHTML={{ __html: launchpad.desc }}
 							/>
 						</div>
 
 						{/* user allocation */}
-						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING && (
+						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING ? (
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-								<div className="text-[24px] font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-2">
+								<div className="text-[16px] md:text-[20px] xl:text-[24px]  font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-3">
 									Your Allocation{" "}
 									{accountStatistics?.stakedNft ? (
-										<span className="text-[16px] font-[500]">
+										<span className="text-[14px] md:text-[16px] xl:text-[20px] font-[500]">
 											(Starksport NFT #{accountStatistics?.nftId})
 										</span>
 									) : null}
 								</div>
 
-								<div className="grid grid-cols-2 md:grid-cols-5 gap-y-6 border-b border-b-[#2D313E] py-6">
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">
-											Committed SFN
-										</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.committed ?? "0",
-													launchpad.tokenRaise.decimals
-												)
-											)}{" "}
-											{!!accountStatistics?.stakedNft
-												? `( +${numberWithCommas(
-														+ethers.formatUnits(
-															accountStatistics?.committed ?? "0",
-															launchpad.tokenSale.decimals
-														) / 10
-												  )} )`
-												: null}{" "}
-											{launchpad.tokenRaise.symbol}
-										</div>
+								{!account ? (
+									<div className="text-[14px] md:text-[16px] text-[#C6C6C6] pt-3 text-center">
+										Connect wallet first
 									</div>
+								) : (
+									<>
+										<div className="grid grid-cols-2 md:grid-cols-5 gap-y-3 border-b border-b-[#2D313E] py-3">
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Committed
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenRaise.address)}
+															alt="tokenRaise"
+															fill
+															sizes="any"
+														/>
+													</div>
 
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">
-											Your Allocation
-										</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.allocation ?? "0",
-													launchpad.tokenSale.decimals
-												)
-											)}{" "}
-											{launchpad.tokenSale.symbol}
-										</div>
-									</div>
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.committed ?? "0",
+																launchpad.tokenRaise.decimals
+															)
+														)}{" "}
+														{!!accountStatistics?.stakedNft
+															? `( +${numberWithCommas(
+																	+ethers.formatUnits(
+																		accountStatistics?.committed ?? "0",
+																		launchpad.tokenSale.decimals
+																	) / 10
+															  )} )`
+															: null}{" "}
+														{/* {launchpad.tokenRaise.symbol} */}
+													</div>
+												</div>
+											</div>
 
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">Claimed</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.claimed ?? "0",
-													launchpad.tokenSale.decimals
-												)
-											)}{" "}
-											{launchpad.tokenSale.symbol}
-										</div>
-									</div>
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Allocation
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenSale.address)}
+															alt="tokenSale"
+															fill
+															sizes="any"
+														/>
+													</div>
 
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">Claimable</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.claimable ?? "0",
-													launchpad.tokenSale.decimals
-												)
-											)}{" "}
-											{launchpad.tokenSale.symbol}
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.allocation ?? "0",
+																launchpad.tokenSale.decimals
+															)
+														)}{" "}
+														{/* {launchpad.tokenSale.symbol} */}
+													</div>
+												</div>
+											</div>
+
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Claimed
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenSale.address)}
+															alt="tokenSale"
+															fill
+															sizes="any"
+														/>
+													</div>
+
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.claimed ?? "0",
+																launchpad.tokenSale.decimals
+															)
+														)}{" "}
+														{/* {launchpad.tokenSale.symbol} */}
+													</div>
+												</div>
+											</div>
+
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Claimable
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenSale.address)}
+															alt="tokenSale"
+															fill
+															sizes="any"
+														/>
+													</div>
+
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.claimable ?? "0",
+																launchpad.tokenSale.decimals
+															)
+														)}{" "}
+														{/* {launchpad.tokenSale.symbol} */}
+													</div>
+												</div>
+											</div>
+
+											{!isNaN(claimableTime) ? (
+												<div className="col-span-2 md:col-span-1 flex justify-end">
+													<div className="flex-1 md:flex-none flex">
+														<Button
+															handler={handleClaim}
+															claimable={claimable}
+															text="Claim"
+															loading={claiming}
+															loadingText=""
+														/>
+													</div>
+												</div>
+											) : null}
 										</div>
-									</div>
-									{!isNaN(claimableTime) && (
-										<div className="col-span-2 md:col-span-1 flex justify-end">
-											<div className="flex-1 md:flex-none flex">
-												<Button
-													handler={handleClaim}
-													claimable={claimable}
-													text="Claim"
-													loading={claiming}
-													loadingText=""
-												/>
+
+										<div className="grid grid-cols-2 md:grid-cols-5 pt-3 gap-y-3">
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Deducted
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenRaise.address)}
+															alt="tokenRaise"
+															fill
+															sizes="any"
+														/>
+													</div>
+
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.deducted ?? "0",
+																launchpad.tokenRaise.decimals
+															)
+														)}{" "}
+														{/* {launchpad.tokenRaise.symbol} */}
+													</div>
+												</div>
+											</div>
+
+											<div className="flex flex-col gap-1 md:gap-2">
+												<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+													Remaining
+												</div>
+												<div className="flex items-center gap-1">
+													<div className="w-[19px] h-[19px] relative">
+														<Image
+															src={getTokenIcon(launchpad.tokenRaise.address)}
+															alt="tokenRaise"
+															fill
+															sizes="any"
+														/>
+													</div>
+
+													<div className="text-[14px] md:text-[16px] font-medium text-[#F1F1F1]">
+														{numberWithCommas(
+															ethers.formatUnits(
+																accountStatistics?.remaining ?? "0",
+																launchpad.tokenRaise.decimals
+															)
+														)}{" "}
+														{/* {launchpad.tokenRaise.symbol} */}
+													</div>
+												</div>
+											</div>
+											<div className="col-span-2 flex flex-col gap-1 md:gap-2">
+												<>
+													<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+														Time to unlock
+													</div>
+													<div className="flex justify-between md:justify-start xl:justify-between gap-0 md:gap-3 xl:gap-0">
+														{!!accountStatistics?.lastCommittedTime ? (
+															<CountDownEnd
+																start={
+																	+accountStatistics.lastCommittedTime + 259200
+																}
+															/>
+														) : null}
+													</div>
+												</>
+											</div>
+
+											<div className="col-span-2 md:col-span-1 flex justify-end">
+												<div className="flex-1 md:flex-none flex">
+													<Button
+														handler={handleClaimRemaining}
+														claimable={
+															claimableRemaining &&
+															typeof accountStatistics?.lastCommittedTime !==
+																"undefined" &&
+															+accountStatistics.lastCommittedTime + 259200 <
+																Math.floor(Date.now() / 1000)
+														}
+														text="Claim"
+														loading={claimingRemaining}
+														loadingText=""
+													/>
+												</div>
 											</div>
 										</div>
-									)}
-								</div>
-
-								<div className="grid grid-cols-2 md:grid-cols-5 pt-6 gap-y-6">
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">
-											Your deducted SFN
-										</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.deducted ?? "0",
-													launchpad.tokenRaise.decimals
-												)
-											)}{" "}
-											{launchpad.tokenRaise.symbol}
-										</div>
-									</div>
-
-									<div>
-										<div className="text-[12px] text-[#C6C6C6]">
-											Your remaining SFN
-										</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{numberWithCommas(
-												ethers.formatUnits(
-													accountStatistics?.remaining ?? "0",
-													launchpad.tokenRaise.decimals
-												)
-											)}{" "}
-											{launchpad.tokenRaise.symbol}
-										</div>
-									</div>
-
-									<div className="col-span-2">
-										<div className="text-[12px] text-[#C6C6C6]">
-											Time to unlock
-										</div>
-										<div className="text-[14px] text-[#F1F1F1] font-bold">
-											{dayjs
-												.utc(
-													(+(accountStatistics?.lastCommittedTime ?? 0) +
-														259200) *
-														1000
-												)
-												.format("MMM DD YYYY HH:mm")}{" "}
-											UTC
-										</div>
-									</div>
-
-									<div className="col-span-2 md:col-span-1 flex justify-end">
-										<div className="flex-1 md:flex-none flex">
-											<Button
-												handler={handleClaimRemaining}
-												claimable={
-													claimableRemaining &&
-													typeof accountStatistics?.lastCommittedTime !==
-														"undefined" &&
-													+accountStatistics.lastCommittedTime + 259200 <
-														Math.floor(Date.now() / 1000)
-												}
-												text="Claim"
-												loading={claimingRemaining}
-												loadingText=""
-											/>
-										</div>
-									</div>
-								</div>
+									</>
+								)}
 							</div>
-						)}
+						) : null}
 
 						{/*  vesting schedule */}
 						<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-							<div className="text-xl font-bold text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
+							<div className="font-bold text-[16px] md:text-[20px] xl:text-[24px] text-[#F1F1F1] mb-3 border-b border-b-[#2D313E] pb-3">
 								Vesting Schedule
 							</div>
 
-							<ul className="steps steps-vertical">
+							<ul className="grid grid-cols-1 md:grid-cols-3 gap-6">
 								{launchpad.vestingTime.map((time: number, idx: number) => (
-									<li
-										key={idx}
-										data-content=""
-										className={clsx("step", {
-											"step-success":
-												typeof accountStatistics?.claimedCount !==
-													"undefined" && +accountStatistics.claimedCount > idx,
-										})}
-									>
-										<div>
-											<div className="flex gap-3 items-center">
-												<div className="py-1 px-3 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] text-[12px] text-[#0D0E12] rounded-xl text-center">
-													{launchpad.vestingPercent[idx] / 1000}%
+									<div key={idx} className="flex flex-col gap-2">
+										<div className="flex gap-3 items-center">
+											<div className="py-1 px-3 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] text-[12px] text-[#0D0E12] rounded-xl text-center">
+												{launchpad.vestingPercent[idx] / 1000}%
+											</div>
+											<div className="flex items-center gap-1">
+												<div className="w-[19px] h-[19px] relative">
+													<Image
+														src={getTokenIcon(launchpad.tokenSale.address)}
+														alt="tokenSale"
+														fill
+														sizes="any"
+													/>
 												</div>
-												<div className="text-[12px] text-[#C6C6C6]">
-													{dayjs
-														.utc((launchpad.end + time) * 1000)
-														.format("MMM DD YYYY HH:mm")}{" "}
-													UTC
+
+												<div className="text-[14px] md:text-[16px] font-medium text-[#24C3BC]">
+													{numberWithCommas(
+														(+ethers.formatUnits(
+															launchpad.totalSale,
+															launchpad.tokenSale.decimals
+														) *
+															launchpad.vestingPercent[idx]) /
+															1000
+													)}
+													{/* {launchpad.tokenSale.symbol} */}
 												</div>
 											</div>
 										</div>
-									</li>
+										<div>
+											<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
+												{dayjs
+													.utc((launchpad.end + time) * 1000)
+													.format("MMM DD YYYY HH:mm")}{" "}
+												UTC
+											</div>
+										</div>
+									</div>
 								))}
 							</ul>
 						</div>

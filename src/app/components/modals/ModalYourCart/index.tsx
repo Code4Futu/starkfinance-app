@@ -115,7 +115,7 @@ export const ModalYourCart = (props: Props) => {
 			<div className="modal-overlay">
 				<div
 					ref={wrapperRef}
-					className="cart-mobile-animation flex justify-center items-center lg:items-start border-t-[1px] border-[#2D313E] bg-[#1A1C24] cart-content-modal"
+					className="cart-mobile-animation flex justify-center items-center xl:items-start border-t-[1px] border-[#2D313E] bg-[#1A1C24] cart-content-modal"
 				>
 					<div className="w-full flex py-9 px-6 flex-col items-start gap-6">
 						<div className="flex justify-between items-start self-stretch">

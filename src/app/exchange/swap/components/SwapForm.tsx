@@ -188,8 +188,8 @@ export default function SwapForm() {
 			<SwitchButton />
 			<Divider className="h-[1px] w-full bg-[#2D313E] mt-6 mb-3" />
 
-			<div className="flex w-full justify-between lg:justify-end">
-				<div className="lg:hidden">
+			<div className="flex w-full justify-between xl:justify-end">
+				<div className="xl:hidden">
 					<div className="button-linear-2 flex items-center justify-center rounded p-1 bg-[#F1F1F1] w-7 h-7">
 						<ChartIcon
 							onClick={() => {

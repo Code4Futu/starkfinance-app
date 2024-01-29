@@ -35,12 +35,12 @@ export const SiteNavigation = (props: Props) => {
 	return (
 		<div
 			className={clsx(
-				"flex justify-between lg:justify-end px-6 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]"
+				"flex justify-between xl:justify-end px-6 py-6 bg-[#1A1C24] border-b border-b-[#2D313E]"
 			)}
 		>
 			<div className="flex items-center gap-2">
 				<Link href="/" passHref prefetch legacyBehavior>
-					<a className="block lg:hidden w-[48px] h-[48px] relative">
+					<a className="block xl:hidden w-[48px] h-[48px] relative">
 						<Image src="/logo.png" alt="logo" fill sizes="48px" />
 					</a>
 				</Link>
@@ -59,7 +59,7 @@ export const SiteNavigation = (props: Props) => {
 						</div>
 					</div>
 				)}
-				<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-0 lg:gap-2 rounded-2xl border-0">
+				<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-0 xl:gap-2 rounded-2xl border-0">
 					<div className="w-[24px] h-[24px] relative">
 						<Image
 							src="/wallets/starknet.png"
@@ -69,7 +69,7 @@ export const SiteNavigation = (props: Props) => {
 						/>
 					</div>
 
-					<div className="text-xl font-bold text-[#F1F1F1] hidden lg:block">
+					<div className="text-[16px] font-bold text-[#F1F1F1] hidden xl:block">
 						Starknet
 					</div>
 				</div>
@@ -78,10 +78,10 @@ export const SiteNavigation = (props: Props) => {
 					className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-1 rounded-2xl border-0"
 					onClick={() => props.openModalConnect(true)}
 				>
-					<div className="w-[24px] h-[24px] relative hidden lg:block ">
+					<div className="w-[24px] h-[24px] relative hidden xl:block ">
 						<Image src="/svg/connect-wallet.svg" fill alt="connect-wallet" />
 					</div>
-					<div className="text-md font-bold text-[#1A1C24] cursor-pointer">
+					<div className="text-[16px] font-bold text-[#1A1C24] cursor-pointer">
 						{address
 							? `${address.slice(0, 4)}...${address.slice(-3)}`
 							: "Connect Wallet"}

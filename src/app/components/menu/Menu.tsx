@@ -176,14 +176,14 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 
 	return (
 		<div className="h-full w-full overflow-hidden flex justify-stretch">
-			<div className="hidden min-[1024px]:block">
+			<div className="hidden min-[1280px]:block">
 				<DrawerDesktop
 					resizeDrawer={resizeDrawer}
 					resizeToggle={resizeToggle}
 					isMobile={isMobile}
 				/>
 			</div>
-			<div className="min-[1024px]:hidden">
+			<div className="min-[1280px]:hidden">
 				<DrawerMobile
 					toggle={toggle}
 					resizeDrawer={resizeDrawer}
@@ -196,7 +196,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					openModalCart={setIsShowModalCart}
 					openModalConnect={setIsShowModalConnect}
 				/>
-				<div className="px-6 py-9 h-[calc(100dvh-176px)] lg:h-[calc(100dvh-100px)] overflow-y-scroll">
+				<div className="px-6 py-9 h-[calc(100dvh-176px)] xl:h-[calc(100dvh-100px)] overflow-y-scroll">
 					<div className="w-full flex justify-center">
 						<div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
 							{children}

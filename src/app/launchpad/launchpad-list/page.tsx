@@ -1,5 +1,3 @@
-"use client";
-
 import Link from "next/link";
 import Image from "next/image";
 import LaunchpadItem from "./components/LaunchpadItem";
@@ -7,23 +5,17 @@ import LatestLaunchpad from "./components/LatestLaunchpad";
 import { ILaunchpad } from "@/app/types";
 import { BASE_API } from "@/app/constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
-import useSWR from "swr";
-import axios from "axios";
 
-export default function LaunchpadListPage() {
-	const { data } = useSWR<[ILaunchpad[], number]>(
-		["LaunchpadListPage"],
-		async () => {
-			const { data } = await axios.get<[ILaunchpad[], number]>(
-				`${BASE_API}/launchpads`
-			);
+async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
+	const res = await fetch(`${BASE_API}/launchpads`, {
+		next: { revalidate: 60 },
+	});
+	return res.json();
+}
 
-			return data;
-		},
-		{ revalidateOnMount: true }
-	);
-
-	const launchpads = data?.[0] ?? undefined;
+export default async function LaunchpadListPage() {
+	const res = await getLaunchpads();
+	const launchpads = res[0];
 
 	return (
 		<div>
@@ -180,7 +172,7 @@ export default function LaunchpadListPage() {
 					</div>
 
 					<Link
-						href="/launchpad/launchpad-list/your-pools"
+						href="/launchpad/your-pools"
 						className="hidden md:block border rounded-2xl border-[#2D313E] py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
 					>
 						Your Pools
@@ -189,11 +181,11 @@ export default function LaunchpadListPage() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad launchpad={launchpads?.[0]} />
+			<LatestLaunchpad launchpad={launchpads[0]} />
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-				{launchpads?.slice(1).map((launchpad: any, idx: number) => (
+				{launchpads.slice(1).map((launchpad: any, idx: number) => (
 					<LaunchpadItem launchpad={launchpad} key={idx} />
 				))}
 			</div>

@@ -46,13 +46,12 @@ export default function Status({
 		<div
 			className={clsx("flex items-center gap-1 py-1.5 px-3 rounded-2xl", bg)}
 		>
-			<Image
-				src={`/svg/${status}.svg`}
-				alt={`${status}`}
-				width={8}
-				height={8}
-			/>
-			<div className={clsx("text-[12px] capitalize", text)}>{status}</div>
+			<div className="w-2 h-2 relative">
+				<Image src={`/svg/${status}.svg`} alt={`${status}`} fill sizes="any" />
+			</div>
+			<div className={clsx("text-[12px] capitalize font-medium", text)}>
+				{status}
+			</div>
 		</div>
 	);
 }

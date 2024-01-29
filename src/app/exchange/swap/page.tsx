@@ -493,13 +493,13 @@ const SwapPage = () => {
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6 px-6 py-6 text-white mb-[80px] max-[480px]:items-center md:mb-[80px] md:items-center lg:mb-0 lg:py-[72px]",
-				currentPath === "/bridge" && "lg:pt-[222px]"
+				"flex w-full flex-col gap-6 px-6 py-6 text-white mb-[80px] max-[480px]:items-center md:mb-[80px] md:items-center xl:mb-0 xl:py-[72px]",
+				currentPath === "/bridge" && "xl:pt-[222px]"
 			)}
 		>
 			<div
 				className={twMerge(
-					"flex flex-row justify-center items-center gap-6 lg:max-h-[514px] lg:flex-col lg:hidden",
+					"flex flex-row justify-center items-center gap-6 xl:max-h-[514px] xl:flex-col xl:hidden",
 					currentPath === "/bridge" && "flex-col"
 				)}
 			>
@@ -520,7 +520,7 @@ const SwapPage = () => {
 					setIsModalChartOpen={setIsModalChartOpen}
 				/>
 				{/* {currentPath === "/exchange/swap" && ( */}
-				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 lg:flex">
+				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
@@ -533,11 +533,11 @@ const SwapPage = () => {
 			</div>
 			<div
 				className={twMerge(
-					"hidden w-full flex-row justify-center items-center gap-6 lg:flex-row lg:flex lg:max-h-[514px]"
-					// currentPath !== "/bridge" && "lg:max-h-[514px]"
+					"hidden w-full flex-row justify-center items-center gap-6 xl:flex-row xl:flex xl:max-h-[514px]"
+					// currentPath !== "/bridge" && "xl:max-h-[514px]"
 				)}
 			>
-				<div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 lg:flex">
+				<div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
@@ -567,7 +567,7 @@ const SwapPage = () => {
 			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
 				<div className="flex flex-col items-start gap-3 self-stretch">
 					<div className="flex items-end justify-between self-stretch max-[480px]:flex-wrap">
-						<span className="text-xl lg:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
+						<span className="text-xl xl:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
 							Transactions
 						</span>
 						<div className="flex items-start rounded-lg border-[1px] border-[#2D313E] bg-[#0D0E12]">

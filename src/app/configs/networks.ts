@@ -86,6 +86,11 @@ export const TOKEN_LIST = {
 	// ],
 };
 
+console.log(
+	TOKEN_LIST[StarknetChainId.TESTNET][2].address,
+	validateAndParseAddress(TOKEN_LIST[StarknetChainId.TESTNET][2].address)
+);
+
 export const TOKEN_ICON_LIST = {
 	[StarknetChainId.MAINNET]: {
 		[WETH[StarknetChainId.MAINNET].address]: "/tokens/eth.svg",
@@ -97,7 +102,7 @@ export const TOKEN_ICON_LIST = {
 	},
 };
 
-export const UNKNOWN_TOKEN_ICON = "/tokens/unknown-token.png";
+export const UNKNOWN_TOKEN_ICON = "/tokens/unknown.svg";
 
 // export const MULTICALL_ADDRESS = {
 // 	[CHAIN_ID.ZETA_TESTNET]: "0x4aF8d9Ab04EA63C621C729EFd95d6BDCB8B15cf9",
@@ -140,7 +145,7 @@ export const SN_RPC_PROVIDER = () =>
 	new RpcProvider({ nodeUrl: sample(NETWORKS_SUPPORTED[APP_CHAIN_ID].rpc)! });
 
 export const getTokenIcon = (address: string | undefined) => {
-	return address
+	return !!address
 		? TOKEN_ICON_LIST[APP_CHAIN_ID][validateAndParseAddress(address)] ??
 				UNKNOWN_TOKEN_ICON
 		: UNKNOWN_TOKEN_ICON;

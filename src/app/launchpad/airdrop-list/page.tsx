@@ -33,9 +33,9 @@ export default function AirdropListPage() {
 				]}
 			/>
 			{/* title and filters */}
-			<div className="flex justify-end items-center mb-6 lg:mb-9">
+			<div className="flex justify-end items-center mb-6 xl:mb-9">
 				<div className="flex gap-3">
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -64,7 +64,7 @@ export default function AirdropListPage() {
 						</ul>
 					</div>
 
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -121,7 +121,7 @@ export default function AirdropListPage() {
 
 					<label
 						htmlFor="filters"
-						className="p-3 lg:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
+						className="p-3 xl:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
 					>
 						<div className="w-[24px] h-[24px] relative">
 							<Image src="/svg/filter.svg" alt="filter" fill />

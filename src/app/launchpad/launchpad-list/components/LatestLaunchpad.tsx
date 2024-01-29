@@ -11,6 +11,7 @@ import dayjs from "dayjs";
 import clsx from "clsx";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
 import Status from "../../components/Status";
+import CountDown from "@/app/components/CountDown";
 
 export default function LatestLaunchpad({
 	launchpad,
@@ -51,7 +52,7 @@ export default function LatestLaunchpad({
 		<div className="rounded-3xl bg-[#1A1C24] overflow-hidden border-2 border-[#24C3BC]">
 			<div
 				className={clsx(
-					"lg:hidden w-[calc(100% + 10px)] pt-[33.33%] relative rounded-2xl "
+					"xl:hidden w-[calc(100% + 10px)] pt-[33.33%] relative rounded-2xl "
 				)}
 			>
 				<Image alt="image" src="/mocks/banner.jpeg" fill />
@@ -60,14 +61,14 @@ export default function LatestLaunchpad({
 			<div className="p-6 flex flex-col gap-3 md:gap-6">
 				<div className="flex justify-between items-end self-stretch">
 					<div className="flex justify-stretch gap-3">
-						<div className="w-[55px] h-[55px] md:w-[66px] md:h-[66px] relative">
+						<div className="w-[59px] h-[59px] md:w-[66px] md:h-[66px] xl:w-[76px] xl:h-[76px] relative">
 							<Image alt="image" src="/tokens/sfn.png" fill />
 						</div>
-						<div className="flex-1 flex flex-col justify-between gap-2">
-							<div className="text-base md:text-2xl leading-[19px] font-bold line-clamp-1">
+						<div className="flex-1 flex flex-col justify-between">
+							<div className="text-[16px] md:text-[20px] xl:text-[24px] font-bold line-clamp-1">
 								{launchpad.name}
 							</div>
-							<div className="flex flex-wrap items-center gap-2">
+							<div className="flex flex-wrap items-center gap-1.5 md:gap-3">
 								<Status status={timeStartDiff.status} />
 								<div className="flex items-center  gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
 									<div className="w-[18px] h-[18px] relative">
@@ -75,13 +76,20 @@ export default function LatestLaunchpad({
 											src={`/wallets/${launchpad.chainKey}.png`}
 											alt="starknet"
 											fill
+											sizes="any"
 										/>
 									</div>
-									<div className="text-[12px] text-[#F1F1F1] capitalize">
+									<div className="text-[12px] text-[#F1F1F1] capitalize font-medium">
 										{launchpad.chainKey}
 									</div>
 								</div>
-								<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] uppercase">
+								{/* <div className="flex items-center gap-1 bg-[#ffffff26] py-1.5 px-3 rounded-2xl">
+									<Image src="/logo.png" alt="token" width={8} height={8} />
+									<div className="text-[12px] text-[#F1F1F1]">
+										SFN
+									</div>
+								</div> */}
+								<div className="bg-[#3E73FC] py-1.5 px-3 rounded-2xl text-[12px] text-[#F1F1F1] capitalize font-medium">
 									{launchpad.type}
 								</div>
 							</div>
@@ -97,20 +105,20 @@ export default function LatestLaunchpad({
 					</Link>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-11 gap-6">
-					<div className="col-span-1 lg:col-span-5 hidden lg:flex ">
+				<div className="grid grid-cols-1 xl:grid-cols-11 gap-6">
+					<div className="col-span-1 xl:col-span-5 hidden xl:flex ">
 						<div className="w-full  pt-[33.33%] relative">
 							<Image alt="image" src="/mocks/banner.png" fill />
 						</div>
 					</div>
 
-					<div className="col-span-1 lg:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
+					<div className="col-span-1 xl:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
 						<div className="flex flex-col md:flex-row justify-between gap-4">
-							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start  gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
-								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start md:border-none border-b border-b-[#2D313E] pb-3">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 									Total raise
 								</div>
-								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+								<div className="text-[14px] md:text-[16px] font-medium">
 									{numberWithCommas(
 										ethers
 											.formatUnits(
@@ -123,11 +131,11 @@ export default function LatestLaunchpad({
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
-								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start md:border-none border-b border-b-[#2D313E] pb-3">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 									Total sale
 								</div>
-								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+								<div className="text-[14px] md:text-[16px] font-medium">
 									{numberWithCommas(
 										ethers
 											.formatUnits(
@@ -140,11 +148,11 @@ export default function LatestLaunchpad({
 								</div>
 							</div>
 							<DividerVertical className="hidden md:block" />
-							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start gap-1 pb-3">
-								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start pb-3">
+								<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 									Rate
 								</div>
-								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+								<div className="text-[14px] md:text-[16px] font-medium">
 									1 {launchpad.tokenRaise.symbol} ={" "}
 									{numberWithCommas(
 										launchpad.totalRaiseUSD /
@@ -158,55 +166,11 @@ export default function LatestLaunchpad({
 							</div>
 						</div>
 						<div className="border-t border-t-[#2D313E] pt-3">
-							<span className="text-xs font-normal leading-[14px] text-[#c6c6c6] md:text-sm md:leading-[16px]">
+							<span className="text-[12px] md:text-[14px] text-[#c6c6c6]">
 								Launchpad {statusToText(timeStartDiff.status)}
 							</span>
-							<div className="flex items-center justify-between md:justify-start gap-1.5 md:gap-6">
-								<div>
-									<span className="countdown font-bold text-xs md:text-base">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
-									</span>{" "}
-									<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-										days
-									</span>
-								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
-									:
-								</span>
-								<div>
-									<span className="countdown font-bold text-xs md:text-base">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
-									</span>{" "}
-									<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-										hrs
-									</span>
-								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
-									:
-								</span>
-								<div>
-									<span className="countdown font-bold text-xs md:text-base">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
-									</span>{" "}
-									<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-										mins
-									</span>
-								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
-									:
-								</span>
-								<div>
-									<span className="countdown font-bold text-xs md:text-base">
-										{/* @ts-expect-error */}
-										<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
-									</span>{" "}
-									<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-										secs
-									</span>
-								</div>
+							<div className="flex items-center justify-between md:justify-start gap-1.5 md:gap-6 xl:gap-4">
+								<CountDown start={launchpad.start} end={launchpad.end} />
 							</div>
 						</div>
 					</div>

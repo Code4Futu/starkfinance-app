@@ -52,42 +52,42 @@ export default function Home() {
 
 				<div className="grid gird-cols-1 md:grid-cols-3 gap-3">
 					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
 							<Image alt="image" src="/svg/launchpad-blue.svg" fill />
 						</div>
 						<div className="flex flex-col justify-center items-start gap-1">
-							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px]">
 								{data?.[1] ?? 0}
 							</div>
-							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
 								Projects Launched
 							</div>
 						</div>
 					</div>
 
 					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
 							<Image alt="image" src="/svg/total-raise.svg" fill />
 						</div>
 						<div className="flex flex-col justify-center items-start gap-1">
-							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px]">
 								$0
 							</div>
-							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
 								Total Funds Raised
 							</div>
 						</div>
 					</div>
 
 					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
 							<Image alt="image" src="/svg/user.svg" fill />
 						</div>
 						<div className="flex flex-col justify-center items-start gap-1">
-							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px] ">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px] ">
 								0
 							</div>
-							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
 								Total Participants
 							</div>
 						</div>
@@ -111,17 +111,17 @@ export default function Home() {
 			{/* latest launchpad */}
 			<LatestLaunchpad launchpad={launchpads?.[0]} />
 
-			{/* top fundrasing */}
-			<div className="flex flex-col gap-3 md:gap-6">
-				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
+			{/* top fund raised */}
+			{/* <div className="flex flex-col gap-3 md:gap-6">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
 					Top Fundrasing
 				</div>
 				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
-			</div>
+			</div> */}
 
 			{/* top airdrop */}
 			{/* <div className="flex flex-col gap-3 md:gap-6">
-				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
 					Top Airdrop
 				</div>
 				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
@@ -150,13 +150,13 @@ export default function Home() {
       </div> */}
 
 			<div className="flex flex-col gap-3 md:gap-6">
-				<div className="text-xl md:text-2xl lg:text-[32px] font-bold">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
 					How to Participate in IDO
 				</div>
 
 				<div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-6">
 					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
 							Step 01
 						</div>
 						<div className="w-[80px] h-[80px] relative">
@@ -168,7 +168,7 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
 							Step 02
 						</div>
 						<div className="w-[80px] h-[80px] relative">
@@ -180,7 +180,7 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
 							Step 03
 						</div>
 						<div className="w-[80px] h-[80px] relative">
@@ -192,7 +192,7 @@ export default function Home() {
 						</div>
 					</div>
 					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
 							Step 04
 						</div>
 						<div className="w-[80px] h-[80px] relative">

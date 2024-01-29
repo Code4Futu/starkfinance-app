@@ -1,9 +1,25 @@
+"use client";
 import Image from "next/image";
 import Link from "next/link";
 import Pool from "./components/Pool";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import useSWR from "swr";
+import { useWeb3 } from "@/app/hooks";
+import axios from "axios";
+import { BASE_API } from "@/app/constants";
 
-export default function YourPools() {
+export default function YourPoolsPage() {
+	const { account } = useWeb3();
+
+	const {} = useSWR(["YourPoolsPage", account], async () => {
+		if (!account) return [];
+		const { data } = await axios.get(
+			`${BASE_API}/launchpads/committed/${account}`
+		);
+
+		console.log(data);
+	});
+
 	return (
 		<div>
 			<Breadcrumbs
@@ -14,11 +30,11 @@ export default function YourPools() {
 			/>
 
 			{/* title and filters */}
-			<div className="flex justify-between items-center mb-6 lg:mb-9">
-				<div className="text-[28px] lg:text-[42px] font-bold">You Pools</div>
+			<div className="flex justify-between items-center mb-6 xl:mb-9">
+				<div className="text-[28px] xl:text-[42px] font-bold">You Pools</div>
 
 				<div className="flex gap-3">
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -47,7 +63,7 @@ export default function YourPools() {
 						</ul>
 					</div>
 
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -75,7 +91,7 @@ export default function YourPools() {
 
 					<label
 						htmlFor="filters"
-						className="p-3 lg:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
+						className="p-3 xl:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
 					>
 						<div className="w-[24px] h-[24px] relative">
 							<Image src="/svg/filter.svg" alt="filter" fill />
@@ -166,7 +182,7 @@ export default function YourPools() {
 					<div className="w-full text-center">Claimable</div>
 				</div>
 				{new Array(3).fill("").map((_, idx) => (
-					<Pool index={idx} />
+					<Pool key={idx} index={idx} />
 				))}
 			</div>
 		</div>

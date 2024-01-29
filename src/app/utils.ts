@@ -81,13 +81,18 @@ export function timeDiff(current: number, start: number, end: number) {
 	return { d, h, m, s, status };
 }
 
-export function timeDiffAirdrop(current: number, start: number) {
-	let status = LAUNCHPAD_STATUS.UPCOMING;
-	if (current < start) status = LAUNCHPAD_STATUS.UPCOMING;
-	if (current > start) status = LAUNCHPAD_STATUS.INPROGRESS;
+export function timeDiffEnd(current: number, start: number) {
+	if (current > start) {
+		return {
+			d: 0,
+			h: 0,
+			m: 0,
+			s: 0,
+			status: LAUNCHPAD_STATUS.END,
+		};
+	}
 
-	const diff =
-		status === LAUNCHPAD_STATUS.UPCOMING ? start - current : current - start;
+	const diff = start - current;
 	let msec = diff;
 	const d = Math.floor(msec / 1000 / 24 / 60 / 60);
 	msec -= d * 1000 * 24 * 60 * 60;
@@ -97,35 +102,19 @@ export function timeDiffAirdrop(current: number, start: number) {
 	msec -= m * 1000 * 60;
 	const s = Math.floor(msec / 1000);
 
-	return { d, h, m, s, status };
+	return { d, h, m, s, status: LAUNCHPAD_STATUS.UPCOMING };
 }
 
 export const statusToText = (status: LAUNCHPAD_STATUS | undefined) => {
 	switch (status) {
 		case LAUNCHPAD_STATUS.UPCOMING:
-			return "open in:";
+			return "starts in:";
 
 		case LAUNCHPAD_STATUS.INPROGRESS:
-			return "end after:";
+			return "ends after:";
 
 		case LAUNCHPAD_STATUS.END:
-			return "end from:";
-
-		default:
-			return "";
-	}
-};
-
-export const airdropStatusToText = (status: LAUNCHPAD_STATUS | undefined) => {
-	switch (status) {
-		case LAUNCHPAD_STATUS.UPCOMING:
-			return "open in:";
-
-		case LAUNCHPAD_STATUS.INPROGRESS:
-			return "start from:";
-
-		case LAUNCHPAD_STATUS.END:
-			return "end from:";
+			return "ends from:";
 
 		default:
 			return "";

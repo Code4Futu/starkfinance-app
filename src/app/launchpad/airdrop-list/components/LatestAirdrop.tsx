@@ -51,7 +51,7 @@ export default function LatestAirdrop({
 		<div className="rounded-3xl bg-[#1A1C24] overflow-hidden border-2 border-[#24C3BC]">
 			<div
 				className={clsx(
-					"lg:hidden w-[calc(100% + 10px)] pt-[33.33%] relative rounded-2xl "
+					"xl:hidden w-[calc(100% + 10px)] pt-[33.33%] relative rounded-2xl "
 				)}
 			>
 				<Image alt="image" src="/mocks/banner.jpeg" fill />
@@ -97,20 +97,20 @@ export default function LatestAirdrop({
 					</Link>
 				</div>
 
-				<div className="grid grid-cols-1 lg:grid-cols-11 gap-6">
-					<div className="col-span-1 lg:col-span-5 hidden lg:flex ">
+				<div className="grid grid-cols-1 xl:grid-cols-11 gap-6">
+					<div className="col-span-1 xl:col-span-5 hidden xl:flex ">
 						<div className="w-full  pt-[33.33%] relative">
 							<Image alt="image" src="/mocks/banner.png" fill />
 						</div>
 					</div>
 
-					<div className="col-span-1 lg:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
+					<div className="col-span-1 xl:col-span-6 flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
 						<div className="flex flex-col md:flex-row justify-between gap-4">
 							<div className="flex flex-1 flex-row md:flex-col justify-between md:justify-start  gap-1 md:border-none border-b border-b-[#2D313E] pb-3">
 								<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
 									Total airdrop
 								</div>
-								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+								<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-medium">
 									{numberWithCommas(
 										ethers
 											.formatUnits(
@@ -129,7 +129,7 @@ export default function LatestAirdrop({
 							</span>
 							<div className="flex items-center justify-between md:justify-start gap-1.5 md:gap-6">
 								<div>
-									<span className="countdown font-bold text-xs md:text-base">
+									<span className="countdown font-medium text-xs md:text-base">
 										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
 									</span>{" "}
@@ -137,11 +137,11 @@ export default function LatestAirdrop({
 										days
 									</span>
 								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
+								<span className="text-sm md:text-base font-medium leading-[19px]">
 									:
 								</span>
 								<div>
-									<span className="countdown font-bold text-xs md:text-base">
+									<span className="countdown font-medium text-xs md:text-base">
 										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
 									</span>{" "}
@@ -149,11 +149,11 @@ export default function LatestAirdrop({
 										hrs
 									</span>
 								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
+								<span className="text-sm md:text-base font-medium leading-[19px]">
 									:
 								</span>
 								<div>
-									<span className="countdown font-bold text-xs md:text-base">
+									<span className="countdown font-medium text-xs md:text-base">
 										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
 									</span>{" "}
@@ -161,11 +161,11 @@ export default function LatestAirdrop({
 										mins
 									</span>
 								</div>
-								<span className="text-sm md:text-base font-bold leading-[19px]">
+								<span className="text-sm md:text-base font-medium leading-[19px]">
 									:
 								</span>
 								<div>
-									<span className="countdown font-bold text-xs md:text-base">
+									<span className="countdown font-medium text-xs md:text-base">
 										{/* @ts-expect-error */}
 										<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
 									</span>{" "}

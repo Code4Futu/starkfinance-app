@@ -329,18 +329,18 @@ const Transaction = ({
 				<div className="flex w-[250px] items-center gap-3">
 					<div className="flex items-center gap-1 rounded-3xl border-[1px] border-[#3C3D4D] px-4 py-2 w-[110px]">
 						<img src={checkIcon(token0Symbol)} alt="logo" className="h-6 w-6" />
-						<span className="text-sm lg:text-base font-bold text-[#f1f1f1]">
+						<span className="text-sm xl:text-base font-bold text-[#f1f1f1]">
 							{token0Symbol}
 						</span>
 					</div>
 					<div className="flex items-center gap-1 rounded-3xl border-[1px] border-[#3C3D4D] px-4 py-2 w-[110px]">
 						<img src={checkIcon(token1Symbol)} alt="logo" className="h-6 w-6" />
-						<span className="text-sm lg:text-base font-bold text-[#f1f1f1]">
+						<span className="text-sm xl:text-base font-bold text-[#f1f1f1]">
 							{token1Symbol}
 						</span>
 					</div>
 				</div>
-				<span className="w-[160px] text-sm lg:text-base font-normal text-[#f1f1f1]">
+				<span className="w-[160px] text-sm xl:text-base font-normal text-[#f1f1f1]">
 					<TVLComponent
 						token0Symbol={token0Symbol}
 						token1Symbol={token1Symbol}
@@ -348,10 +348,10 @@ const Transaction = ({
 						token1Reserve={token1Reserve}
 					/>
 				</span>
-				<span className="w-[160px] text-sm lg:text-base font-normal text-[#f1f1f1]">
+				<span className="w-[160px] text-sm xl:text-base font-normal text-[#f1f1f1]">
 					--
 				</span>
-				<span className="w-[100px] text-sm lg:text-base font-normal text-[#f1f1f1]">
+				<span className="w-[100px] text-sm xl:text-base font-normal text-[#f1f1f1]">
 					--
 				</span>
 			</div>
@@ -435,23 +435,23 @@ const TransactionDesktop = ({ allPairs, loading }) => {
 	return (
 		<div className="flex w-full flex-col">
 			<div className="flex items-center justify-between self-stretch">
-				<span className="w-[250px] text-sm lg:text-base font-bold text-[#f1f1f1]">
+				<span className="w-[250px] text-sm xl:text-base font-bold text-[#f1f1f1]">
 					Name
 				</span>
 				<div className="flex w-[160px] items-center gap-1">
-					<span className="text-sm lg:text-base font-bold text-[#f1f1f1]">
+					<span className="text-sm xl:text-base font-bold text-[#f1f1f1]">
 						Liquidity
 					</span>
 					<ArrangeIcon />
 				</div>
 				<div className="flex w-[160px] items-center gap-1">
-					<span className="text-sm lg:text-base font-bold text-[#f1f1f1]">
+					<span className="text-sm xl:text-base font-bold text-[#f1f1f1]">
 						Volume (24h)
 					</span>
 					<ArrangeIcon />
 				</div>
 				<div className="flex w-[100px] items-center gap-1">
-					<span className="text-sm lg:text-base font-bold text-[#f1f1f1]">
+					<span className="text-sm xl:text-base font-bold text-[#f1f1f1]">
 						Fee (24h)
 					</span>
 					<ArrangeIcon />
@@ -610,7 +610,7 @@ const LiquidityPage = () => {
 	};
 
 	return (
-		<div className="flex w-full flex-col gap-6 px-6 py-9 text-white mb-[80px] md:mb-[104px] md:items-center lg:py-[72px] lg:mb-0">
+		<div className="flex w-full flex-col gap-6 px-6 py-9 text-white mb-[80px] md:mb-[104px] md:items-center xl:py-[72px] xl:mb-0">
 			<div className="flex w-full max-w-[1088px] flex-col items-start gap-3">
 				<div className="w-full md:hidden">
 					<HeaderMobile

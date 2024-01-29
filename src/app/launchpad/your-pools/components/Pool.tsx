@@ -3,7 +3,7 @@ import Image from "next/image";
 export default function Pool({ index }: { index: number }) {
 	return (
 		<div className="grid grid-cols-1 md:grid-cols-7 place-items-center p-6 bg-[#1A1C24] rounded-3xl">
-			<div className="w-full flex md:flex-col lg:flex-row items-center gap-2 pb-3 mb:pb-0 lg:pb-0 border-b border-b-[#2D313E] md:border-b-0 md:border-r border-r-[#2D313E] md:pr-2">
+			<div className="w-full flex md:flex-col xl:flex-row items-center gap-2 pb-3 mb:pb-0 xl:pb-0 border-b border-b-[#2D313E] md:border-b-0 md:border-r border-r-[#2D313E] md:pr-2">
 				<div className="w-[36px] h-[36px] relative">
 					<Image src="/logo.png" alt="logo" fill />
 				</div>

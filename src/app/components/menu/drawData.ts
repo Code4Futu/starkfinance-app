@@ -31,14 +31,14 @@ export const drawerDataMobile = [
 		title: "Locking",
 		open: false,
 		items: [
-			{
-				title: "Create Lock",
-				path: "/launchpad/locking",
-			},
-			{
-				title: "Token",
-				path: "/launchpad/locking/token",
-			},
+			// {
+			// 	title: "Create Lock",
+			// 	path: "/launchpad/locking",
+			// },
+			// {
+			// 	title: "Token",
+			// 	path: "/launchpad/locking/token",
+			// },
 			// {
 			// 	title: "Liquidity",
 			// 	path: "/launchpad/locking/liquidity",
@@ -54,10 +54,10 @@ export const drawerDataMobile = [
 				title: "Launchpad List",
 				path: "/launchpad/launchpad-list",
 			},
-			{
-				title: "Airdrop List",
-				path: "/launchpad/airdrop-list",
-			},
+			// {
+			// 	title: "Airdrop List",
+			// 	path: "/launchpad/airdrop-list",
+			// },
 			{
 				title: "Your Pools",
 				path: "/launchpad/your-pools",
@@ -120,14 +120,14 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			{
-				title: "Create Lock",
-				path: "/launchpad/locking",
-			},
-			{
-				title: "Token",
-				path: "/launchpad/locking/token",
-			},
+			// {
+			// 	title: "Create Lock",
+			// 	path: "/launchpad/locking",
+			// },
+			// {
+			// 	title: "Token",
+			// 	path: "/launchpad/locking/token",
+			// },
 			// {
 			// 	title: "Liquidity",
 			// 	path: "/launchpad/locking/liquidity",
@@ -144,10 +144,10 @@ export const drawerData = [
 				title: "Launchpad List",
 				path: "/launchpad/launchpad-list",
 			},
-			{
-				title: "Airdrop List",
-				path: "/launchpad/airdrop-list",
-			},
+			// {
+			// 	title: "Airdrop List",
+			// 	path: "/launchpad/airdrop-list",
+			// },
 			{
 				title: "Your Pools",
 				path: "/launchpad/your-pools",
@@ -191,6 +191,7 @@ export const socialLink = {
 	tw: "https://twitter.com/starkfinance",
 	teleChannel: "https://t.me/starksportchanel",
 	teleGlobal: "https://t.me/starksportglobal",
+	medium: "https://starkfinance.medium.com",
 };
 
 export const socialData = [
@@ -213,7 +214,7 @@ export const socialData = [
 			},
 			{
 				title: "Medium",
-				path: socialLink.teleChannel,
+				path: socialLink.medium,
 			},
 			{
 				title: "Github",

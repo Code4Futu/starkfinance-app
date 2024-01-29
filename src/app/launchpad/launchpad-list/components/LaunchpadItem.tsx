@@ -10,6 +10,7 @@ import dayjs from "dayjs";
 import clsx from "clsx";
 import Status from "../../components/Status";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
+import CountDown from "@/app/components/CountDown";
 
 export default function LaunchpadItem({
 	launchpad,
@@ -65,11 +66,11 @@ export default function LaunchpadItem({
 			</div>
 
 			<div className="p-6 flex flex-col gap-3 md:gap-6">
-				<div className="flex justify-stretch gap-3">
-					<div className="w-[60px] h-[60px] relative">
+				<div className="flex justify-stretch items-center gap-3">
+					<div className="w-[51px] h-[51px] md:w-[55px] md:h-[55px] xl:w-[60px] xl:h-[60px] relative">
 						<Image alt="image" src="/tokens/sfn.png" fill />
 					</div>
-					<div className="flex-1 flex flex-col justify-between gap-2">
+					<div className="flex-1 flex flex-col justify-between">
 						<div className="text-[20px] font-bold line-clamp-1">
 							{launchpad.name}
 						</div>
@@ -104,10 +105,10 @@ export default function LaunchpadItem({
 				<div className="flex flex-col justify-between border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-[18px] md:p-6">
 					<div className="flex flex-col gap-3">
 						<div className="flex flex-1 justify-between gap-1 border-b border-b-[#2D313E] pb-3">
-							<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 								Total raise
 							</div>
-							<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+							<div className="text-[14px] md:text-[16px] font-medium">
 								{numberWithCommas(
 									ethers
 										.formatUnits(
@@ -120,10 +121,10 @@ export default function LaunchpadItem({
 							</div>
 						</div>
 						<div className="flex flex-1 justify-between gap-1 border-b border-b-[#2D313E] pb-3">
-							<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 								Total sale
 							</div>
-							<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+							<div className="text-[14px] md:text-[16px] font-medium">
 								{numberWithCommas(
 									ethers
 										.formatUnits(
@@ -136,10 +137,10 @@ export default function LaunchpadItem({
 							</div>
 						</div>
 						<div className="flex flex-1 justify-between gap-1 pb-3">
-							<div className="text-xs font-normal leading-[14px] text-[#C6C6C6] md:text-sm md:leading-[16px]">
+							<div className="text-[12px] md:text-[14px] text-[#C6C6C6]">
 								Rate
 							</div>
-							<div className="text-sm leading-[16px] md:text-base md:leading-[19px] font-bold">
+							<div className="text-[14px] md:text-[16px] font-medium">
 								1 {launchpad.tokenRaise.symbol} ={" "}
 								{numberWithCommas(
 									launchpad.totalRaiseUSD /
@@ -153,55 +154,11 @@ export default function LaunchpadItem({
 						</div>
 					</div>
 					<div className="border-t border-t-[#2D313E] pt-3">
-						<span className="text-xs font-normal leading-[14px] text-[#c6c6c6] md:text-sm md:leading-[16px]">
+						<span className="text-[12px] md:text-[14px] text-[#c6c6c6]">
 							Launchpad {statusToText(timeStartDiff.status)}
 						</span>
 						<div className="flex items-center justify-between">
-							<div>
-								<span className="countdown font-bold text-xs md:text-base">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.d ?? 0 }}></span>
-								</span>{" "}
-								<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-									days
-								</span>
-							</div>
-							<span className="text-sm md:text-base font-bold leading-[19px]">
-								:
-							</span>
-							<div>
-								<span className="countdown font-bold text-xs md:text-base">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.h ?? 0 }}></span>
-								</span>{" "}
-								<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-									hrs
-								</span>
-							</div>
-							<span className="text-sm md:text-base font-bold leading-[19px]">
-								:
-							</span>
-							<div>
-								<span className="countdown font-bold text-xs md:text-base">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.m ?? 0 }}></span>
-								</span>{" "}
-								<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-									mins
-								</span>
-							</div>
-							<span className="text-sm md:text-base font-bold leading-[19px]">
-								:
-							</span>
-							<div>
-								<span className="countdown font-bold text-xs md:text-base">
-									{/* @ts-expect-error */}
-									<span style={{ "--value": timeStartDiff?.s ?? 0 }}></span>
-								</span>{" "}
-								<span className="text-xs md:text-sm leading-[16px] text-[#c6c6c6]">
-									secs
-								</span>
-							</div>
+							<CountDown start={launchpad.start} end={launchpad.end} />
 						</div>
 					</div>
 				</div>

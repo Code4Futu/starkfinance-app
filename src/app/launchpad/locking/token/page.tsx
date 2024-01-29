@@ -49,7 +49,7 @@ export default function TokenLocking() {
 			/>
 
 			{/* filters */}
-			<div className="flex justify-end items-center mb-6 lg:mb-9">
+			<div className="flex justify-end items-center mb-6 xl:mb-9">
 				<div className="flex gap-3">
 					<div
 						className={clsx(
