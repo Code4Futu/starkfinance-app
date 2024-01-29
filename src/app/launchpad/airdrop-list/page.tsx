@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import AirdropItem from "./components/AirdropItem";
@@ -5,20 +6,23 @@ import LatestAirdrop from "./components/LatestAirdrop";
 import { IAirdrop } from "../../types";
 import { BASE_API } from "../../constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import axios from "axios";
+import useSWR from "swr";
 
-async function getAirdrops(): Promise<[IAirdrop[], number]> {
-	const res = await fetch(`${BASE_API}/airdrops`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
+export default function AirdropListPage() {
+	const { data } = useSWR<[IAirdrop[], number]>(
+		["AirdropListPage"],
+		async () => {
+			const { data } = await axios.get<[IAirdrop[], number]>(
+				`${BASE_API}/airdrops`
+			);
 
-export default async function AirdropList() {
-	const res = await getAirdrops();
+			return data;
+		},
+		{ revalidateOnMount: true }
+	);
 
-	let airdrops = res[0];
-
-	let totalAirdrop = res[1];
+	const airdrops = data?.[0] ?? undefined;
 
 	return (
 		<div>
@@ -183,11 +187,11 @@ export default async function AirdropList() {
 			</div>
 
 			{/* latest launchpad */}
-			{airdrops.length && <LatestAirdrop airdrop={airdrops[0]} />}
+			<LatestAirdrop airdrop={airdrops?.[0]} />
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-				{airdrops.slice(1).map((airdrop: any, idx: number) => (
+				{airdrops?.slice(1).map((airdrop: any, idx: number) => (
 					<AirdropItem airdrop={airdrop} key={idx} />
 				))}
 			</div>

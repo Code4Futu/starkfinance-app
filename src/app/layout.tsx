@@ -23,7 +23,11 @@ export const metadata: Metadata = {
 			"StarkFinance is an all-in-one Incubation Hub with a full stack DeFi platform across blockchain networks. We provide exclusive services including IDO Launchpad, NFT Auction, Marketplace, and Exchange.",
 		url: "https://testnet.starkfinance.co",
 		siteName: "StarkFinance",
-		images: [{ url: "https://testnet.starkfinance.co/ecosystem.png" }],
+		images: [
+			{
+				url: "https://res.cloudinary.com/dklf85tfy/image/upload/f_auto,q_auto/oz2k10vc6jvzmqtcbtl9",
+			},
+		],
 		locale: "en_US",
 		type: "website",
 	},
@@ -56,7 +60,7 @@ export const metadata: Metadata = {
 			"StarkFinance is an all-in-one Incubation Hub with a full stack DeFi platform across blockchain networks. We provide exclusive services including IDO Launchpad, NFT Auction, Marketplace, and Exchange.",
 		creator: "@starkfinance",
 		images: {
-			url: "https://testnet.starkfinance.co/ecosystem.png",
+			url: "https://res.cloudinary.com/dklf85tfy/image/upload/f_auto,q_auto/oz2k10vc6jvzmqtcbtl9",
 			alt: "ecosystem",
 		},
 	},

@@ -6,17 +6,33 @@ import LatestLaunchpad from "./launchpad/launchpad-list/components/LatestLaunchp
 import { BASE_API } from "./constants";
 import { ILaunchpad } from "./types";
 import { HomepageCarousel } from "./components/HomepageCarousel";
+import useSWR from "swr";
+import axios from "axios";
 
-async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
-	const res = await fetch(`${BASE_API}/launchpads`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
+// async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
+// 	const res = await fetch(`${BASE_API}/launchpads`, {
+// 		next: { revalidate: 60 },
+// 	});
+// 	return res.json();
+// }
 
-export default async function Home() {
-	const res = await getLaunchpads();
-	const launchpads = res[0];
+export default function Home() {
+	// const res = await getLaunchpads();
+	// const launchpads = res[0];
+
+	const { data } = useSWR<[ILaunchpad[], number]>(
+		["Home"],
+		async () => {
+			const { data } = await axios.get<[ILaunchpad[], number]>(
+				`${BASE_API}/launchpads`
+			);
+
+			return data;
+		},
+		{ revalidateOnMount: true }
+	);
+
+	const launchpads = data?.[0] ?? undefined;
 
 	return (
 		<div className="flex flex-col gap-6">
@@ -41,7 +57,7 @@ export default async function Home() {
 						</div>
 						<div className="flex flex-col justify-center items-start gap-1">
 							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
-								{res[1]}
+								{data?.[1] ?? 0}
 							</div>
 							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
 								Projects Launched
@@ -93,7 +109,7 @@ export default async function Home() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestLaunchpad launchpad={launchpads[0]} />
+			<LatestLaunchpad launchpad={launchpads?.[0]} />
 
 			{/* top fundrasing */}
 			<div className="flex flex-col gap-3 md:gap-6">

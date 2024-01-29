@@ -12,7 +12,11 @@ import clsx from "clsx";
 import { DividerVertical } from "@/app/components/HomepageCarousel";
 import Status from "../../components/Status";
 
-export default function LatestAirdrop({ airdrop }: { airdrop: IAirdrop }) {
+export default function LatestAirdrop({
+	airdrop,
+}: {
+	airdrop: IAirdrop | undefined;
+}) {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
 		h: number;
@@ -40,6 +44,8 @@ export default function LatestAirdrop({ airdrop }: { airdrop: IAirdrop }) {
 
 		return () => clearInterval(interval);
 	}, [airdrop?.start, airdrop?.end]);
+
+	if (!airdrop) return <div className="skeleton h-32"></div>;
 
 	return (
 		<div className="rounded-3xl bg-[#1A1C24] overflow-hidden border-2 border-[#24C3BC]">

@@ -15,7 +15,7 @@ import Status from "../../components/Status";
 export default function LatestLaunchpad({
 	launchpad,
 }: {
-	launchpad: ILaunchpad;
+	launchpad: ILaunchpad | undefined;
 }) {
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
@@ -44,6 +44,8 @@ export default function LatestLaunchpad({
 
 		return () => clearInterval(interval);
 	}, [launchpad?.start, launchpad?.end]);
+
+	if (!launchpad) return <div className="skeleton h-32"></div>;
 
 	return (
 		<div className="rounded-3xl bg-[#1A1C24] overflow-hidden border-2 border-[#24C3BC]">
