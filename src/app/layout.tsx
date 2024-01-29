@@ -46,7 +46,7 @@ export const metadata: Metadata = {
 	},
 	icons: {
 		icon: "/tokens/sfn.png",
-		shortcut: "/logo.png",
+		shortcut: "/tokens/sfn.png",
 		apple: "/apple-touch-icon.png",
 		other: {
 			rel: "apple-touch-icon",

@@ -7,18 +7,21 @@ import useSWR from "swr";
 import { useWeb3 } from "@/app/hooks";
 import axios from "axios";
 import { BASE_API } from "@/app/constants";
+import { CommittedLaunchpad } from "./types";
 
 export default function YourPoolsPage() {
 	const { account } = useWeb3();
 
-	const {} = useSWR(["YourPoolsPage", account], async () => {
-		if (!account) return [];
-		const { data } = await axios.get(
-			`${BASE_API}/launchpads/committed/${account}`
-		);
-
-		console.log(data);
-	});
+	const { data: launchpads } = useSWR<CommittedLaunchpad[]>(
+		["YourPoolsPage", account],
+		async () => {
+			if (!account) return [];
+			const { data } = await axios.get<CommittedLaunchpad[]>(
+				`${BASE_API}/launchpads/committed/${account}`
+			);
+			return data;
+		}
+	);
 
 	return (
 		<div>
@@ -30,9 +33,7 @@ export default function YourPoolsPage() {
 			/>
 
 			{/* title and filters */}
-			<div className="flex justify-between items-center mb-6 xl:mb-9">
-				<div className="text-[28px] xl:text-[42px] font-bold">You Pools</div>
-
+			<div className="flex justify-end items-center mb-6 xl:mb-9">
 				<div className="flex gap-3">
 					<div className="hidden xl:block dropdown dropdown-end">
 						<label
@@ -159,31 +160,37 @@ export default function YourPoolsPage() {
 				</div>
 			</div>
 
-			<div className="flex flex-col gap-6 bg-[#1A1C24] rounded-3xl p-9">
+			<div className="flex flex-col gap-6 md:gap-3 md:bg-[#1A1C24] md:p-6 md:rounded-3xl">
 				<div className="hidden md:grid grid-cols-7 bg-[#0D0E12] rounded-2xl p-6">
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2">
 						Pool name
 					</div>
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2 text-center">
 						Status
 					</div>
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2 text-center">
 						NFT Stake
 					</div>
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2 text-center">
 						Allocation
 					</div>
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2 text-center">
 						Total committed
 					</div>
-					<div className="w-full md:border-r border-r-[#2D313E] md:px-2 text-center">
+					<div className="w-full h-full flex flex-col justify-center md:border-r border-r-[#2D313E] md:px-2 text-center">
 						Claimed
 					</div>
-					<div className="w-full text-center">Claimable</div>
+					<div className="w-full h-full flex flex-col justify-center text-center">
+						Claimable
+					</div>
 				</div>
-				{new Array(3).fill("").map((_, idx) => (
-					<Pool key={idx} index={idx} />
-				))}
+				{launchpads?.length ? (
+					launchpads.map((launchpad, idx) => (
+						<Pool key={idx} index={idx} launchpad={launchpad} />
+					))
+				) : (
+					<div className="text-center">Connect wallet</div>
+				)}
 			</div>
 		</div>
 	);

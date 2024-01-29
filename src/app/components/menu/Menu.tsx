@@ -1,7 +1,6 @@
 "use client";
 
 import { useAccount, useConnectors } from "@starknet-react/core";
-import { connectors } from "../../conf";
 import { useEffect, useRef, useState } from "react";
 import clsx from "clsx";
 import ModalWallet from "../modals/ModalWallet";
@@ -152,7 +151,6 @@ const useOpenDrawer = () => {
 
 export default function Menu({ children }: { children: React.ReactNode }) {
 	const { available, connect, refresh } = useConnectors();
-	const { address } = useAccount();
 	const { isMobile, openDrawer, toggle, resizeDrawer, resizeToggle, content } =
 		useOpenDrawer();
 

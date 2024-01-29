@@ -3,8 +3,8 @@
 import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
-import { useAccount, useConnectors } from "@starknet-react/core";
 import { usePathname } from "next/navigation";
+import { useWeb3 } from "@/app/hooks";
 
 export const CartIcon = () => {
 	return (
@@ -29,7 +29,7 @@ interface Props {
 }
 
 export const SiteNavigation = (props: Props) => {
-	const { address } = useAccount();
+	const { account } = useWeb3();
 	const currentPath = usePathname();
 
 	return (
@@ -82,8 +82,8 @@ export const SiteNavigation = (props: Props) => {
 						<Image src="/svg/connect-wallet.svg" fill alt="connect-wallet" />
 					</div>
 					<div className="text-[16px] font-bold text-[#1A1C24] cursor-pointer">
-						{address
-							? `${address.slice(0, 4)}...${address.slice(-3)}`
+						{account
+							? `${account.slice(0, 4)}...${account.slice(-3)}`
 							: "Connect Wallet"}
 					</div>
 				</button>

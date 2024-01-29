@@ -904,7 +904,7 @@ export default function Launchpad({
 						{/* user allocation */}
 						{timeStartDiff.status !== LAUNCHPAD_STATUS.UPCOMING ? (
 							<div className="flex flex-col border border-[#2D313E] bg-[#0D0E12] rounded-3xl p-6">
-								<div className="text-[16px] md:text-[20px] xl:text-[24px]  font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-3">
+								<div className="text-[16px] md:text-[20px] xl:text-[24px] font-bold text-[#F1F1F1] border-b border-b-[#2D313E] pb-3">
 									Your Allocation{" "}
 									{accountStatistics?.stakedNft ? (
 										<span className="text-[14px] md:text-[16px] xl:text-[20px] font-[500]">
