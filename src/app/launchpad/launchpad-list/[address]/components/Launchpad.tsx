@@ -26,6 +26,7 @@ import { getTokenIcon } from "@/app/configs/networks";
 import CountDown from "@/app/components/CountDown";
 import CountDownEnd from "@/app/components/CountDownEnd";
 import TokenIcon from "@/app/components/TokenIcon";
+import NFTModal from "./NFTModal";
 
 dayjs.extend(utc);
 
@@ -150,21 +151,10 @@ export default function Launchpad({
 			}
 		);
 
-	const { data: nfts, isLoading: nftsLoading } = useSWR<any[]>(
-		[account],
-		() => fetch(`${BASE_API}/nfts?address=${account}`).then((r) => r.json()),
-		{ refreshInterval: 300 }
-	);
-
 	const [commitAmount, setCommitAmount] = useState<string>("");
 	const [submitting, setSubmitting] = useState<boolean>(false);
 	const [claiming, setClaiming] = useState<boolean>(false);
 	const [claimingRemaining, setClaimingRemaining] = useState<boolean>(false);
-	const [stakingNft, setStakingNft] = useState<boolean>(false);
-
-	const [searchNft, setSearchNft] = useState<string>("");
-
-	const modalRef = useRef<HTMLButtonElement>(null);
 
 	const [timeStartDiff, setTimeStartDiff] = useState<{
 		d: number;
@@ -365,119 +355,25 @@ export default function Launchpad({
 		}
 	}, [library, launchpad?.address, claimableRemaining]);
 
-	const handleStakeNft = useCallback(
-		async (nftId: string) => {
-			if (!launchpad) return;
-			if (!library) return toast.error("Connect wallet first");
-			try {
-				if (!modalRef.current) return;
-				setStakingNft(true);
-				const calls = [
-					{
-						contractAddress: launchpad.nft,
-						entrypoint: "approve",
-						calldata: CallData.compile({
-							to: launchpad.address,
-							token_id: cairo.uint256(nftId),
-						}),
-					},
-					{
-						contractAddress: launchpad.address,
-						entrypoint: "stake_nft",
-						calldata: CallData.compile({
-							nft_id: cairo.uint256(nftId),
-						}),
-					},
-				];
-				const tx = await library.execute(calls);
-				await StarknetRpcProvider.waitForTransaction(tx.transaction_hash);
-				modalRef.current.click();
-				useWeb3Store.setState({ txHash: tx.transaction_hash });
-				setStakingNft(false);
-				toast.success(`Stake NFT success. TxHash is ${tx.transaction_hash}`);
-			} catch (error: any) {
-				setStakingNft(false);
-				toast.error(error.message);
-			}
-		},
-		[library, launchpad?.address, claimableRemaining, modalRef]
-	);
-
 	const handleOpenStakeNftModal = useCallback(() => {
 		// @ts-expect-error
 		document.getElementById("nft_modal").showModal();
 	}, []);
 
-	console.log(!!launchpad);
-
 	return (
 		<div>
-			<dialog id="nft_modal" className="modal">
-				<div className="modal-box bg-[#1A1C24] p-6 md:max-w-[560px] xl:max-w-[1200px]">
-					<div className="flex justify-between items-center py-3 border-b border-b-[#2D313E]">
-						<div className="">Your StarkFinance NFT</div>
-
-						<div>
-							<input
-								type="text"
-								value={searchNft}
-								placeholder="Search"
-								onChange={(e) => setSearchNft(e.target.value)}
-								className="input placeholder:opacity-50 w-full bg-[#0D0E12] border-[#2D313E] rounded-2xl outline-0 focus:outline-0 focus:border-solid focus:border-[#2D313E]"
-							/>
-						</div>
-					</div>
-
-					<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6 p-8">
-						{nfts?.filter((nft) => nft.nftId.toString().includes(searchNft))
-							.length ? (
-							nfts
-								.filter((nft) => nft.nftId.toString().includes(searchNft))
-								.map((nft) => (
-									<div
-										key={nft.nftId}
-										className="flex flex-col gap-6 border border-[#2D313E] bg-[#232631] rounded-3xl pb-6"
-									>
-										<div className="w-full pt-[100%] relative">
-											<Image src="/nft/stark_nft.png" alt="nft" fill />
-										</div>
-
-										<div className="text-center text-[20px] text-[#F1F1F1]">
-											<div>StarkFinance NFT</div>
-											<div>#{nft.nftId}</div>
-										</div>
-
-										<div className="w-full flex justify-center">
-											<div>
-												<Button
-													handler={() => handleStakeNft(nft.nftId)}
-													claimable={true}
-													text="Stake NFT"
-													loading={stakingNft}
-													loadingText=""
-												/>
-											</div>
-										</div>
-									</div>
-								))
-						) : (
-							<div className="col-span-1 md:col-span-2 xl:col-span-4 text-center">
-								You don't have StarkFinance NFT
-							</div>
-						)}
-					</div>
-				</div>
-				<form method="dialog" className="modal-backdrop">
-					<button ref={modalRef}>close</button>
-				</form>
-			</dialog>
-
 			<Breadcrumbs
 				items={[
 					{ text: "Launchpad", icon: "/svg/launchpad.svg", url: "/" },
 					{ text: "Launchpad List", url: "/launchpad/launchpad-list" },
 					{ text: launchpad?.name ?? "" },
 				]}
+			/>
+
+			<NFTModal
+				name="nft_modal"
+				launchpadAddress={launchpad?.address}
+				nftAddress={launchpad?.nft}
 			/>
 
 			<div className="flex flex-col gap-8">
@@ -836,7 +732,7 @@ export default function Launchpad({
 											claimable={
 												!!launchpad &&
 												!!library &&
-												!nftsLoading &&
+												!!account &&
 												!!launchpadStatistics?.committed &&
 												+launchpadStatistics.committed >
 													+launchpad.totalRaise &&
