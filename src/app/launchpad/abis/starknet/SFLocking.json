@@ -1,8 +1,8 @@
 [
 	{
 		"type": "impl",
-		"name": "ISFLockingImpl",
-		"interface_name": "starkfinance::interfaces::launchpad::locking::ISFLocking"
+		"name": "ILockingImpl",
+		"interface_name": "starkfinance::interfaces::launchpad::locking::ILocking"
 	},
 	{
 		"type": "struct",
@@ -33,6 +33,7 @@
 				"type": "core::starknet::contract_address::ContractAddress"
 			},
 			{ "name": "amount", "type": "core::integer::u256" },
+			{ "name": "start", "type": "core::integer::u64" },
 			{ "name": "tge", "type": "core::integer::u64" },
 			{ "name": "is_vesting", "type": "core::bool" },
 			{ "name": "tge_percent", "type": "core::integer::u256" }
@@ -40,7 +41,7 @@
 	},
 	{
 		"type": "interface",
-		"name": "starkfinance::interfaces::launchpad::locking::ISFLocking",
+		"name": "starkfinance::interfaces::launchpad::locking::ILocking",
 		"items": [
 			{
 				"type": "function",
@@ -78,7 +79,7 @@
 			},
 			{
 				"type": "function",
-				"name": "lock",
+				"name": "create",
 				"inputs": [
 					{
 						"name": "owner",
@@ -89,6 +90,7 @@
 						"type": "core::starknet::contract_address::ContractAddress"
 					},
 					{ "name": "amount", "type": "core::integer::u256" },
+					{ "name": "start", "type": "core::integer::u64" },
 					{ "name": "tge", "type": "core::integer::u64" },
 					{ "name": "is_vesting", "type": "core::bool" },
 					{ "name": "tge_percent", "type": "core::integer::u256" },
@@ -106,7 +108,7 @@
 			},
 			{
 				"type": "function",
-				"name": "unlock",
+				"name": "claim",
 				"inputs": [
 					{
 						"name": "token",
@@ -121,7 +123,7 @@
 	},
 	{
 		"type": "event",
-		"name": "starkfinance::launchpad::locking::SFLocking::Created",
+		"name": "starkfinance::launchpad::locking::Locking::Created",
 		"kind": "struct",
 		"members": [
 			{
@@ -135,7 +137,7 @@
 	},
 	{
 		"type": "event",
-		"name": "starkfinance::launchpad::locking::SFLocking::Claimed",
+		"name": "starkfinance::launchpad::locking::Locking::Claimed",
 		"kind": "struct",
 		"members": [
 			{
@@ -149,17 +151,17 @@
 	},
 	{
 		"type": "event",
-		"name": "starkfinance::launchpad::locking::SFLocking::Event",
+		"name": "starkfinance::launchpad::locking::Locking::Event",
 		"kind": "enum",
 		"variants": [
 			{
 				"name": "Created",
-				"type": "starkfinance::launchpad::locking::SFLocking::Created",
+				"type": "starkfinance::launchpad::locking::Locking::Created",
 				"kind": "nested"
 			},
 			{
 				"name": "Claimed",
-				"type": "starkfinance::launchpad::locking::SFLocking::Claimed",
+				"type": "starkfinance::launchpad::locking::Locking::Claimed",
 				"kind": "nested"
 			}
 		]
