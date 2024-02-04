@@ -12,18 +12,18 @@ export const drawerDataMobile = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			// 	title: "Swap",
-			// 	path: "/exchange/swap",
-			// },
-			// {
-			// 	title: "Pools",
-			// 	path: "/exchange/liquidity",
-			// },
-			// {
-			// 	title: "Overview",
-			// 	path: "/exchange/overview",
-			// },
+			{
+				title: "Swap",
+				path: "/exchange/swap",
+			},
+			{
+				title: "Pools",
+				path: "/exchange/liquidity",
+			},
+			{
+				title: "Overview",
+				path: "/exchange/overview",
+			},
 		],
 	},
 	{
@@ -31,18 +31,18 @@ export const drawerDataMobile = [
 		title: "Locking",
 		open: false,
 		items: [
-			// {
-			// 	title: "Create Lock",
-			// 	path: "/launchpad/locking",
-			// },
-			// {
-			// 	title: "Token",
-			// 	path: "/launchpad/locking/token",
-			// },
-			// {
-			// 	title: "Liquidity",
-			// 	path: "/launchpad/locking/liquidity",
-			// },
+			{
+				title: "Create Lock",
+				path: "/launchpad/locking",
+			},
+			{
+				title: "Token",
+				path: "/launchpad/locking/token",
+			},
+			{
+				title: "Liquidity",
+				path: "/launchpad/locking/liquidity",
+			},
 		],
 	},
 	{
@@ -54,10 +54,10 @@ export const drawerDataMobile = [
 				title: "Launchpad List",
 				path: "/launchpad/launchpad-list",
 			},
-			// {
-			// 	title: "Airdrop List",
-			// 	path: "/launchpad/airdrop-list",
-			// },
+			{
+				title: "Airdrop List",
+				path: "/launchpad/airdrop-list",
+			},
 			{
 				title: "Your Pools",
 				path: "/launchpad/your-pools",
@@ -92,26 +92,26 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			// 	title: "Swap",
-			// 	path: "/exchange/swap",
-			// },
-			// {
-			// 	title: "Pools",
-			// 	path: "/exchange/liquidity",
-			// },
-			// {
-			// 	title: "Overview",
-			// 	path: "/exchange/overview",
-			// },
-			// {
-			//   title: "Staking",
-			//   path: route.comingSoon,
-			// },
-			// {
-			//   title: "Bridge",
-			//   path: route.swapBridge,
-			// },
+			{
+				title: "Swap",
+				path: "/exchange/swap",
+			},
+			{
+				title: "Pools",
+				path: "/exchange/liquidity",
+			},
+			{
+				title: "Overview",
+				path: "/exchange/overview",
+			},
+			{
+				title: "Staking",
+				path: "/exchange/staking",
+			},
+			{
+				title: "Bridge",
+				path: "/exchange/bridge",
+			},
 		],
 	},
 	{
@@ -120,18 +120,18 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			// 	title: "Create Lock",
-			// 	path: "/launchpad/locking",
-			// },
-			// {
-			// 	title: "Token",
-			// 	path: "/launchpad/locking/token",
-			// },
-			// {
-			// 	title: "Liquidity",
-			// 	path: "/launchpad/locking/liquidity",
-			// },
+			{
+				title: "Create Lock",
+				path: "/launchpad/locking",
+			},
+			{
+				title: "Token",
+				path: "/launchpad/locking/token",
+			},
+			{
+				title: "Liquidity",
+				path: "/launchpad/locking/liquidity",
+			},
 		],
 	},
 	{
@@ -144,10 +144,10 @@ export const drawerData = [
 				title: "Launchpad List",
 				path: "/launchpad/launchpad-list",
 			},
-			// {
-			// 	title: "Airdrop List",
-			// 	path: "/launchpad/airdrop-list",
-			// },
+			{
+				title: "Airdrop List",
+				path: "/launchpad/airdrop-list",
+			},
 			{
 				title: "Your Pools",
 				path: "/launchpad/your-pools",
@@ -160,22 +160,22 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			//   title: "Collections",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Activity",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Events",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Profile",
-			//   path: route.home,
-			// },
+			{
+				title: "Collections",
+				path: "/marketplace",
+			},
+			{
+				title: "Activity",
+				path: "/marketplace/activities",
+			},
+			{
+				title: "Events",
+				path: "/marketplace/events",
+			},
+			{
+				title: "Profile",
+				path: "/marketplace/profile",
+			},
 		],
 	},
 	{

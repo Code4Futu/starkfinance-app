@@ -16,6 +16,7 @@ import { ArrangeIcon } from "./icons";
 // import { YourLiquidity } from "../your-liquidity";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
+import ComingSoonPage from "@/app/components/ComingSoon";
 
 const FACTORY_ADDRESS =
 	"0x594074315e98393351438011f5a558466f1733fde666f73f41738a39804c27";
@@ -705,6 +706,8 @@ const LiquidityPage = () => {
 };
 
 export default function WrapLiquidityPage() {
+	// TODO remove coming soon
+	return <ComingSoonPage />;
 	// const { isConnected: isConnectedEvm } = useActiveWeb3React();
 
 	// return isConnectedEvm ? <LiquidityPage /> : <LiquidityPage />;

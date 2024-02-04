@@ -37,6 +37,7 @@ import DetailBridgeModal from "../components/modals/detail-bridge/DetailBridgeMo
 import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
 import SwapForm from "./components/SwapForm";
+import ComingSoonPage from "@/app/components/ComingSoon";
 
 const FACTORY_ADDRESS =
 	"0x594074315e98393351438011f5a558466f1733fde666f73f41738a39804c27";
@@ -715,6 +716,8 @@ const SwapPage = () => {
 };
 
 export default function WrapSwapPage() {
+	// TODO remove coming soon
+	return <ComingSoonPage />;
 	// const { isConnected: isConnectedEvm } = useActiveWeb3React();
 
 	// return isConnectedEvm ? <SwapPageEVM /> : <SwapPage />;

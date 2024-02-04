@@ -21,11 +21,11 @@ const schema = yup.object().shape({
 	owner: yup.string().required(),
 	tge: yup.date().required("tge required"),
 	tgePercent: yup.number().min(1).max(100000).required("tge required"),
-	vestingTime: yup.array(),
-	vestingPercent: yup.array(),
+	vestingDays: yup.number().optional(),
+	vestingPercent: yup.number().optional(),
 });
 
-export default function CreateLock() {
+export default function CreateLockPage() {
 	const { account, address } = useAccount();
 
 	const {
@@ -39,7 +39,8 @@ export default function CreateLock() {
 		resolver: yupResolver(schema),
 		defaultValues: {
 			tge: new Date(), // Default value here
-			tgePercent: 100,
+			// vestingDays: 1,
+			// tgePercent: 100,
 		},
 	});
 
@@ -47,7 +48,6 @@ export default function CreateLock() {
 
 	const [isOtherOwner, setIsOtherOwner] = useState<boolean>(false);
 	const [isVesting, setIsVesting] = useState<boolean>(false);
-	const [vesting, setVesting] = useState<number>(1);
 
 	const onSubmit = async (values: LockInputs) => {
 		try {
@@ -280,59 +280,46 @@ export default function CreateLock() {
 									/>
 								</div>
 
-								{new Array(vesting).fill("").map((e, idx) => (
-									<div
-										key={idx}
-										className="col-span-2 grid grid-cols-2 gap-[24px]"
-									>
-										<div className="flex flex-col justify-stretch gap-[8px]">
-											<label htmlFor={`vestingDays-${idx}`}>
-												Vesting Days
-												<span className="text-[#FF6C6C]">*</span>
-											</label>
+								<div className="col-span-2 grid grid-cols-2 gap-[24px]">
+									<div className="flex flex-col justify-stretch gap-[8px]">
+										<label htmlFor={`vestingDays`}>
+											Vesting Days
+											<span className="text-[#FF6C6C]">*</span>
+										</label>
 
-											<input
-												className={clsx(
-													"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
-													{
-														"border-[#2D313E]": true,
-														"border-[#FF6C6C]": false,
-													}
-												)}
-												id={`vestingDays-${idx}`}
-												type="text"
-												placeholder="Number of days after TGE"
-												{...register(`vestingTime.${idx}`)}
-											/>
-										</div>
-										<div className="flex flex-col justify-stretch gap-[8px]">
-											<label htmlFor={`vestingPercent-${idx}`}>
-												Vesting Percent
-												<span className="text-[#FF6C6C]">*</span>
-											</label>
-
-											<input
-												className={clsx(
-													"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
-													{
-														"border-[#2D313E]": true,
-														"border-[#FF6C6C]": false,
-													}
-												)}
-												id={`vestingPercent-${idx}`}
-												type="text"
-												placeholder="Ex 10"
-												{...register(`vestingPercent.${idx}`)}
-											/>
-										</div>
+										<input
+											className={clsx(
+												"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
+												{
+													"border-[#2D313E]": true,
+													"border-[#FF6C6C]": false,
+												}
+											)}
+											id={`vestingDays`}
+											type="text"
+											placeholder="Number of days after TGE"
+											{...register(`vestingDays`)}
+										/>
 									</div>
-								))}
-								<div className="col-span-2 flex">
-									<div
-										onClick={() => setVesting((pre) => pre + 1)}
-										className="cursor-pointer text-[#1A1C24] bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] rounded-2xl border-0 px-6 py-3"
-									>
-										Add
+									<div className="flex flex-col justify-stretch gap-[8px]">
+										<label htmlFor={`vestingPercent`}>
+											Vesting Percent
+											<span className="text-[#FF6C6C]">*</span>
+										</label>
+
+										<input
+											className={clsx(
+												"placeholder:opacity-30 appearance-none block w-full bg-[#0D0E12] border rounded-2xl p-3 leading-tight focus:outline-none focus:bg-[#0D0E12]",
+												{
+													"border-[#2D313E]": true,
+													"border-[#FF6C6C]": false,
+												}
+											)}
+											id={`vestingPercent`}
+											type="text"
+											placeholder="Ex 10"
+											{...register(`vestingPercent`)}
+										/>
 									</div>
 								</div>
 							</>

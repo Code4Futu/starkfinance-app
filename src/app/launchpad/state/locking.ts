@@ -10,8 +10,8 @@ export type LockInputs = {
 	owner: string;
 	tge: Date;
 	tgePercent: number;
-	vestingTime?: number[];
-	vestingPercent?: number[];
+	vestingDays?: number;
+	vestingPercent?: number;
 };
 
 export const lock = async (
@@ -36,14 +36,14 @@ export const lock = async (
 		tge: Math.floor(values.tge.getTime() / 1000),
 		is_vesting: values.isVesting ?? false,
 		tge_percent: (values.tgePercent * 1000).toString(),
-		vesting_time:
-			values.isVesting && values.vestingTime
-				? values.vestingTime.map((e) => (e * 86400).toString())
-				: [],
-		vesting_percent:
-			values.isVesting && values.vestingPercent
-				? values.vestingPercent.map((e) => (e * 1000).toString())
-				: [],
+		vesting_time: [],
+		// values.isVesting && values.vestingTime
+		// 	? values.vestingTime.map((e) => (e * 86400).toString())
+		// 	: [],
+		// vesting_percent:
+		// 	values.isVesting && values.vestingPercent
+		// 		? values.vestingPercent.map((e) => (e * 1000).toString())
+		// 		: [],
 	});
 
 	// console.log(

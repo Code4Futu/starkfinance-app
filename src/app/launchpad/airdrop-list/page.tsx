@@ -8,8 +8,12 @@ import { BASE_API } from "../../constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import axios from "axios";
 import useSWR from "swr";
+import ComingSoonPage from "@/app/components/ComingSoon";
 
 export default function AirdropListPage() {
+	// TODO remove coming soon
+	return <ComingSoonPage />;
+
 	const { data } = useSWR<[IAirdrop[], number]>(
 		["AirdropListPage"],
 		async () => {

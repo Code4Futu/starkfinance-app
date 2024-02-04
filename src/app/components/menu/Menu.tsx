@@ -195,7 +195,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					openModalConnect={setIsShowModalConnect}
 				/>
 				<div className="px-6 py-9 h-[calc(100dvh-176px)] xl:h-[calc(100dvh-100px)] overflow-y-scroll">
-					<div className="w-full flex justify-center">
+					<div className="w-full min-h-full flex justify-center">
 						<div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
 							{children}
 						</div>
