@@ -717,7 +717,7 @@ const SwapPage = () => {
 
 export default function WrapSwapPage() {
 	// TODO remove coming soon
-	return <ComingSoonPage />;
+	// return <ComingSoonPage />;
 	// const { isConnected: isConnectedEvm } = useActiveWeb3React();
 
 	// return isConnectedEvm ? <SwapPageEVM /> : <SwapPage />;

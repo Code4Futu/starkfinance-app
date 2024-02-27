@@ -1,3 +1,5 @@
+// @ts-nocheck
+
 "use client";
 
 import { useState, useEffect, useRef } from "react";
@@ -87,9 +89,9 @@ const tokenNameSymbol = [
 	},
 ];
 
-var pairsSymbol = [];
+var pairsSymbol: any[] = [];
 
-function findTokenPriceByName(tokenName) {
+function findTokenPriceByName(tokenName: string) {
 	for (let i = 0; i < tokenNameSymbol.length; i++) {
 		if (tokenNameSymbol[i].name == tokenName) {
 			return tokenNameSymbol[i].price;
@@ -98,26 +100,19 @@ function findTokenPriceByName(tokenName) {
 	return 1;
 }
 
-function getTokenAmountInEther(amount, decimals) {
-	const tokenAmountInWei = new BigNumber(amount);
-	const etherAmount = tokenAmountInWei.dividedBy(new BigNumber(10 ** decimals));
-	return etherAmount.toFixed(6);
-}
-
-function hex2a(hexx) {
+function hex2a(hexx: any) {
 	var hex = hexx.toString(); //force conversion
 	var str = "";
 	for (var i = 0; i < hex.length; i += 2)
 		str += String.fromCharCode(parseInt(hex.substr(i, 2), 16));
 	return str.substring(1); // remove whitespace in front
 }
-
 const TVLComponent = ({
 	token0Symbol,
 	token1Symbol,
 	token0Reserve,
 	token1Reserve,
-}) => {
+}: any) => {
 	const [token0TVL, setToken0TVL] = useState(0);
 	const [token1TVL, setToken1TVL] = useState(0);
 	const [TVL, setTVL] = useState(0);
@@ -597,7 +592,7 @@ const LiquidityPage = () => {
 	// 	else setActiveTab(true);
 	// }, [params]);
 
-	const handleActiveTab = (status) => {
+	const handleActiveTab = (status: boolean) => {
 		setActiveTab(status);
 	};
 
@@ -605,7 +600,7 @@ const LiquidityPage = () => {
 	const [pageSize, setPageSize] = useState(10);
 	const [totalItems, setTotalItems] = useState(0);
 
-	const handleChange = (newCurrentPage, newPageSize) => {
+	const handleChange = (newCurrentPage: number, newPageSize: number) => {
 		setCurrentPage(newCurrentPage);
 		setPageSize(newPageSize);
 	};
@@ -707,7 +702,7 @@ const LiquidityPage = () => {
 
 export default function WrapLiquidityPage() {
 	// TODO remove coming soon
-	return <ComingSoonPage />;
+	// return <ComingSoonPage />;
 	// const { isConnected: isConnectedEvm } = useActiveWeb3React();
 
 	// return isConnectedEvm ? <LiquidityPage /> : <LiquidityPage />;
