@@ -1,4 +1,4 @@
-export const SwapIcon = ({ handleChangeToken }) => {
+export const SwapParallel = ({ handleChangeToken }) => {
 	return (
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -6,8 +6,7 @@ export const SwapIcon = ({ handleChangeToken }) => {
 			height="24"
 			viewBox="0 0 24 24"
 			fill="none"
-			className="cursor-pointer"
-			onClick={() => handleChangeToken()}
+			onClick={handleChangeToken}
 		>
 			<path
 				fillRule="evenodd"

@@ -36,7 +36,20 @@ import { erc20abi } from "./erc20abi.js";
 import DetailBridgeModal from "../components/modals/detail-bridge/DetailBridgeModal.jsx";
 import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
-import AddLiquidityForm from "./components/AddLiquidityForm";
+import SwapForm from "./components/SwapForm";
+
+const FACTORY_ADDRESS =
+	"0x594074315e98393351438011f5a558466f1733fde666f73f41738a39804c27";
+const ROUTER_ADDRESS =
+	"0x2d300192ea8d3291755bfd2bb2f9e16b38f48a20e4ce98e189d2daa7be435c2";
+// const provider = new RpcProvider({
+//     nodeUrl: 'https://starknet-mainnet.infura.io/v3/6892505f20e24c1d86f9b3313f47ea74',
+// });
+const provider = new RpcProvider({
+	nodeUrl:
+		"https://starknet-mainnet.infura.io/v3/6892505f20e24c1d86f9b3313f47ea74",
+	// nodeUrl: 'https://starknet-goerli.infura.io/v3/4c1d46736d6c4c9f8d6c6f17002e4e6b',
+});
 
 const mockDataTokenTest = [
 	{
@@ -203,10 +216,164 @@ const FormSwap = ({
 		// getPairId(token0.address, token1.address);
 	}, [token0, token1]);
 
-	return <AddLiquidityForm />;
+	/// SWAP
+	const calls = [
+		{
+			contractAddress: token0.address,
+			entrypoint: "approve",
+			calldata: [ROUTER_ADDRESS, token0InputAmount, 0],
+		},
+		{
+			contractAddress: ROUTER_ADDRESS,
+			entrypoint: "swap_exact_tokens_for_tokens", // (amountIn, amountOutMin, path, to, deadline)
+			// calldata: [token0InputAmount, 0, 0, 0, 2, token0.address, token1.address, address, getDeadlineTime()],
+			calldata: [
+				token0InputAmount,
+				0,
+				token1OutputAmount.toString(),
+				0,
+				2,
+				token0.address,
+				token1.address,
+				address,
+				getDeadlineTime(),
+			],
+		},
+	];
+
+	const handleSwap = async () => {
+		// try {
+		// 	if (status === "connected") {
+		// 		if (submitting) return;
+		// 		setSubmitting(true);
+		// 		await account.execute(calls);
+		// 		setSubmitting(false);
+		// 	} else {
+		// 		setSubmitting(false);
+		// 		alert("Please connect wallet");
+		// 	}
+		// } catch (error) {
+		// 	setSubmitting(false);
+		// }
+	};
+
+	useEffect(() => {
+		// const fetchData = async () => {
+		// 	if (status === "connected") {
+		// 		const erc20Contract = new Contract(erc20abi, token0.address, provider);
+		// 		let token0Balance = await erc20Contract.call("balanceOf", [address]);
+		// 		let token0BalanceInWei = uint256
+		// 			.uint256ToBN(token0Balance.balance)
+		// 			.toString();
+		// 		let token0BalanceInEther = getTokenAmountInEther(
+		// 			token0BalanceInWei,
+		// 			token0.decimals
+		// 		);
+		// 		setToken0BalanceAmount(token0BalanceInEther);
+		// 		const erc20ContractToken1 = new Contract(
+		// 			erc20abi,
+		// 			token1.address,
+		// 			provider
+		// 		);
+		// 		let token1Balance = await erc20ContractToken1.call("balanceOf", [
+		// 			address,
+		// 		]);
+		// 		let token1BalanceInWei = uint256
+		// 			.uint256ToBN(token1Balance.balance)
+		// 			.toString();
+		// 		let token1BalanceInEther = getTokenAmountInEther(
+		// 			token1BalanceInWei,
+		// 			token1.decimals
+		// 		);
+		// 		setToken1BalanceAmount(token1BalanceInEther);
+		// 	}
+		// };
+		// fetchData();
+	}, [status, token0.address, token1.address]);
+
+	useEffect(() => {
+		if (initialRender.current) {
+			initialRender.current = false;
+		} else {
+			// console.log(token0InputAmount);
+			// const fetchData = async () => {
+			// 	setPriceImpact(undefined);
+			// 	const routerContract = new Contract(
+			// 		router.abi,
+			// 		ROUTER_ADDRESS,
+			// 		provider
+			// 	);
+			// 	// console.log('routerContract', routerContract);
+			// 	let token1Output = await routerContract.call("get_amounts_out", [
+			// 		[token0InputAmount, 0],
+			// 		[token0.address, token1.address],
+			// 	]);
+			// 	let token1OutputInWei = uint256
+			// 		.uint256ToBN(token1Output.amounts[1])
+			// 		.toString();
+			// 	let token1OutputInEther = getTokenAmountInEther(
+			// 		token1OutputInWei,
+			// 		token1.decimals
+			// 	);
+			// 	setToken1OutputAmount(token1OutputInWei);
+			// 	setToken1OutputDisplayAmount(token1OutputInEther);
+			// 	const factoryContract = new Contract(
+			// 		factoryAbi.abi,
+			// 		FACTORY_ADDRESS,
+			// 		provider
+			// 	);
+			// 	let result = await factoryContract.call("get_pair", [
+			// 		token0.address,
+			// 		token1.address,
+			// 	]);
+			// 	const pairAddress = BigNumberEthers.from(
+			// 		result.pair.toString()
+			// 	).toHexString();
+			// 	const pairContract = new Contract(pairAbi.abi, pairAddress, provider);
+			// 	const isToken0 = sortsTokenBefore(token0.address, token1.address)
+			// 		? true
+			// 		: false;
+			// 	const reserves = await pairContract.call("get_reserves");
+			// 	const reserve0 = BigNumberEthers.from(reserves.reserve0.low.toString());
+			// 	const reserve1 = BigNumberEthers.from(reserves.reserve1.low.toString());
+			// 	const k = reserve0.mul(reserve1);
+			// 	// const newReserve0 = isToken0
+			// 	//   ? reserve0.add(BigNumberEthers.from(token0InputAmount))
+			// 	//   : k.div(reserve1.add(BigNumberEthers.from(token0InputAmount)));
+			// 	// const newReserve1 = isToken0
+			// 	//   ? k.div(reserve0.add(BigNumberEthers.from(token0InputAmount)))
+			// 	//   : reserve1.add(BigNumberEthers.from(token0InputAmount));
+			// 	const lastPrice = reserve0.toString() / reserve1.toString();
+			// 	const currentPrice = isToken0
+			// 		? BigNumberEthers.from(token0InputAmount).toString() /
+			// 		  token1OutputInWei
+			// 		: token1OutputInWei /
+			// 		  BigNumberEthers.from(token0InputAmount).toString();
+			// 	const priceImpact =
+			// 		(currentPrice - lastPrice > 0
+			// 			? (currentPrice - lastPrice) / currentPrice
+			// 			: (lastPrice - currentPrice) / lastPrice) * 100;
+			// 	setPriceImpact(priceImpact > 100 ? 100 : priceImpact);
+			// };
+			// if (token0InputAmount > 0) {
+			// 	setToken1OutputAmount("Loading");
+			// 	setToken1OutputDisplayAmount("Loading");
+			// 	fetchData();
+			// }
+		}
+	}, [token0InputAmount]);
+
+	const warningPriceImpact = useMemo(
+		() => (priceImpact ? priceImpact > 10 : false),
+		[priceImpact]
+	);
+
+	const currentPath = useLocationPath();
+
+	return <SwapForm />;
 };
 
-const AddLiquidityPage = () => {
+const SwapPage = () => {
 	const { account, address, status } = useCurrentAccount();
 	const [vol, setVol] = useState(0);
 	const [historicalPrices, setHistoricalPrices] = useState<any[]>([]);
@@ -326,13 +493,13 @@ const AddLiquidityPage = () => {
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6text-white mb-[80px] max-[480px]:items-center md:items-center",
+				"flex w-full flex-col gap-6 text-white max-[480px]:items-center md:items-center ",
 				currentPath === "/bridge" && "lg:pt-[222px]"
 			)}
 		>
 			<div
 				className={twMerge(
-					"flex flex-row justify-center items-center gap-6 xl:max-h-[514px] xl:flex-col xl:hidden",
+					"flex flex-row justify-center items-center gap-6 lg:max-h-[514px] lg:flex-col lg:hidden",
 					currentPath === "/bridge" && "flex-col"
 				)}
 			>
@@ -353,7 +520,7 @@ const AddLiquidityPage = () => {
 					setIsModalChartOpen={setIsModalChartOpen}
 				/>
 				{/* {currentPath === "/exchange/swap" && ( */}
-				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
+				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 lg:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
@@ -366,12 +533,11 @@ const AddLiquidityPage = () => {
 			</div>
 			<div
 				className={twMerge(
-					"hidden w-full flex-row justify-center items-center gap-6 xl:flex-row xl:flex xl:max-h-[514px]"
-					// currentPath !== "/bridge" && "xl:max-h-[514px]"
+					"hidden w-full flex-row justify-center items-center gap-6 lg:flex-row lg:flex lg:max-h-[514px]"
+					// currentPath !== "/bridge" && "lg:max-h-[514px]"
 				)}
 			>
-				{/* TODO uncomment */}
-				{/* <div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
+				<div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 lg:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
@@ -379,8 +545,7 @@ const AddLiquidityPage = () => {
 						dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={handleChangeToken}
 					/>
-				</div> */}
-
+				</div>
 				<FormSwap
 					setVol={setVol}
 					setHistoricalPrices={setHistoricalPrices}
@@ -399,10 +564,10 @@ const AddLiquidityPage = () => {
 				/>
 			</div>
 			{/* Table */}
-			{/* <div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
+			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
 				<div className="flex flex-col items-start gap-3 self-stretch">
 					<div className="flex items-end justify-between self-stretch max-[480px]:flex-wrap">
-						<span className="text-xl xl:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
+						<span className="text-xl lg:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
 							Transactions
 						</span>
 						<div className="flex items-start rounded-lg border-[1px] border-[#2D313E] bg-[#0D0E12]">
@@ -533,8 +698,8 @@ const AddLiquidityPage = () => {
 					isShowing={isShowBridgeModal}
 					hide={setIsShowBridgeModal}
 				/>
-			)} */}
-			{/* {isModalChartOpen && (
+			)}
+			{isModalChartOpen && (
 				<ChartModal
 					isShowing={isModalChartOpen}
 					hide={() => setIsModalChartOpen(false)}
@@ -544,7 +709,7 @@ const AddLiquidityPage = () => {
 					dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 					handleChangeToken={handleChangeToken}
 				/>
-			)} */}
+			)}
 		</div>
 	);
 };
@@ -552,7 +717,7 @@ const AddLiquidityPage = () => {
 export default function WrapSwapPage() {
 	// const { isConnected: isConnectedEvm } = useActiveWeb3React();
 
-	// return isConnectedEvm ? <SwapPageEVM /> : <AddLiquidityPage />;
+	// return isConnectedEvm ? <SwapPageEVM /> : <SwapPage />;
 
-	return <AddLiquidityPage />;
+	return <SwapPage />;
 }

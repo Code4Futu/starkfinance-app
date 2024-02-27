@@ -7,8 +7,8 @@ import "./style.scss";
 
 import { useWallet } from "../../evm/hooks/useWallet";
 import { injected } from "../../evm/utils/web3React";
-import { useDispatch } from "react-redux";
-import actions from "../../redux/action";
+// import { useDispatch } from "react-redux";
+// import actions from "../../redux/action";
 import { CHAIN_ID } from "../../evm/configs/networks";
 import { WALLET_TYPES, WALLETS } from "../../context/types";
 import { useGlobalContext } from "../../context/GlobalContext";

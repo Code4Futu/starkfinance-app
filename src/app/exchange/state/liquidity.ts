@@ -1,7 +1,13 @@
 import { Pair, Percent, Price, Token, TokenAmount } from "l0k_swap-sdk";
-import { APP_CHAIN_ID, FACTORY_ADDRESS, Field } from "../configs/networks";
-import { AccountInterface, Contract, RpcProvider, cairo, num } from "starknet";
+import {
+	APP_CHAIN_ID,
+	FACTORY_ADDRESS,
+	Field,
+	ROUTER_ADDRESS,
+} from "../configs/networks";
+import { AccountInterface, Contract, RpcProvider, num } from "starknet";
 import PairAbi from "@/app/exchange/abis/starknet/Pair.json";
+import RouterAbi from "@/app/exchange/abis/starknet/Router.json";
 
 export interface PoolState {
 	pair?: Pair | undefined;
@@ -32,8 +38,6 @@ export const getPoolInfo = async (
 	library: AccountInterface | RpcProvider,
 	currencies: (Token | undefined)[]
 ): Promise<PoolState | undefined> => {
-	// if (!WETH || !FACTORY_ADDRESS) return undefined;
-
 	const [tokenA, tokenB] = currencies;
 	if (!tokenA || !tokenB || tokenA.equals(tokenB)) return undefined;
 
@@ -83,10 +87,12 @@ export const getPoolInfo = async (
 
 		return {
 			pair,
-			balanceOf: new TokenAmount(pair.liquidityToken, balanceOf),
+			balanceOf: balanceOf
+				? new TokenAmount(pair.liquidityToken, balanceOf)
+				: undefined,
 			inputIsToken0: isTokenA0,
 			prices,
-			shareOfPool: new Percent(balanceOf, totalSupply),
+			shareOfPool: balanceOf ? new Percent(balanceOf, totalSupply) : undefined,
 			totalSupply: new TokenAmount(pair.liquidityToken, totalSupply),
 			noLiquidity: false,
 		};
@@ -96,76 +102,122 @@ export const getPoolInfo = async (
 	}
 };
 
-// export const addLiquidityCallback = async (
-//   account: string | null | undefined,
-//   library: Web3Provider | null,
-//   tokens: {
-//     [Field.INPUT]: Token | undefined;
-//     [Field.OUTPUT]: Token | undefined;
-//   },
-//   amounts: {
-//     [Field.INPUT]: TokenAmount | undefined;
-//     [Field.OUTPUT]: TokenAmount | undefined;
-//   }
-// ) => {
-//   try {
-//     if (
-//       !account ||
-//       !library ||
-//       [tokens, amounts].some((e) => !e[Field.INPUT] || !e[Field.OUTPUT])
-//     )
-//       return;
+export const addLiquidityCallback = async (
+	account: string | null | undefined,
+	library: AccountInterface | null | undefined,
+	tokens: {
+		[Field.INPUT]: Token | undefined;
+		[Field.OUTPUT]: Token | undefined;
+	},
+	amounts: {
+		[Field.INPUT]: TokenAmount | undefined;
+		[Field.OUTPUT]: TokenAmount | undefined;
+	}
+) => {
+	try {
+		if (
+			!account ||
+			!library ||
+			[tokens, amounts].some((e) => !e[Field.INPUT] || !e[Field.OUTPUT])
+		)
+			throw Error("Invalid params");
 
-//     const routerContract = getRouterContract(library, account);
+		const deadline = Math.floor(Date.now() / 1000) + 30 * 60;
+		// const routerContract = getRouterContract(library, account);
 
-//     let args,
-//       overrides = {},
-//       methodName: string = "";
+		// let args,
+		//   overrides = {},
+		//   methodName: string = "";
 
-//     // addLiquidityETH
-//     if (
-//       tokens[Field.INPUT]?.equals(WETH) ||
-//       tokens[Field.OUTPUT]?.equals(WETH)
-//     ) {
-//       methodName = "addLiquidityETH";
-//       const inputIsETH = tokens[Field.INPUT]?.equals(WETH);
-//       args = [
-//         (inputIsETH
-//           ? tokens[Field.OUTPUT]?.address
-//           : tokens[Field.INPUT]?.address) ?? "", // token
-//         (inputIsETH
-//           ? amounts[Field.OUTPUT]?.raw.toString()
-//           : amounts[Field.INPUT]?.raw.toString()) ?? 0, // token amount
-//         0, // token min
-//         0, // eth min
-//         account,
-//         Math.floor(Date.now() / 1000) + 30 * 60, // TODO deadline of user's settings
-//       ];
-//       overrides = {
-//         value: inputIsETH
-//           ? amounts[Field.INPUT]?.raw.toString()
-//           : amounts[Field.OUTPUT]?.raw.toString(),
-//       };
-//     } else {
-//       // addLiquidity
-//       methodName = "addLiquidity";
-//       args = [
-//         tokens[Field.INPUT]?.address ?? "", // token0
-//         tokens[Field.OUTPUT]?.address ?? "", // token1
-//         amounts[Field.INPUT]?.raw.toString() ?? 0, // token0 amount
-//         amounts[Field.OUTPUT]?.raw.toString() ?? 0, // token1 amount
-//         0, // token0 min
-//         0, // token1 min
-//         account,
-//         Math.floor(Date.now() / 1000) + 30 * 60, // TODO deadline of user's settings
-//       ];
-//     }
-//     return callContract(routerContract, methodName, args, overrides);
-//   } catch (error) {
-//     console.error(error);
-//     throw error;
-//   }
-// };
+		// // addLiquidityETH
+		// if (
+		//   tokens[Field.INPUT]?.equals(WETH) ||
+		//   tokens[Field.OUTPUT]?.equals(WETH)
+		// ) {
+		//   methodName = "addLiquidityETH";
+		//   const inputIsETH = tokens[Field.INPUT]?.equals(WETH);
+		//   args = [
+		//     (inputIsETH
+		//       ? tokens[Field.OUTPUT]?.address
+		//       : tokens[Field.INPUT]?.address) ?? "", // token
+		//     (inputIsETH
+		//       ? amounts[Field.OUTPUT]?.raw.toString()
+		//       : amounts[Field.INPUT]?.raw.toString()) ?? 0, // token amount
+		//     0, // token min
+		//     0, // eth min
+		//     account,
+		//     Math.floor(Date.now() / 1000) + 30 * 60, // TODO deadline of user's settings
+		//   ];
+		//   overrides = {
+		//     value: inputIsETH
+		//       ? amounts[Field.INPUT]?.raw.toString()
+		//       : amounts[Field.OUTPUT]?.raw.toString(),
+		//   };
+		// } else {
+		//   // addLiquidity
+		//   methodName = "addLiquidity";
+		//   args = [
+		//     tokens[Field.INPUT]?.address ?? "", // token0
+		//     tokens[Field.OUTPUT]?.address ?? "", // token1
+		//     amounts[Field.INPUT]?.raw.toString() ?? 0, // token0 amount
+		//     amounts[Field.OUTPUT]?.raw.toString() ?? 0, // token1 amount
+		//     0, // token0 min
+		//     0, // token1 min
+		//     account,
+		//     Math.floor(Date.now() / 1000) + 30 * 60, // TODO deadline of user's settings
+		//   ];
+		// }
+		// return callContract(routerContract, methodName, args, overrides);
+
+		const token0Contract = new Contract(
+			PairAbi,
+			tokens[Field.INPUT]!.address,
+			library
+		);
+		const token1Contract = new Contract(
+			PairAbi,
+			tokens[Field.OUTPUT]!.address,
+			library
+		);
+		const routerContract = new Contract(
+			RouterAbi,
+			ROUTER_ADDRESS[APP_CHAIN_ID],
+			library
+		);
+
+		const approve0Call = token0Contract.populate("approve", {
+			spender: ROUTER_ADDRESS[APP_CHAIN_ID],
+			amount: amounts[Field.INPUT]!.raw.toString(),
+		});
+		const approve1Call = token1Contract.populate("approve", {
+			spender: ROUTER_ADDRESS[APP_CHAIN_ID],
+			amount: amounts[Field.OUTPUT]!.raw.toString(),
+		});
+		const addLiquidityCall = routerContract.populate("add_liquidity", {
+			tokenA: tokens[Field.INPUT]!.address,
+			tokenB: tokens[Field.OUTPUT]!.address,
+			stable: false,
+			feeTier: 0,
+			amountADesired: amounts[Field.INPUT]!.raw.toString(),
+			amountBDesired: amounts[Field.OUTPUT]!.raw.toString(),
+			amountAMin: 0,
+			amountBMin: 0,
+			to: account,
+			deadline,
+		});
+
+		const tx = await library.execute([
+			approve0Call,
+			approve1Call,
+			addLiquidityCall,
+		]);
+		await library.waitForTransaction(tx.transaction_hash);
+		return tx;
+	} catch (error) {
+		console.error(error);
+		throw error;
+	}
+};
 
 // export const getOwnerLiquidityPools = async (
 //   library: Web3Provider | undefined,
