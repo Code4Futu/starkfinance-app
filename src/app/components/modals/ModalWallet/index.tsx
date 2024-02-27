@@ -9,7 +9,7 @@ import Image from "next/image";
 // import { useWallet } from "../../evm/hooks/useWallet";
 import { injected } from "@/app/exchange/evm/utils/web3React";
 // import { useDispatch } from "react-redux";
-import { useGlobalContext } from "@/app/context/GlobalContext";
+// import { useGlobalContext } from "@/app/context/GlobalContext";
 import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
 // import actions from "../../redux/action";
 import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
@@ -69,7 +69,7 @@ const ModalWallet = ({
 }) => {
 	// const dispatch = useDispatch();
 
-	const { setWalletConnected } = useGlobalContext();
+	// const { setWalletConnected } = useGlobalContext();
 
 	const { connect: connectEvm } = useWallet();
 
@@ -110,19 +110,19 @@ const ModalWallet = ({
 			}
 			// @ts-ignore
 			if (window?.okxwallet.starknet.isConnected) {
-				setWalletConnected(
-					WALLETS.OKX,
-					// @ts-ignore
-					window?.okxwallet.starknet.selectedAddress,
-					WALLET_TYPES.STARKNET
-				);
+				// setWalletConnected(
+				// 	WALLETS.OKX,
+				// 	// @ts-ignore
+				// 	window?.okxwallet.starknet.selectedAddress,
+				// 	WALLET_TYPES.STARKNET
+				// );
 			}
 			// @ts-ignore
 			const [address] = await window?.okxwallet.starknet.enable();
-			setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
+			// setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
 		} else if (isEvm) {
 			connectEvm(connector, _chainId);
-			setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
+			// setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
 		} else {
 			const isWalletConnected = available.find(
 				// @ts-ignore
@@ -130,7 +130,7 @@ const ModalWallet = ({
 			);
 			if (isWalletConnected) {
 				await connect(connector);
-				setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
+				// setWalletConnected(WALLETS.ARGENT_X, "", WALLET_TYPES.STARKNET);
 			} else alert(`Please install ${connector.id()} wallet!`);
 		}
 		// @ts-ignore

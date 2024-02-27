@@ -98,7 +98,7 @@ export const TOKEN_ICON_LIST = {
 	},
 };
 
-export const UNKNOWN_TOKEN_ICON = "/unknown-token.png";
+export const UNKNOWN_TOKEN_ICON = "/tokens/unknown.svg";
 
 // export const MULTICALL_ADDRESS = {
 // 	[CHAIN_ID.ZETA_TESTNET]: "0x4aF8d9Ab04EA63C621C729EFd95d6BDCB8B15cf9",

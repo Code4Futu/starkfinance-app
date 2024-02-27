@@ -189,7 +189,9 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 			</div>
 			<div className="flex-1 text-[#C6C6C6]">
 				<SiteNavigation
-					openModalConnect={() => setIsShowModalConnect(true)}
+					openModalConnect={() => {
+						console.log(1);
+					}}
 					openModalCart={() => null}
 				/>
 				<div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll overflow-x-hidden">
