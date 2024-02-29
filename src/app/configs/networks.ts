@@ -3,7 +3,10 @@ import sample from "lodash/sample";
 import { RpcProvider } from "starknet";
 import { validateAndParseAddress } from "starknet";
 
-export const APP_CHAIN_ID = StarknetChainId.TESTNET;
+export const APP_CHAIN_ID =
+	process.env.NEXT_PUBLIC_IS_MAINNET === "true"
+		? StarknetChainId.MAINNET
+		: StarknetChainId.TESTNET;
 
 export const NETWORKS_SUPPORTED = {
 	[StarknetChainId.MAINNET]: {
@@ -142,3 +145,7 @@ export const getTokenIcon = (address: string | undefined) => {
 				UNKNOWN_TOKEN_ICON
 		: UNKNOWN_TOKEN_ICON;
 };
+
+export const StarknetRpcProvider = new RpcProvider({
+	nodeUrl: sample(NETWORKS_SUPPORTED[APP_CHAIN_ID].rpc)!,
+});

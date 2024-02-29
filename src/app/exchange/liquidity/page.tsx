@@ -21,6 +21,7 @@ import { ArrangeIcon } from "./icons";
 import { twMerge } from "tailwind-merge";
 import Link from "next/link";
 import ComingSoonPage from "@/app/components/ComingSoon";
+import { useWeb3 } from "@/app/hooks";
 
 const FACTORY_ADDRESS =
 	"0x594074315e98393351438011f5a558466f1733fde666f73f41738a39804c27";
@@ -544,6 +545,7 @@ const LiquidityPage = () => {
 	const [allPairs, setAllPairs] = useState([]);
 	const [loading, setLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState(true);
+	const { library } = useWeb3();
 
 	useEffect(() => {
 		const fetchData = async () => {
@@ -553,7 +555,13 @@ const LiquidityPage = () => {
 				FACTORY_ADDRESS,
 				provider
 			);
-			let all_pairs = await factoryContract.call("get_all_pairs");
+			// let all_pairs = await library.callContract({
+			// 	entrypoint: 'all'
+			// })
+			// console.log(
+			// 	"🚀 ~ file: page.tsx:557 ~ fetchData ~ all_pairs:",
+			// 	all_pairs
+			// );
 			// let tempAllPairs = all_pairs.re;
 			// let tempArr = [];
 			// pairsSymbol = [];

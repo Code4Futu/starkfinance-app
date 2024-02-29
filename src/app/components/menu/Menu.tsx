@@ -1,16 +1,19 @@
 "use client";
 
-import { useAccount, useConnectors } from "@starknet-react/core";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import clsx from "clsx";
-import ModalWallet from "../modals/ModalWallet";
+import { ModalWallet } from "@/app/components/modals/ModalWallet";
 import { drawerData, drawerDataMobile, socialData } from "./drawData";
 import { SiteNavigation } from "./components/SiteNavigation/SiteNavigation";
 import { DrawerDesktop } from "./components/DrawerDesktop";
 import { socialLink } from "./drawData";
 import { DrawerMobile } from "./components/DrawerMobile/DrawerMobile";
-import { ModalYourCart } from "../modals/ModalYourCart";
-import { useDrawerStore } from "@/app/store";
+// import { ModalYourCart } from "../modals/ModalYourCart";
+import { useAppStore, useDrawerStore } from "@/app/store";
+
+// import dynamic from 'next/dynamic'
+
+// const ModalWallet = dynamic(() => import('../modals/ModalWallet'), { ssr: false })
 
 const drawData = drawerData;
 const drawDataMobile = drawerDataMobile;
@@ -148,27 +151,13 @@ const useOpenDrawer = () => {
 };
 
 export default function Menu({ children }: { children: React.ReactNode }) {
-	const { available, connect, refresh } = useConnectors();
-	const { address } = useAccount();
 	const { isMobile, openDrawer, toggle, resizeDrawer, resizeToggle, content } =
 		useOpenDrawer();
 
-	const [isShowModalConnect, setIsShowModalConnect] = useState(false);
-
-	const handleConnect = async (connector: any) => {
-		try {
-			connect(connector);
-		} catch (error) {
-			alert(`Please install ${connector.id()} wallet!`);
-		}
-		// const isWalletConnected = available.find(
-		// 	(availableConnector) => availableConnector.id === connector.id
-		// );
-
-		// isWalletConnected
-		// 	? connect(connector)
-		// 	: alert(`Please install ${connector.id()} wallet!`);
-	};
+	const [openConnectModal, toggleOpenConnectModal] = useAppStore((s) => [
+		s.openConnectModal,
+		s.toggleOpenConnectModal,
+	]);
 
 	return (
 		<div className="h-full w-full overflow-hidden flex justify-stretch">
@@ -188,12 +177,7 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 				/>
 			</div>
 			<div className="flex-1 text-[#C6C6C6]">
-				<SiteNavigation
-					openModalConnect={() => {
-						console.log(1);
-					}}
-					openModalCart={() => null}
-				/>
+				<SiteNavigation />
 				<div className="px-6 py-9 h-[calc(100vh-176px)] lg:h-[calc(100vh-100px)] overflow-y-scroll overflow-x-hidden">
 					<div className="w-full flex justify-center">
 						<div className="max-w-[1080px] flex-1 text-[#F1F1F1]">
@@ -202,11 +186,8 @@ export default function Menu({ children }: { children: React.ReactNode }) {
 					</div>
 				</div>
 			</div>
-			{isShowModalConnect && (
-				<ModalWallet
-					isShowing={isShowModalConnect}
-					hide={() => setIsShowModalConnect(false)}
-				/>
+			{openConnectModal && (
+				<ModalWallet hide={() => toggleOpenConnectModal()} />
 			)}
 		</div>
 	);

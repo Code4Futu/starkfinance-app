@@ -5,6 +5,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import { usePathname } from "next/navigation";
 import { useWeb3 } from "@/app/hooks";
+import { useAppStore } from "@/app/store";
 
 export const CartIcon = () => {
 	return (
@@ -23,14 +24,10 @@ export const CartIcon = () => {
 	);
 };
 
-interface Props {
-	openModalConnect: React.Dispatch<React.SetStateAction<boolean>>;
-	openModalCart: React.Dispatch<React.SetStateAction<boolean>>;
-}
-
-export const SiteNavigation = (props: Props) => {
+export const SiteNavigation = () => {
 	const { account } = useWeb3();
-	const currentPath = usePathname();
+	// const currentPath = usePathname();
+	const toggleOpenConnectModal = useAppStore((s) => s.toggleOpenConnectModal);
 
 	return (
 		<div
@@ -39,17 +36,18 @@ export const SiteNavigation = (props: Props) => {
 			)}
 		>
 			<div className="flex items-center gap-2">
-				<Link href="/" passHref prefetch legacyBehavior>
-					<a className="block xl:hidden w-[48px] h-[48px] relative">
+				<Link href="/" legacyBehavior>
+					<div className="block xl:hidden w-[48px] h-[48px] relative">
 						<Image src="/logo.png" alt="logo" fill sizes="48px" />
-					</a>
+					</div>
 				</Link>
 			</div>
 			<div className="flex gap-3">
-				{currentPath.split("/")[1] === "marketplace" && (
+				{/* {currentPath.split("/")[1] === "marketplace" && (
 					<div
 						className="relative flex p-3 cursor-pointer justify-center items-center gap-1 rounded-2xl bg-[#232631]"
-						onClick={() => props.openModalCart(true)}
+						// TODO
+						// onClick={() => props.openModalCart(true)}
 					>
 						<CartIcon />
 						<div className="flex flex-col justify-center items-center gap-[10px] absolute top-[5px] right-[5px] rounded-[10px] bg-[#24C3BC]">
@@ -58,7 +56,7 @@ export const SiteNavigation = (props: Props) => {
 							</span>
 						</div>
 					</div>
-				)}
+				)} */}
 				<div className="cursor-pointer p-3 flex items-center bg-[#232631] gap-0 xl:gap-2 rounded-2xl border-0">
 					<div className="w-[24px] h-[24px] relative">
 						<Image
@@ -76,7 +74,7 @@ export const SiteNavigation = (props: Props) => {
 
 				<button
 					className="btn flex items-center bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] gap-1 rounded-2xl border-0"
-					onClick={() => props.openModalConnect(true)}
+					onClick={() => toggleOpenConnectModal()}
 				>
 					<div className="w-[24px] h-[24px] relative hidden xl:block ">
 						<Image src="/svg/connect-wallet.svg" fill alt="connect-wallet" />

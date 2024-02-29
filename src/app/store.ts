@@ -15,3 +15,12 @@ export const useDrawerStore = create<DrawerStore>()((set) => ({
 	open: false,
 	toggleDrawer: () => set((state) => ({ open: !state.open })),
 }));
+
+export const useAppStore = create<{
+	openConnectModal: boolean;
+	toggleOpenConnectModal: () => void;
+}>()((set) => ({
+	openConnectModal: false,
+	toggleOpenConnectModal: () =>
+		set((state) => ({ openConnectModal: !state.openConnectModal })),
+}));

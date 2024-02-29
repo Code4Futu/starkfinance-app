@@ -5,7 +5,7 @@ import icons from "../assets/icons";
 import { validateAndParseAddress } from "starknet";
 
 export const APP_CHAIN_ID =
-	process.env.NODE_ENV === "production"
+	process.env.NEXT_PUBLIC_IS_MAINNET === "true"
 		? StarknetChainId.MAINNET
 		: StarknetChainId.TESTNET;
 
@@ -57,7 +57,23 @@ export const CUSTOM_BASES: {
 };
 
 export const TOKEN_LIST = {
-	[StarknetChainId.MAINNET]: [WETH[StarknetChainId.MAINNET]],
+	[StarknetChainId.MAINNET]: [
+		WETH[StarknetChainId.MAINNET],
+		new Token(
+			StarknetChainId.MAINNET,
+			"0x053c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
+			6,
+			"USDC",
+			"USDC"
+		),
+		new Token(
+			StarknetChainId.MAINNET,
+			"0x068f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8",
+			6,
+			"USDT",
+			"USDT"
+		),
+	],
 	[StarknetChainId.TESTNET]: [
 		WETH[StarknetChainId.TESTNET],
 		new Token(
@@ -107,13 +123,15 @@ export const UNKNOWN_TOKEN_ICON = "/tokens/unknown.svg";
 // };
 
 export const FACTORY_ADDRESS = {
-	[StarknetChainId.MAINNET]: "",
+	[StarknetChainId.MAINNET]:
+		"0x64613af31ea3b32fd7608f6fde869de79304b19c80c8b759704060d5b392046",
 	[StarknetChainId.TESTNET]:
 		"0x13933db8e632249d1593b79b2146b7faddb17e2b6c5bd4de64702f66c9301e0",
 };
 
 export const ROUTER_ADDRESS = {
-	[StarknetChainId.MAINNET]: "",
+	[StarknetChainId.MAINNET]:
+		"0x2a6396450ee16b429936b7331d19c0a63b54d0712bee7601c70716ee8d8eb77",
 	[StarknetChainId.TESTNET]:
 		"0x56470159c6c0816ebf3ddbf021e22fb48e65e5b79e0617d425b2b153acc19",
 };

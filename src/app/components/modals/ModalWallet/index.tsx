@@ -1,19 +1,18 @@
 "use client";
 
 import { useConnectors } from "@starknet-react/core";
-import React, { MouseEventHandler, useRef, useState, useEffect } from "react";
-import "./style.scss";
-import { Divider } from "../../Divider";
 import Image from "next/image";
+import { MouseEventHandler, useEffect, useRef, useState } from "react";
+import { Divider } from "../../Divider";
+import "./style.scss";
 
 // import { useWallet } from "../../evm/hooks/useWallet";
 import { injected } from "@/app/exchange/evm/utils/web3React";
 // import { useDispatch } from "react-redux";
 // import { useGlobalContext } from "@/app/context/GlobalContext";
-import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
+// import { useWallet } from "@/app/exchange/evm/hooks/useWallet";
 // import actions from "../../redux/action";
 import { CHAIN_ID } from "@/app/exchange/evm/configs/networks";
-import { WALLETS, WALLET_TYPES } from "@/app/context/types";
 // import actions from "@/app/redux/action";
 // import { WALLET_TYPES, WALLETS } from "../../context/types";
 // import { useGlobalContext } from "../../context/GlobalContext";
@@ -60,18 +59,10 @@ const IconBack = ({ onClick }: { onClick: MouseEventHandler }) => {
 	);
 };
 
-const ModalWallet = ({
-	isShowing,
-	hide,
-}: {
-	isShowing: boolean;
-	hide: any;
-}) => {
-	// const dispatch = useDispatch();
-
+export const ModalWallet = ({ hide }: { hide: any }) => {
 	// const { setWalletConnected } = useGlobalContext();
 
-	const { connect: connectEvm } = useWallet();
+	// const { connect: connectEvm } = useWallet();
 
 	//   const handleArgent = () => {};
 
@@ -121,7 +112,7 @@ const ModalWallet = ({
 			const [address] = await window?.okxwallet.starknet.enable();
 			// setWalletConnected(WALLETS.OKX, address, WALLET_TYPES.STARKNET);
 		} else if (isEvm) {
-			connectEvm(connector, _chainId);
+			// connectEvm(connector, _chainId);
 			// setWalletConnected(WALLETS.METAMASK, "", WALLET_TYPES.EVM);
 		} else {
 			const isWalletConnected = available.find(
@@ -285,5 +276,3 @@ const ModalWallet = ({
 		</>
 	);
 };
-
-export default ModalWallet;

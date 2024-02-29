@@ -13,8 +13,3 @@ export enum LAUNCHPAD_TYPE {
 	PUBLIC = "public",
 	PRIVATE = "private",
 }
-
-export const StarknetRpcProvider = new RpcProvider({
-	nodeUrl: "https://starknet-testnet.public.blastapi.io",
-	// nodeUrl: "https://starknet-mainnet.public.blastapi.io",
-});

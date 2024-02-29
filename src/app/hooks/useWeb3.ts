@@ -1,5 +1,5 @@
 import { useAccount } from "@starknet-react/core";
-import { StarknetRpcProvider } from "../constants";
+import { StarknetRpcProvider } from "@/app/configs/networks";
 import { AccountInterface } from "starknet";
 
 export const useWeb3 = () => {
