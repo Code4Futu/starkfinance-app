@@ -1,0 +1,52 @@
+iframe[name="layerswap"] {
+  .text-primary-logoColor {
+    color: #fff !important;
+  }
+}
+
+.override-input {
+  input::placeholder {
+    color: #c6c6c6 !important;
+  }
+}
+
+.override-input:focus,
+.override-input:focus-visible,
+.override-input:focus-within {
+  border: 1px solid #2d313e !important;
+  box-shadow: none !important;
+  outline: none !important;
+  color: #c6c6c6 !important;
+}
+
+input::placeholder {
+  color: #c6c6c6;
+}
+
+::-webkit-input-placeholder {
+  /* WebKit, Blink, Edge */
+  color: #c6c6c6;
+}
+:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #c6c6c6;
+  opacity: 1;
+}
+::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #c6c6c6;
+  opacity: 1;
+}
+:-ms-input-placeholder {
+  /* Internet Explorer 10-11 */
+  color: #c6c6c6;
+}
+::-ms-input-placeholder {
+  /* Microsoft Edge */
+  color: #c6c6c6;
+}
+
+::placeholder {
+  /* Most modern browsers support this now. */
+  color: #c6c6c6;
+}

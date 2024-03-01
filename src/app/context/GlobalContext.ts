@@ -4,10 +4,10 @@ import { WALLET_TYPES } from "./types";
 
 // init state
 export const initState = {
-  walletType: WALLET_TYPES.STARKNET,
-  wallet: undefined,
-  walletAddress: "",
-  setWalletConnected: (wallet: string, address: any, walletType: string) => {},
+	walletType: WALLET_TYPES.STARKNET,
+	wallet: undefined,
+	walletAddress: "",
+	setWalletConnected: (wallet: string, address: any, walletType: string) => {},
 };
 
 // create context

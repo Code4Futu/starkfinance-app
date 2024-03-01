@@ -119,7 +119,7 @@ export const swapCallback = async (
 		// console.log(methodName, args, options);
 		// return callContract(routerContract, methodName, args, options);
 
-		const approveCalldata = new Contract(
+		const approveCall = new Contract(
 			PairAbi,
 			trade.inputAmount.token.address,
 			library
@@ -128,7 +128,7 @@ export const swapCallback = async (
 			amount: trade.inputAmount.raw.toString(),
 		});
 
-		const swapCalldata = new Contract(
+		const swapCall = new Contract(
 			RouterAbi,
 			ROUTER_ADDRESS[APP_CHAIN_ID],
 			library
@@ -145,9 +145,9 @@ export const swapCallback = async (
 			deadline,
 		});
 
-		const tx = await library.execute([approveCalldata, swapCalldata]);
-
-		return library.waitForTransaction(tx.transaction_hash);
+		const tx = await library.execute([approveCall, swapCall]);
+		await library.waitForTransaction(tx.transaction_hash);
+		return tx;
 	} catch (error) {
 		console.error("user reject transaction", error);
 		throw error;

@@ -6,15 +6,16 @@ import { ILaunchpad } from "@/app/types";
 import { BASE_API } from "@/app/constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 
-async function getLaunchpads(): Promise<ILaunchpad[]> {
+async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
 	const res = await fetch(`${BASE_API}/launchpads`, {
 		next: { revalidate: 60 },
 	});
 	return res.json();
 }
 
-export default async function LaunchpadList() {
-	const launchpads = await getLaunchpads();
+export default async function LaunchpadListPage() {
+	const res = await getLaunchpads();
+	const launchpads = res[0];
 
 	return (
 		<div>
@@ -25,12 +26,8 @@ export default async function LaunchpadList() {
 				]}
 			/>
 
-			{/* title and filters */}
-			<div className="flex justify-between items-center mb-6 lg:mb-9">
-				<div className="text-[28px] lg:text-[42px] font-bold">
-					Launchpad List
-				</div>
-
+			{/* filters */}
+			<div className="flex justify-end items-center mb-6 lg:mb-9">
 				<div className="flex gap-3">
 					<div className="hidden lg:block dropdown dropdown-end">
 						<label
@@ -175,7 +172,7 @@ export default async function LaunchpadList() {
 					</div>
 
 					<Link
-						href="/launchpad/launchpad-list/your-pools"
+						href="/launchpad/your-pools"
 						className="hidden md:block border rounded-2xl border-[#2D313E] py-3 px-6 bg-[#F1F1F1] text-[#0D0E12] font-bold"
 					>
 						Your Pools

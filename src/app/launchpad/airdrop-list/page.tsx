@@ -1,3 +1,4 @@
+"use client";
 import Link from "next/link";
 import Image from "next/image";
 import AirdropItem from "./components/AirdropItem";
@@ -5,16 +6,27 @@ import LatestAirdrop from "./components/LatestAirdrop";
 import { IAirdrop } from "../../types";
 import { BASE_API } from "../../constants";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
+import axios from "axios";
+import useSWR from "swr";
+import ComingSoonPage from "@/app/components/ComingSoon";
 
-async function getAirdrops(): Promise<IAirdrop[]> {
-	const res = await fetch(`${BASE_API}/airdrops`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
+export default function AirdropListPage() {
+	// TODO remove coming soon
+	return <ComingSoonPage />;
 
-export default async function AirdropList() {
-	const airdrops = await getAirdrops();
+	const { data } = useSWR<[IAirdrop[], number]>(
+		["AirdropListPage"],
+		async () => {
+			const { data } = await axios.get<[IAirdrop[], number]>(
+				`${BASE_API}/airdrops`
+			);
+
+			return data;
+		},
+		{ revalidateOnMount: true }
+	);
+
+	const airdrops = data?.[0] ?? undefined;
 
 	return (
 		<div>
@@ -25,11 +37,9 @@ export default async function AirdropList() {
 				]}
 			/>
 			{/* title and filters */}
-			<div className="flex justify-between items-center mb-6 lg:mb-9">
-				<div className="text-[28px] lg:text-[42px] font-bold">Airdrop List</div>
-
+			<div className="flex justify-end items-center mb-6 xl:mb-9">
 				<div className="flex gap-3">
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -58,7 +68,7 @@ export default async function AirdropList() {
 						</ul>
 					</div>
 
-					<div className="hidden lg:block dropdown dropdown-end">
+					<div className="hidden xl:block dropdown dropdown-end">
 						<label
 							tabIndex={0}
 							className="border rounded-2xl border-[#2D313E] py-3 pl-6 pr-2 flex items-center gap-1 font-bold"
@@ -115,7 +125,7 @@ export default async function AirdropList() {
 
 					<label
 						htmlFor="filters"
-						className="p-3 lg:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
+						className="p-3 xl:hidden btn rounded-2xl border-[#2D313E] bg-[#0D0E12] hover:bg-[#0D0E12] "
 					>
 						<div className="w-[24px] h-[24px] relative">
 							<Image src="/svg/filter.svg" alt="filter" fill />
@@ -181,11 +191,11 @@ export default async function AirdropList() {
 			</div>
 
 			{/* latest launchpad */}
-			<LatestAirdrop airdrop={airdrops[0]} />
+			<LatestAirdrop airdrop={airdrops?.[0]} />
 
 			{/* list launchpad */}
 			<div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6 mt-6">
-				{airdrops.slice(1).map((airdrop: any, idx: number) => (
+				{airdrops?.slice(1).map((airdrop: any, idx: number) => (
 					<AirdropItem airdrop={airdrop} key={idx} />
 				))}
 			</div>

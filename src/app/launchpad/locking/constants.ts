@@ -1,0 +1,2 @@
+export const LOCKING_ADDRESS =
+	"0x1351089e8c97002ea0b3e14f1c4ef1e1c7f15bbeb53ec4ce0da460937621b69";

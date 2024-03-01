@@ -30,13 +30,39 @@ export const drawerDataMobile = [
 		id: 3,
 		title: "Locking",
 		open: false,
-		items: [],
+		items: [
+			{
+				title: "Create Lock",
+				path: "/launchpad/locking",
+			},
+			{
+				title: "Token",
+				path: "/launchpad/locking/token",
+			},
+			{
+				title: "Liquidity",
+				path: "/launchpad/locking/liquidity",
+			},
+		],
 	},
 	{
 		id: 4,
 		title: "Launchpad",
 		open: false,
-		items: [],
+		items: [
+			{
+				title: "Launchpad List",
+				path: "/launchpad/launchpad-list",
+			},
+			{
+				title: "Airdrop List",
+				path: "/launchpad/airdrop-list",
+			},
+			{
+				title: "Your Pools",
+				path: "/launchpad/your-pools",
+			},
+		],
 	},
 	{
 		id: 5,
@@ -78,14 +104,14 @@ export const drawerData = [
 				title: "Overview",
 				path: "/exchange/overview",
 			},
-			// {
-			//   title: "Staking",
-			//   path: route.comingSoon,
-			// },
-			// {
-			//   title: "Bridge",
-			//   path: route.swapBridge,
-			// },
+			{
+				title: "Staking",
+				path: "/exchange/staking",
+			},
+			{
+				title: "Bridge",
+				path: "/exchange/bridge",
+			},
 		],
 	},
 	{
@@ -94,18 +120,18 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			//   title: "Locking 1",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Locking 2",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Locking 3",
-			//   path: route.home,
-			// },
+			{
+				title: "Create Lock",
+				path: "/launchpad/locking",
+			},
+			{
+				title: "Token",
+				path: "/launchpad/locking/token",
+			},
+			{
+				title: "Liquidity",
+				path: "/launchpad/locking/liquidity",
+			},
 		],
 	},
 	{
@@ -114,18 +140,18 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			//   title: "Launchpad List",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Airdrop List",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Your Pool",
-			//   path: route.home,
-			// },
+			{
+				title: "Launchpad List",
+				path: "/launchpad/launchpad-list",
+			},
+			{
+				title: "Airdrop List",
+				path: "/launchpad/airdrop-list",
+			},
+			{
+				title: "Your Pools",
+				path: "/launchpad/your-pools",
+			},
 		],
 	},
 	{
@@ -134,22 +160,22 @@ export const drawerData = [
 		open: false,
 		// action: () => {},
 		items: [
-			// {
-			//   title: "Collections",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Activity",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Events",
-			//   path: route.home,
-			// },
-			// {
-			//   title: "Profile",
-			//   path: route.home,
-			// },
+			{
+				title: "Collections",
+				path: "/marketplace",
+			},
+			{
+				title: "Activity",
+				path: "/marketplace/activities",
+			},
+			{
+				title: "Events",
+				path: "/marketplace/events",
+			},
+			{
+				title: "Profile",
+				path: "/marketplace/profile",
+			},
 		],
 	},
 	{
@@ -161,10 +187,11 @@ export const drawerData = [
 ];
 
 export const socialLink = {
-	discord: "https://discord.com/invite/starksport",
+	discord: "https://discord.gg/starkfinance",
 	tw: "https://twitter.com/starkfinance",
 	teleChannel: "https://t.me/starksportchanel",
 	teleGlobal: "https://t.me/starksportglobal",
+	medium: "https://starkfinance.medium.com",
 };
 
 export const socialData = [
@@ -187,7 +214,7 @@ export const socialData = [
 			},
 			{
 				title: "Medium",
-				path: socialLink.teleChannel,
+				path: socialLink.medium,
 			},
 			{
 				title: "Github",

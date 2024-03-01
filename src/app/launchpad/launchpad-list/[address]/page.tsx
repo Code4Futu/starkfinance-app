@@ -1,20 +1,24 @@
+"use client";
 import { BASE_API } from "@/app/constants";
 import Launchpad from "./components/Launchpad";
 import { ILaunchpad } from "@/app/types";
+import useSWR from "swr";
+import axios from "axios";
 
-async function getLaunchpad(params: { address: string }): Promise<ILaunchpad> {
-	const res = await fetch(`${BASE_API}/launchpads/${params.address}`, {
-		next: { revalidate: 60 },
-	});
-	return res.json();
-}
-
-export default async function LaunchpadPage({
+export default function LaunchpadPage({
 	params,
 }: {
 	params: { address: string };
 }) {
-	const launchpad = await getLaunchpad(params);
+	const { data: launchpad } = useSWR<ILaunchpad>(
+		["LaunchpadDetailPage", params.address],
+		async () => {
+			const { data } = await axios.get<ILaunchpad>(
+				`${BASE_API}/launchpads/${params.address}`
+			);
+			return data;
+		}
+	);
 
 	return <Launchpad launchpad={launchpad} />;
 }

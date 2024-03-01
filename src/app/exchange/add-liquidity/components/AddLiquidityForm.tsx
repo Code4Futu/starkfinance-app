@@ -13,38 +13,54 @@ import {
 	WETH,
 	getTokenIcon,
 } from "@/app/exchange/configs/networks";
-import { JSBI, Percent, Token, TokenAmount, Trade } from "l0k_swap-sdk";
+import {
+	Fraction,
+	JSBI,
+	Percent,
+	Token,
+	TokenAmount,
+	Trade,
+} from "l0k_swap-sdk";
 import useSWR from "swr";
 import { useAccount } from "@starknet-react/core";
 import { num } from "starknet";
 import { numberWithCommas } from "@/app/utils";
-import { parseUnits } from "ethers";
+import { formatUnits, parseUnits } from "ethers";
 import { swapCallback, useDerivedSwapInfo } from "@/app/exchange/state/swap";
 import { SwapButton } from "@/app/exchange/components/buttons";
 import SettingChartModal from "@/app/exchange/components/modals/settings-modal/SettingModalChart";
 import SelectTokenModal from "@/app/exchange/components/modals/select-token-modal/SelectTokenModal";
 import OutsideClickHandler from "react-outside-click-handler";
-import { getPoolInfo } from "@/app/exchange/state/liquidity";
+import {
+	addLiquidityCallback,
+	getPoolInfo,
+} from "@/app/exchange/state/liquidity";
 import { PoolState, EmptyPool } from "@/app/exchange/state/liquidity";
+import { useWeb3Store } from "@/app/store";
 
 export default function AddLiquidityForm() {
 	const { account, isConnected, address } = useAccount();
+	const web3State = useWeb3Store();
 
 	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
 		[Field.INPUT]: WETH[APP_CHAIN_ID],
 		[Field.OUTPUT]: TOKEN_LIST[APP_CHAIN_ID][1],
 	});
 
-	const [typedValue, setTypedValue] = useState("");
 	const [independentField, setIndependentField] = useState<Field>(Field.INPUT);
-	const [reloadPool, setReloadPool] = useState<boolean>(false);
 	// const [poolInfo, setPoolInfo] = useState<PoolState>(EmptyPool);
 	const [submitting, setSubmitting] = useState<boolean>(false);
-	const [tokensNeedApproved, setTokensNeedApproved] = useState<Token[]>([]);
-	const [slippage, setSlippage] = useState<string>("0.5");
-	const [disabledMultihops, setDisabledMultihops] = useState<boolean>(false);
-	const [isCheckedHighPriceImpact, setIsCheckedHighPriceImpact] =
-		useState<boolean>(false);
+	useState<boolean>(false);
+	const [tokenAmounts, setTokenAmounts] = useState<{ [key in Field]: string }>({
+		[Field.INPUT]: "",
+		[Field.OUTPUT]: "",
+	});
+	const [parsedTokenAmounts, setParsedTokenAmounts] = useState<{
+		[key in Field]: TokenAmount | undefined;
+	}>({
+		[Field.INPUT]: undefined,
+		[Field.OUTPUT]: undefined,
+	});
 
 	const [isShowSetting, setIsShowSetting] = useState(false);
 	const [isShowTokenModal, setIsShowTokenModal] = useState(false);
@@ -53,35 +69,38 @@ export default function AddLiquidityForm() {
 	const [feeTierCustom, setFeeTierCustom] = useState(0);
 	const [feeTierError, setFeeTierError] = useState(false);
 
-	const { data } = useSWR<{
+	const { data, isLoading: isLoadingPool } = useSWR<{
 		balances: (TokenAmount | undefined)[];
 		poolInfo: PoolState | undefined;
-	}>([address, tokens[Field.INPUT], tokens[Field.OUTPUT]], async () => {
-		// if (!address || !isConnected)
-		// 	return {
-		// 		balances: [],
-		// 		poolInfo: undefined,
-		// 	};
-		const provider = SN_RPC_PROVIDER();
-		const balances = await Promise.all(
-			[tokens[Field.INPUT], tokens[Field.OUTPUT]].map(async (t) => {
-				if (!address || !t) return undefined;
-				const res = await provider.callContract({
-					contractAddress: t.address,
-					entrypoint: "balanceOf",
-					calldata: [address],
-				});
-				return new TokenAmount(t, num.hexToDecimalString(res.result[0]));
-			})
-		);
+	}>(
+		[address, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
+		async () => {
+			// if (!address || !isConnected)
+			// 	return {
+			// 		balances: [],
+			// 		poolInfo: undefined,
+			// 	};
+			const provider = SN_RPC_PROVIDER();
+			const balances = await Promise.all(
+				[tokens[Field.INPUT], tokens[Field.OUTPUT]].map(async (t) => {
+					if (!address || !t) return undefined;
+					const res = await provider.callContract({
+						contractAddress: t.address,
+						entrypoint: "balanceOf",
+						calldata: [address],
+					});
+					return new TokenAmount(t, num.hexToDecimalString(res.result[0]));
+				})
+			);
 
-		const poolInfo = await getPoolInfo(address, provider, [
-			tokens[Field.INPUT],
-			tokens[Field.OUTPUT],
-		]);
+			const poolInfo = await getPoolInfo(address, provider, [
+				tokens[Field.INPUT],
+				tokens[Field.OUTPUT],
+			]);
 
-		return { balances, poolInfo };
-	});
+			return { balances, poolInfo };
+		}
+	);
 
 	const handleSelectToken = (token: Token) => {
 		let _tokens = { ...tokens };
@@ -101,11 +120,84 @@ export default function AddLiquidityForm() {
 		// onClose();
 	};
 
-	const handleChangeAmounts = (value: string, independentField: Field) => {
-		if (isNaN(+value)) return;
-		setTypedValue(value);
-		setIndependentField(independentField);
-	};
+	const handleChangeAmounts = useCallback(
+		(value: string, independentField: Field) => {
+			if (!data?.poolInfo) return;
+
+			if (value === "") {
+				data.poolInfo.noLiquidity
+					? setTokenAmounts((amounts) => ({
+							...amounts,
+							[independentField]: "",
+					  }))
+					: setTokenAmounts({ [Field.INPUT]: "", [Field.OUTPUT]: "" });
+				return;
+			}
+
+			setIndependentField(independentField);
+			const remainField =
+				independentField === Field.INPUT ? Field.OUTPUT : Field.INPUT;
+			const decimalsIndependent = tokens?.[independentField]?.decimals ?? 18;
+			const remainDecimals = tokens?.[remainField]?.decimals ?? 18;
+			let parsedAmount: Fraction | undefined;
+			if (
+				data.poolInfo.noLiquidity &&
+				!data.poolInfo.prices[independentField]
+			) {
+				setTokenAmounts((amounts) => ({
+					...amounts,
+					[independentField]: value,
+				}));
+				try {
+					parsedAmount = new Fraction(
+						parseUnits(value, decimalsIndependent).toString()
+					);
+					tokens[independentField] &&
+						setParsedTokenAmounts((amounts) => ({
+							...amounts,
+							[independentField]: new TokenAmount(
+								tokens[independentField] as any,
+								parsedAmount?.quotient.toString() as any
+							),
+						}));
+				} catch (error) {
+					console.error(error);
+					return;
+				}
+			} else {
+				try {
+					parsedAmount = new Fraction(
+						parseUnits(value, decimalsIndependent).toString()
+					);
+				} catch (error) {
+					console.error(error);
+					return;
+				}
+				if (!parsedAmount) return;
+				const remainParsedAmount = parsedAmount.multiply(
+					data?.poolInfo.prices[remainField]?.raw ?? "1"
+				);
+				setParsedTokenAmounts({
+					[independentField]: new TokenAmount(
+						tokens[independentField] as any,
+						parsedAmount.quotient.toString()
+					),
+					[remainField]: new TokenAmount(
+						tokens[remainField] as any,
+						remainParsedAmount.quotient.toString()
+					),
+				} as any);
+				setTokenAmounts({
+					[independentField]: value,
+					[remainField]: formatUnits(
+						remainParsedAmount.quotient.toString(),
+						remainDecimals
+					),
+				} as any);
+			}
+		},
+		[data?.poolInfo, tokens[Field.INPUT], tokens[Field.OUTPUT]]
+	);
 
 	// const isDisableBtn: boolean = useMemo(() => {
 	// 	if (!trade || !balances?.[0] || !tokens[Field.INPUT] || !typedValue)
@@ -169,18 +261,26 @@ export default function AddLiquidityForm() {
 		setFeeTierError(false);
 	};
 
-	// const onSwapCallback = useCallback(async () => {
-	// 	try {
-	// 		setSubmitting(true);
-	// 		await swapCallback(account, address, trade, +slippage);
-	// 		setReloadPool((pre) => !pre);
-	// 		setSubmitting(false);
-	// 		setTypedValue("");
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		setSubmitting(false);
-	// 	}
-	// }, [account, address, trade, slippage]);
+	const onAddLiquidityCallback = useCallback(async () => {
+		try {
+			setSubmitting(true);
+			const tx = await addLiquidityCallback(
+				address,
+				account,
+				tokens,
+				parsedTokenAmounts
+			);
+			setSubmitting(false);
+			setTokenAmounts({
+				[Field.INPUT]: "",
+				[Field.OUTPUT]: "",
+			});
+			useWeb3Store.setState({ ...web3State, txHash: tx.transaction_hash });
+		} catch (error) {
+			console.error(error);
+			setSubmitting(false);
+		}
+	}, [address, account, tokens, parsedTokenAmounts]);
 
 	// const onApproveTokens = useCallback(async () => {
 	// 	try {
@@ -210,7 +310,7 @@ export default function AddLiquidityForm() {
 	// 	if (isNeedApproved) {
 	// 		return onApproveTokens();
 	// 	} else if (!isDisableBtn) {
-	// 		return onSwapCallback();
+	// 		return onAddLiquidityCallback();
 	// 	}
 	// };
 
@@ -218,11 +318,9 @@ export default function AddLiquidityForm() {
 	// 	if (isNeedApproved) {
 	// 		return onApproveTokens();
 	// 	} else if (!isDisableBtn) {
-	// 		return onSwapCallback().then(onCloseConfirmHighSlippage);
+	// 		return onAddLiquidityCallback().then(onCloseConfirmHighSlippage);
 	// 	}
 	// };
-
-	console.log(data?.poolInfo);
 
 	return (
 		<div
@@ -234,8 +332,8 @@ export default function AddLiquidityForm() {
 			<SwitchButton />
 			<Divider className="h-[1px] w-full bg-[#2D313E] mt-6 mb-3" />
 
-			<div className="flex w-full justify-between lg:justify-end">
-				<div className="lg:hidden">
+			<div className="flex w-full justify-between xl:justify-end">
+				<div className="xl:hidden">
 					<div className="button-linear-2 flex items-center justify-center rounded p-1 bg-[#F1F1F1] w-7 h-7">
 						<ChartIcon
 							onClick={() => {
@@ -281,11 +379,7 @@ export default function AddLiquidityForm() {
 							placeholder="0.0"
 							className="border-none px-0 text-right text-xl font-bold text-[#C6C6C6] max-w-[120px]"
 							// ref={inputToken0Ref}
-							// value={
-							// 	independentField === Field.INPUT
-							// 		? typedValue
-							// 		: trade?.inputAmount.toSignificant(6) ?? ""
-							// }
+							value={tokenAmounts[Field.INPUT]}
 							onChange={(e) => handleChangeAmounts(e.target.value, Field.INPUT)}
 						/>
 					</div>
@@ -338,11 +432,7 @@ export default function AddLiquidityForm() {
 							placeholder="0.0"
 							// value={token1OutputDisplayAmount}
 							className="border-none px-0 text-right text-xl font-bold text-[#C6C6C6] max-w-[120px]"
-							// value={
-							// independentField === Field.OUTPUT
-							// 	? typedValue
-							// 	: trade?.outputAmount.toSignificant(6) ?? ""
-							// }
+							value={tokenAmounts[Field.OUTPUT]}
 							onChange={(e) =>
 								handleChangeAmounts(e.target.value, Field.OUTPUT)
 							}
@@ -428,7 +518,7 @@ export default function AddLiquidityForm() {
 							{tokens[Field.INPUT]?.name} per {tokens[Field.OUTPUT]?.name}
 						</span>
 						<span className="text-sm font-bold text-[#F1F1F1] leading-4">
-							--
+							{data?.poolInfo?.prices[Field.INPUT]?.toSignificant(4) ?? "--"}
 						</span>
 					</div>
 					{/* TODO */}
@@ -437,7 +527,7 @@ export default function AddLiquidityForm() {
 							{tokens[Field.OUTPUT]?.name} per {tokens[Field.INPUT]?.name}
 						</span>
 						<span className="text-sm font-bold text-[#F1F1F1] leading-4">
-							--
+							{data?.poolInfo?.prices[Field.OUTPUT]?.toSignificant(4) ?? "--"}
 						</span>
 					</div>
 					{/* TODO */}
@@ -450,15 +540,13 @@ export default function AddLiquidityForm() {
 						</span>
 					</div>
 				</div>
-				{/* <SwapButton
-					loadingPool={isLoadingTrade}
-					handleSwap={onSwapCallback}
+				<SwapButton
+					loadingPool={isLoadingPool}
+					handleSwap={onAddLiquidityCallback}
 					submitting={submitting}
-					warningPriceImpact={
-						parseFloat((trade?.priceImpact.toSignificant(6) ?? 0).toString()) >
-						10
-					}
-				/> */}
+					warningPriceImpact={false}
+					isSwap={false}
+				/>
 			</div>
 			{isShowSetting && (
 				<SettingChartModal

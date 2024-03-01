@@ -1,155 +1,133 @@
+"use client";
+
 import Image from "next/image";
+// import { HomepageCarousel } from "./components/HomepageCarousel";
 import LatestLaunchpad from "./launchpad/launchpad-list/components/LatestLaunchpad";
-import { IAirdrop, ILaunchpad } from "./types";
 import { BASE_API } from "./constants";
+import { ILaunchpad } from "./types";
 import { HomepageCarousel } from "./components/HomepageCarousel";
+import useSWR from "swr";
+import axios from "axios";
 
-async function getLaunchpads(): Promise<ILaunchpad[]> {
-  const res = await fetch(`${BASE_API}/launchpads`, {
-    next: { revalidate: 60 },
-  });
-  return res.json();
-}
+// async function getLaunchpads(): Promise<[ILaunchpad[], number]> {
+// 	const res = await fetch(`${BASE_API}/launchpads`, {
+// 		next: { revalidate: 60 },
+// 	});
+// 	return res.json();
+// }
 
-async function getAirdrops(): Promise<IAirdrop[]> {
-  const res = await fetch(`${BASE_API}/airdrops`, {
-    next: { revalidate: 60 },
-  });
-  return res.json();
-}
+export default function Home() {
+	// const res = await getLaunchpads();
+	// const launchpads = res[0];
 
-const mockAirdrop = [
-  {
-    chainKey: "starknet",
-    address:
-      "0x399347f433a9e49a662185b67b9405d83b1328fd8f2c3e786f3df026d235ae7",
-    name: "StarkFinance Airdrop Testnet 1",
-    owner: "0x05ed5A976522b349A449B87f208f530B6d1566383df41861Fc0E5cF6DFE32395",
-    tokenAirdropAddress:
-      "0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
-    type: "private",
-    start: 1702893600,
-    totalAirdrop: "1000",
-    totalAirdropAmount: "1000000000000000000000000",
-    vestingTime: [0, 3600],
-    vestingPercent: [50000, 50000],
-    logo: "",
-    banner: "",
-    socials_x: "",
-    socials_telegram: "",
-    socials_discord: "",
-    socials_medium: "",
-    socials_github: "",
-    desc: "",
-    tokenAirdrop: {
-      chainKey: "starknet",
-      address:
-        "0x3f327365c803ee53491b73d82770e59643736608e077cea589685647ba2b1f8",
-      name: "SfnToken",
-      decimals: 18,
-      symbol: "SFN",
-    },
-  },
-];
+	const { data } = useSWR<[ILaunchpad[], number]>(
+		["Home"],
+		async () => {
+			const { data } = await axios.get<[ILaunchpad[], number]>(
+				`${BASE_API}/launchpads`
+			);
 
-export default async function Home() {
-  const launchpads = await getLaunchpads();
-  const airdrops = await getAirdrops();
+			return data;
+		},
+		{ revalidateOnMount: true }
+	);
 
-  return (
-    <div className="flex flex-col gap-6">
-      {/* Overall stats */}
-      <div className="flex flex-col gap-6 rounded-3xl bg-[#1A1C24] p-6">
-        <div className="flex justify-start md:justify-between md:items-end">
-          <div className="text-2xl font-bold leading-[23px]">Overall stats</div>
-          <div className="hidden md:flex gap-3">
-            <div className="text-center button-linear-1 font-bold text-[#1A1C24] py-2 px-4 rounded-2xl cursor-pointer">
-              Buy SFN Token
-            </div>
-            <div className="text-center button-linear-2 font-bold text-[#1A1C24] py-2 px-4 rounded-2xl cursor-pointer">
-              Apply for Launchpad / Airdrop
-            </div>
-          </div>
-        </div>
+	const launchpads = data?.[0] ?? undefined;
 
-        <div className="grid gird-cols-1 md:grid-cols-3 gap-3">
-          <div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-            <div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
-              <Image alt="image" src="/svg/launchpad-blue.svg" fill />
-            </div>
-            <div className="flex flex-col justify-center items-start gap-1">
-              <div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
-                1
-              </div>
-              <div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
-                Projects Launched
-              </div>
-            </div>
-          </div>
+	return (
+		<div className="flex flex-col gap-6">
+			{/* Overall stats */}
+			<div className="flex flex-col gap-6 rounded-3xl bg-[#1A1C24] p-6">
+				<div className="flex justify-start md:justify-between md:items-end">
+					<div className="text-2xl font-bold leading-[23px]">Overall stats</div>
+					<div className="hidden md:flex gap-3">
+						<div className="text-center button-linear-1 font-bold text-[#1A1C24] py-2 px-4 rounded-2xl cursor-pointer">
+							Buy SFN Token
+						</div>
+						<div className="text-center button-linear-2 font-bold text-[#1A1C24] py-2 px-4 rounded-2xl cursor-pointer">
+							Apply for Launchpad / Airdrop
+						</div>
+					</div>
+				</div>
 
-          <div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-            <div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
-              <Image alt="image" src="/svg/total-raise.svg" fill />
-            </div>
-            <div className="flex flex-col justify-center items-start gap-1">
-              <div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px]">
-                $0
-              </div>
-              <div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
-                Total Funds Raised
-              </div>
-            </div>
-          </div>
+				<div className="grid gird-cols-1 md:grid-cols-3 gap-3">
+					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
+							<Image alt="image" src="/svg/launchpad-blue.svg" fill />
+						</div>
+						<div className="flex flex-col justify-center items-start gap-1">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px]">
+								{data?.[1] ?? 0}
+							</div>
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
+								Projects Launched
+							</div>
+						</div>
+					</div>
 
-          <div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
-            <div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] lg:w-[51px] lg:h-[51] relative">
-              <Image alt="image" src="/svg/user.svg" fill />
-            </div>
-            <div className="flex flex-col justify-center items-start gap-1">
-              <div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] lg:text-2xl lg:leading-[28px] ">
-                0
-              </div>
-              <div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] lg:text-base lg:leading-[19px]">
-                Total Participants
-              </div>
-            </div>
-          </div>
-        </div>
+					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
+							<Image alt="image" src="/svg/total-raise.svg" fill />
+						</div>
+						<div className="flex flex-col justify-center items-start gap-1">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px]">
+								$0
+							</div>
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
+								Total Funds Raised
+							</div>
+						</div>
+					</div>
 
-        <div className="flex flex-col md:hidden gap-6">
-          <div className="text-center button-linear-1 py-2 px-4 rounded-2xl">
-            <span className="font-bold text-[#1A1C24] leading-[19px]">
-              Buy SFN Token
-            </span>
-          </div>
-          <div className="text-center button-linear-2 py-2 px-4 rounded-2xl">
-            <span className="font-bold text-[#1A1C24] leading-[19px]">
-              Apply for Launchpad / Airdrop
-            </span>
-          </div>
-        </div>
-      </div>
+					<div className="w-full p-[18px] flex gap-2 bg-[#0D0E12] border-[1px] border-[#2D313E] rounded-2xl">
+						<div className="w-[37px] h-[37px] md:w-[43px] md:h-[43px] xl:w-[51px] xl:h-[51] relative">
+							<Image alt="image" src="/svg/user.svg" fill />
+						</div>
+						<div className="flex flex-col justify-center items-start gap-1">
+							<div className="font-bold text-base leading-[19px] md:text-xl md:leading-[23px] xl:text-2xl xl:leading-[28px] ">
+								0
+							</div>
+							<div className="text-xs font-normal text-[#C6C6C6] leading-[14px] md:text-sm md:leading-[16px] xl:text-base xl:leading-[19px]">
+								Total Participants
+							</div>
+						</div>
+					</div>
+				</div>
 
-      {/* latest launchpad */}
-      <LatestLaunchpad launchpad={launchpads[0]} />
+				<div className="flex flex-col md:hidden gap-6">
+					<div className="text-center button-linear-1 py-2 px-4 rounded-2xl">
+						<span className="font-bold text-[#1A1C24] leading-[19px]">
+							Buy SFN Token
+						</span>
+					</div>
+					<div className="text-center button-linear-2 py-2 px-4 rounded-2xl">
+						<span className="font-bold text-[#1A1C24] leading-[19px]">
+							Apply for Launchpad / Airdrop
+						</span>
+					</div>
+				</div>
+			</div>
 
-      {/* top fundrasing */}
-      <div className="flex flex-col gap-3 md:gap-6">
-        <div className="text-xl md:text-2xl lg:text-[32px] font-bold">
-          Top Fundrasing
-        </div>
-        <HomepageCarousel launchpads={launchpads} />
-      </div>
+			{/* latest launchpad */}
+			<LatestLaunchpad launchpad={launchpads?.[0]} />
 
-      {/* top airdrop */}
-      <div className="flex flex-col gap-3 md:gap-6">
-        <div className="text-xl md:text-2xl lg:text-[32px] font-bold">
-          Top Airdrop
-        </div>
-        <HomepageCarousel launchpads={launchpads} />
-      </div>
+			{/* top fund raised */}
+			{/* <div className="flex flex-col gap-3 md:gap-6">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
+					Top Fundrasing
+				</div>
+				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
+			</div> */}
 
-      {/* <div className="flex flex-wrap gap-1 md:gap-4">
+			{/* top airdrop */}
+			{/* <div className="flex flex-col gap-3 md:gap-6">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
+					Top Airdrop
+				</div>
+				<HomepageCarousel launchpads={launchpads?.length ? launchpads : []} />
+			</div> */}
+
+			{/* <div className="flex flex-wrap gap-1 md:gap-4">
         <div className="py-2 px-2 md:py-3 md:px-5 bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] border-2 font-bold text-[#1A1C24]  rounded-2xl">
           Buy SFN token
         </div>
@@ -171,64 +149,64 @@ export default async function Home() {
         </div>
       </div> */}
 
-      <div className="flex flex-col gap-3 md:gap-6">
-        <div className="text-xl md:text-2xl lg:text-[32px] font-bold">
-          How to Participate in IDO
-        </div>
+			<div className="flex flex-col gap-3 md:gap-6">
+				<div className="text-xl md:text-2xl xl:text-[32px] font-bold">
+					How to Participate in IDO
+				</div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-6">
-          <div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-            <div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
-              Step 01
-            </div>
-            <div className="w-[80px] h-[80px] relative">
-              <Image alt="image" src="/svg/step1.svg" fill />
-            </div>
-            <div className="text-sm text-center md:text-base">
-              Prepare SFN tokens in your wallet and ensure you have enough ETH
-              or STRK to pay gas on Starknet Chain.
-            </div>
-          </div>
-          <div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-            <div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
-              Step 02
-            </div>
-            <div className="w-[80px] h-[80px] relative">
-              <Image alt="image" src="/svg/step2.svg" fill />
-            </div>
-            <div className="text-sm text-center md:text-base">
-              Commit SFN tokens on IDO pools you and stake your Starksport NFT
-              to boost allocations.
-            </div>
-          </div>
-          <div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-            <div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
-              Step 03
-            </div>
-            <div className="w-[80px] h-[80px] relative">
-              <Image alt="image" src="/svg/step3.svg" fill />
-            </div>
-            <div className="text-sm text-center md:text-base">
-              The system will calculate your allocation, then the corresponding
-              SFN amount will be deducted.
-            </div>
-          </div>
-          <div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
-            <div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 lg:px-24 rounded-b-2xl">
-              Step 04
-            </div>
-            <div className="w-[80px] h-[80px] relative">
-              <Image alt="image" src="/svg/step4.svg" fill />
-            </div>
-            <div className="text-sm text-center md:text-base">
-              Access to launchpad platform and claim your IDO tokens also your
-              remaining SFN fund.
-            </div>
-          </div>
-        </div>
-      </div>
+				<div className="grid grid-cols-1 md:grid-cols-2 mt-4 gap-6">
+					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
+							Step 01
+						</div>
+						<div className="w-[80px] h-[80px] relative">
+							<Image alt="image" src="/svg/step1.svg" fill />
+						</div>
+						<div className="text-sm text-center md:text-base">
+							Prepare SFN tokens in your wallet and ensure you have enough ETH
+							or STRK to pay gas on Starknet Chain.
+						</div>
+					</div>
+					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
+							Step 02
+						</div>
+						<div className="w-[80px] h-[80px] relative">
+							<Image alt="image" src="/svg/step2.svg" fill />
+						</div>
+						<div className="text-sm text-center md:text-base">
+							Commit SFN tokens on IDO pools you and stake your Starksport NFT
+							to boost allocations.
+						</div>
+					</div>
+					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
+							Step 03
+						</div>
+						<div className="w-[80px] h-[80px] relative">
+							<Image alt="image" src="/svg/step3.svg" fill />
+						</div>
+						<div className="text-sm text-center md:text-base">
+							The system will calculate your allocation, then the corresponding
+							SFN amount will be deducted.
+						</div>
+					</div>
+					<div className="rounded-3xl bg-[#1A1C24] px-6 pb-6 flex flex-col gap-6 items-center">
+						<div className="bg-gradient-to-r from-[#24C3BC] to-[#ADFFFB] font-bold text-[#1A1C24] py-3 px-6 xl:px-24 rounded-b-2xl">
+							Step 04
+						</div>
+						<div className="w-[80px] h-[80px] relative">
+							<Image alt="image" src="/svg/step4.svg" fill />
+						</div>
+						<div className="text-sm text-center md:text-base">
+							Access to launchpad platform and claim your IDO tokens also your
+							remaining SFN fund.
+						</div>
+					</div>
+				</div>
+			</div>
 
-      {/* <div className="flex flex-col rounded-3xl bg-[#1A1C24] px-3 md:px-6 py-6">
+			{/* <div className="flex flex-col rounded-3xl bg-[#1A1C24] px-3 md:px-6 py-6">
         <div className="text-[24px] font-bold mb-6">Features</div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -289,6 +267,6 @@ export default async function Home() {
           </div>
         </div>
       </div> */}
-    </div>
-  );
+		</div>
+	);
 }

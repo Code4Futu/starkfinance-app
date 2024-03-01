@@ -1,17 +1,17 @@
 import { create } from "zustand";
 
 export const useWeb3Store = create<{
-  txHash: string | undefined;
+	txHash: string | undefined;
 }>((set) => ({
-  txHash: undefined,
+	txHash: undefined,
 }));
 
 type DrawerStore = {
-  open: boolean;
-  toggleDrawer: () => void;
+	open: boolean;
+	toggleDrawer: () => void;
 };
 
 export const useDrawerStore = create<DrawerStore>()((set) => ({
-  open: false,
-  toggleDrawer: () => set((state) => ({ open: !state.open })),
+	open: false,
+	toggleDrawer: () => set((state) => ({ open: !state.open })),
 }));

@@ -32,7 +32,7 @@ html {
 	background: fixed no-repeat url("./assets/icons/bg.png");
 	background-size: cover;
 	/* width: 100vw;
-  height: 100vh; */
+  height: 100dvh; */
 }
 
 div#root {
