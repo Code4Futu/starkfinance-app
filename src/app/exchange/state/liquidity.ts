@@ -1,13 +1,9 @@
 import { Pair, Percent, Price, Token, TokenAmount } from "l0k_swap-sdk";
-import {
-	APP_CHAIN_ID,
-	FACTORY_ADDRESS,
-	Field,
-	ROUTER_ADDRESS,
-} from "../configs/networks";
+import { FACTORY_ADDRESS, Field, ROUTER_ADDRESS } from "../configs/networks";
 import { AccountInterface, Contract, RpcProvider, num } from "starknet";
 import PairAbi from "@/app/exchange/abis/starknet/Pair.json";
 import RouterAbi from "@/app/exchange/abis/starknet/Router.json";
+import { APP_CHAIN_ID } from "@/app/configs/networks";
 
 export interface PoolState {
 	pair?: Pair | undefined;
@@ -97,7 +93,6 @@ export const getPoolInfo = async (
 			noLiquidity: false,
 		};
 	} catch (error) {
-		console.log("🚀 ~ error:", error);
 		return EmptyPool;
 	}
 };

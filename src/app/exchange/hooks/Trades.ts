@@ -1,13 +1,13 @@
 import { Token, TokenAmount, Trade, Pair } from "l0k_swap-sdk";
 import {
-	APP_CHAIN_ID,
+	FACTORY_ADDRESS,
 	BASES_TO_CHECK_TRADES_AGAINST,
 	CUSTOM_BASES,
-	FACTORY_ADDRESS,
 } from "../configs/networks";
 import { flatMap } from "lodash";
 import { Abi, AccountInterface, Contract, RpcProvider, num } from "starknet";
 import PairAbi from "@/app/exchange/abis/starknet/Pair.json";
+import { APP_CHAIN_ID } from "@/app/configs/networks";
 
 export enum PairState {
 	LOADING,

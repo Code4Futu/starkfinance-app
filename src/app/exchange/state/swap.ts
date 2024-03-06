@@ -1,10 +1,11 @@
 import { Token, Trade, TokenAmount, JSBI } from "l0k_swap-sdk";
-import { APP_CHAIN_ID, Field, ROUTER_ADDRESS } from "../configs/networks";
+import { Field, ROUTER_ADDRESS } from "../configs/networks";
 import { parseUnits } from "ethers";
 import { AccountInterface, Contract, RpcProvider } from "starknet";
 import { useTradeExactIn, useTradeExactOut } from "@/app/exchange/hooks/Trades";
 import PairAbi from "@/app/exchange/abis/starknet/Pair.json";
 import RouterAbi from "@/app/exchange/abis/starknet/Router.json";
+import { APP_CHAIN_ID } from "@/app/configs/networks";
 
 // try to parse a user entered amount for a given token
 export const tryParseAmount = (

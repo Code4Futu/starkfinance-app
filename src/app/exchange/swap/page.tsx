@@ -6,7 +6,7 @@ import SwapForm from "./components/SwapForm";
 import { ChartDesktop } from "./components/Chart";
 import ChartModal from "../components/modals/chart-modal/ModalChart";
 import { Token } from "l0k_swap-sdk";
-import { APP_CHAIN_ID, TOKEN_LIST, WETH } from "../configs/networks";
+import { APP_CHAIN_ID, TOKEN_LIST, WETH } from "@/app/configs/networks";
 
 export default function SwapPage() {
 	return (

@@ -37,6 +37,7 @@ import DetailBridgeModal from "../components/modals/detail-bridge/DetailBridgeMo
 import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
 import AddLiquidityForm from "./components/AddLiquidityForm";
+import { APP_CHAIN_ID, WETH } from "@/app/configs/networks";
 
 const mockDataTokenTest = [
 	{
@@ -326,7 +327,7 @@ const AddLiquidityPage = () => {
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6text-white mb-[80px] max-[480px]:items-center md:items-center",
+				"flex w-full flex-col gap-6 text-white mb-[80px] max-[480px]:items-center md:items-center",
 				currentPath === "/bridge" && "lg:pt-[222px]"
 			)}
 		>
@@ -370,16 +371,15 @@ const AddLiquidityPage = () => {
 					// currentPath !== "/bridge" && "xl:max-h-[514px]"
 				)}
 			>
-				{/* TODO uncomment */}
-				{/* <div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
+				<div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
-						vol={isNaN(vol) ? "0" : vol}
+						vol={isNaN(vol) ? "1.2" : vol}
 						dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={handleChangeToken}
 					/>
-				</div> */}
+				</div>
 
 				<FormSwap
 					setVol={setVol}
@@ -399,7 +399,7 @@ const AddLiquidityPage = () => {
 				/>
 			</div>
 			{/* Table */}
-			{/* <div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
+			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
 				<div className="flex flex-col items-start gap-3 self-stretch">
 					<div className="flex items-end justify-between self-stretch max-[480px]:flex-wrap">
 						<span className="text-xl xl:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
@@ -528,7 +528,7 @@ const AddLiquidityPage = () => {
 					)}
 				</div>
 			</div>
-			{isShowBridgeModal && (
+			{/* {isShowBridgeModal && (
 				<DetailBridgeModal
 					isShowing={isShowBridgeModal}
 					hide={setIsShowBridgeModal}
@@ -538,8 +538,9 @@ const AddLiquidityPage = () => {
 				<ChartModal
 					isShowing={isModalChartOpen}
 					hide={() => setIsModalChartOpen(false)}
-					token0={token0}
-					token1={token1}
+					token0={WETH[APP_CHAIN_ID]}
+					token1={WETH[APP_CHAIN_ID]}
+					token1={"B"}
 					vol={isNaN(vol) ? "0" : vol}
 					dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 					handleChangeToken={handleChangeToken}

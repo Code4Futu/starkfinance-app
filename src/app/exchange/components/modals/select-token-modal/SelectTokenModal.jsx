@@ -1,5 +1,5 @@
 import "./style.scss";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import { SelectTokenModalHeader } from "./components/SelectTokenModalHeader";
 import { Divider } from "../../Divider";
@@ -23,6 +23,9 @@ import {
 	number,
 } from "starknet";
 import { erc20abi } from "./erc20abi";
+import { Field } from "@/app/exchange/configs/networks";
+import { APP_CHAIN_ID, TOKEN_LIST } from "@/app/configs/networks";
+import TokenIcon from "@/app/components/TokenIcon";
 // import { routerabi } from "./routerAbi";
 // import { factoryabi } from "./factoryAbi";
 
@@ -93,16 +96,13 @@ const TokenInfo = ({ tokenAddress, handleSelectToken }) => {
 };
 
 const SelectTokenModal = (props) => {
-	const {
-		isShowing,
-		hide,
-		token0,
-		token1,
-		setToken0,
-		setToken1,
-		mockDataTokenTest,
-		typeModal,
-	} = props;
+	const { isShowing, hide, token0, token1, setToken0, setToken1, typeModal } =
+		props;
+
+	const tokenList = useMemo(() => {
+		return TOKEN_LIST[APP_CHAIN_ID];
+	}, []);
+
 	const [searchValue, setSearchValue] = useState("");
 
 	const handleInputChange = (event) => {
@@ -111,12 +111,12 @@ const SelectTokenModal = (props) => {
 	};
 
 	const handleSelectToken = (item) => {
-		if (typeModal === 1) {
+		if (typeModal === Field.INPUT) {
 			if (item.name === token1.name) {
 				setToken1(token0);
 			}
 			setToken0(item);
-		} else if (typeModal === 2) {
+		} else if (typeModal === Field.OUTPUT) {
 			if (item.name === token0.name) {
 				setToken0(token1);
 			}
@@ -170,19 +170,13 @@ const SelectTokenModal = (props) => {
 		const strFirstTwo = token.slice(0, 2);
 		// let tempArr = [];
 		if (strFirstTwo === "0x") {
-			// mockDataTokenTest.map((item) => {
-			//   if (token === item.address) tempArr.push(item);
-			// });
-			return mockDataTokenTest.filter((item) => {
+			return tokenList.filter((item) => {
 				const searchTerm = token.toLowerCase();
 				const itemValue = item.address.toLowerCase();
 				return itemValue.includes(searchTerm);
 			});
 		} else {
-			// mockDataTokenTest.map((item) => {
-			//   if (token.toLowerCase() === item.name.toLowerCase()) tempArr.push(item);
-			// });
-			return mockDataTokenTest.filter((item) => {
+			return tokenList.filter((item) => {
 				const searchTerm = token.toLowerCase();
 				const itemValue = item.name.toLowerCase();
 				return itemValue.includes(searchTerm);
@@ -212,7 +206,7 @@ const SelectTokenModal = (props) => {
 						<span className="text-base font-normal text-[#C6C6C6]">
 							Recommend tokens
 						</span>
-						<div className="flex flex-wrap content-start items-start gap-[7px] self-stretch">
+						{/* <div className="flex flex-wrap content-start items-start gap-[7px] self-stretch">
 							<div className="flex items-center gap-1 rounded-xl bg-[#232631] py-[6px] pl-[6px] pr-3">
 								<img
 									src={icons.v2.logo_noname.src}
@@ -237,35 +231,31 @@ const SelectTokenModal = (props) => {
 								/>
 								<span className="text-base font-bold text-[#F1F1F1]">USDT</span>
 							</div>
-						</div>
+						</div> */}
 						<div className="flex flex-col items-start gap-1 self-stretch">
 							{searchValue === "" && (
 								<>
-									{mockDataTokenTest.map((item, index) => {
+									{tokenList.map((token, index) => {
 										return (
 											<div
 												key={index}
 												className="flex items-center justify-between self-stretch rounded-xl bg-[#232631] px-3 py-[6px]"
 												onClick={() => {
-													handleSelectToken(item);
+													handleSelectToken(token);
 												}}
 											>
 												<div className="flex items-center gap-2">
-													<img
-														src={item.icon.src}
-														alt={item.name}
-														className="h-10 w-10"
-													/>
+													<TokenIcon address={token.address} w={24} h={24} />
 													<div className="flex flex-col items-start justify-center">
 														<span className="text-base font-bold text-[#F1F1F1]">
-															{item.name}
+															{token.symbol}
 														</span>
 														<span className="text-xs font-medium text-[#C6C6C6]">
-															{checkSubName(item.name)}
+															{token.name}
 														</span>
 													</div>
 												</div>
-												{item.name === "SFN" ? <ActiveStar /> : <Star />}
+												{token.name === "SFN" ? <ActiveStar /> : <Star />}
 											</div>
 										);
 									})}
@@ -284,17 +274,13 @@ const SelectTokenModal = (props) => {
 													}}
 												>
 													<div className="flex items-center gap-2">
-														<img
-															src={item.icon.src}
-															alt={item.name}
-															className="h-10 w-10"
-														/>
+														<TokenIcon address={token.address} w={24} h={24} />
 														<div className="flex flex-col items-start justify-center">
 															<span className="text-base font-bold text-[#F1F1F1]">
-																{item.name}
+																{item.symbol}
 															</span>
 															<span className="text-xs font-medium text-[#C6C6C6]">
-																{checkSubName(item.name)}
+																{token.name}
 															</span>
 														</div>
 													</div>

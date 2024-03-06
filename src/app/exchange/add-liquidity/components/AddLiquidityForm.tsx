@@ -4,15 +4,14 @@ import { ArrowDown, ChartIcon, SettingIcon, SwapIcon } from "./icons";
 import { Divider } from "@/app/components/Divider";
 import { SwitchButton } from "./SwitchButton";
 import { useCallback, useMemo, useState } from "react";
+import { BIPS_BASE, Field } from "@/app/exchange/configs/networks";
 import {
 	APP_CHAIN_ID,
-	BIPS_BASE,
-	Field,
-	SN_RPC_PROVIDER,
+	StarknetRpcProvider,
 	TOKEN_LIST,
 	WETH,
 	getTokenIcon,
-} from "@/app/exchange/configs/networks";
+} from "@/app/configs/networks";
 import {
 	Fraction,
 	JSBI,
@@ -37,9 +36,10 @@ import {
 } from "@/app/exchange/state/liquidity";
 import { PoolState, EmptyPool } from "@/app/exchange/state/liquidity";
 import { useWeb3Store } from "@/app/store";
+import { useWeb3 } from "@/app/hooks";
 
 export default function AddLiquidityForm() {
-	const { account, isConnected, address } = useAccount();
+	const { account, library } = useWeb3();
 	const web3State = useWeb3Store();
 
 	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
@@ -73,27 +73,26 @@ export default function AddLiquidityForm() {
 		balances: (TokenAmount | undefined)[];
 		poolInfo: PoolState | undefined;
 	}>(
-		[address, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
+		[account, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
 		async () => {
 			// if (!address || !isConnected)
 			// 	return {
 			// 		balances: [],
 			// 		poolInfo: undefined,
 			// 	};
-			const provider = SN_RPC_PROVIDER();
 			const balances = await Promise.all(
 				[tokens[Field.INPUT], tokens[Field.OUTPUT]].map(async (t) => {
-					if (!address || !t) return undefined;
-					const res = await provider.callContract({
+					if (!account || !t) return undefined;
+					const res = await library.callContract({
 						contractAddress: t.address,
 						entrypoint: "balanceOf",
-						calldata: [address],
+						calldata: [account],
 					});
 					return new TokenAmount(t, num.hexToDecimalString(res.result[0]));
 				})
 			);
 
-			const poolInfo = await getPoolInfo(address, provider, [
+			const poolInfo = await getPoolInfo(account, library, [
 				tokens[Field.INPUT],
 				tokens[Field.OUTPUT],
 			]);
@@ -265,8 +264,8 @@ export default function AddLiquidityForm() {
 		try {
 			setSubmitting(true);
 			const tx = await addLiquidityCallback(
-				address,
 				account,
+				library,
 				tokens,
 				parsedTokenAmounts
 			);
@@ -280,47 +279,9 @@ export default function AddLiquidityForm() {
 			console.error(error);
 			setSubmitting(false);
 		}
-	}, [address, account, tokens, parsedTokenAmounts]);
+	}, [account, library, tokens, parsedTokenAmounts]);
 
-	// const onApproveTokens = useCallback(async () => {
-	// 	try {
-	// 		if (!account || !library) return;
-	// 		setSubmitting(true);
-	// 		const result = await approves(
-	// 			library,
-	// 			account,
-	// 			ROUTER_ADDRESS,
-	// 			tokensNeedApproved
-	// 		);
-	// 		if (result) setTokensNeedApproved([]);
-	// 		setSubmitting(false);
-	// 	} catch (error) {
-	// 		console.error(error);
-	// 		setSubmitting(false);
-	// 	}
-	// }, [account, library, tokensNeedApproved]);
-
-	// const isHighPriceImpact = useMemo(
-	// 	() => (trade ? trade.priceImpact.greaterThan(FIVE_PERCENT) : false),
-	// 	[trade]
-	// );
-
-	// const onSubmit = () => {
-	// 	if (isHighPriceImpact) return onOpenConfirmHighSlippage();
-	// 	if (isNeedApproved) {
-	// 		return onApproveTokens();
-	// 	} else if (!isDisableBtn) {
-	// 		return onAddLiquidityCallback();
-	// 	}
-	// };
-
-	// const onSubmitHighSlippage = () => {
-	// 	if (isNeedApproved) {
-	// 		return onApproveTokens();
-	// 	} else if (!isDisableBtn) {
-	// 		return onAddLiquidityCallback().then(onCloseConfirmHighSlippage);
-	// 	}
-	// };
+	const [typeModal, setTypeModal] = useState<Field>(Field.INPUT);
 
 	return (
 		<div
@@ -359,8 +320,8 @@ export default function AddLiquidityForm() {
 						<div
 							className="flex p-[6px] justify-center items-center gap-1 rounded-xl border-[1px] border-[#2D313E] bg-[#1A1C24] h-9 cursor-pointer"
 							onClick={() => {
-								// setTypeModal(1);
-								// setIsShowTokenModal(true);
+								setTypeModal(Field.INPUT);
+								setIsShowTokenModal(true);
 							}}
 						>
 							<img
@@ -406,8 +367,8 @@ export default function AddLiquidityForm() {
 						<div
 							className="flex items-center justify-center gap-1 rounded-xl border-[1px] border-[#2D313E] bg-[#1A1C24] p-[6px] h-9 cursor-pointer"
 							onClick={() => {
-								// setTypeModal(2);
-								// setIsShowTokenModal(true);
+								setTypeModal(Field.OUTPUT);
+								setIsShowTokenModal(true);
 							}}
 						>
 							{/* {token1.name !== "" ? ( */}
@@ -554,18 +515,21 @@ export default function AddLiquidityForm() {
 					setIsShow={setIsShowSetting}
 				/>
 			)}
-			{/* {isShowTokenModal && (
-    <SelectTokenModal
-      isShowing={isShowTokenModal}
-      hide={setIsShowTokenModal}
-      token0={token0}
-      token1={token1}
-      setToken0={setToken0}
-      setToken1={setToken1}
-      mockDataTokenTest={mockDataTokenTest}
-      typeModal={typeModal}
-    />
-  )} */}
+			{isShowTokenModal && (
+				<SelectTokenModal
+					isShowing={isShowTokenModal}
+					hide={setIsShowTokenModal}
+					token0={tokens[Field.INPUT]}
+					token1={tokens[Field.OUTPUT]}
+					setToken0={(token0: Token) =>
+						setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+					}
+					setToken1={(token1: Token) =>
+						setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+					}
+					typeModal={typeModal}
+				/>
+			)}
 		</div>
 	);
 }

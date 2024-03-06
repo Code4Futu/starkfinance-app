@@ -1,11 +1,8 @@
 "use client";
 import Breadcrumbs from "@/app/components/Breadcrumbs";
 import Button from "@/app/components/Button";
-import {
-	BASE_API,
-	LAUNCHPAD_STATUS,
-	StarknetRpcProvider,
-} from "@/app/constants";
+import { BASE_API, LAUNCHPAD_STATUS } from "@/app/constants";
+import { StarknetRpcProvider } from "@/app/configs/networks";
 import { useWeb3 } from "@/app/hooks";
 import ERC20Abi from "@/app/launchpad/abis/starknet/ERC20.json";
 import SFLaunchpadAbi from "@/app/launchpad/abis/starknet/SFLaunchpad.json";

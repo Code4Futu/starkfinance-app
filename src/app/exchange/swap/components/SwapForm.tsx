@@ -6,15 +6,14 @@ import { ArrowDown, ChartIcon, SettingIcon, SwapIcon } from "./icons";
 import { Divider } from "@/app/components/Divider";
 import { SwitchButton } from "./SwitchButton";
 import { useCallback, useMemo, useState } from "react";
+import { BIPS_BASE, Field } from "@/app/exchange/configs/networks";
 import {
 	APP_CHAIN_ID,
-	BIPS_BASE,
-	Field,
-	SN_RPC_PROVIDER,
+	StarknetRpcProvider,
 	TOKEN_LIST,
 	WETH,
 	getTokenIcon,
-} from "@/app/exchange/configs/networks";
+} from "@/app/configs/networks";
 import { JSBI, Percent, Token, TokenAmount, Trade } from "l0k_swap-sdk";
 import useSWR from "swr";
 import { useAccount } from "@starknet-react/core";
@@ -27,9 +26,10 @@ import SettingChartModal from "@/app/exchange/components/modals/settings-modal/S
 import SelectTokenModal from "@/app/exchange/components/modals/select-token-modal/SelectTokenModal";
 import { useWeb3Store } from "@/app/store";
 import ChartModal from "@/app/exchange/components/modals/chart-modal/ModalChart";
+import { useWeb3 } from "@/app/hooks";
 
 export default function SwapForm() {
-	const { account, isConnected, address } = useAccount();
+	const { account, isConnected, library } = useWeb3();
 	const web3State = useWeb3Store();
 
 	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
@@ -49,18 +49,17 @@ export default function SwapForm() {
 	const [isShowTokenModal, setIsShowTokenModal] = useState(false);
 
 	const { data: balances } = useSWR<(TokenAmount | undefined)[]>(
-		[address, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
+		[account, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
 		async () => {
-			if (!address || !isConnected) return [];
-			const provider = SN_RPC_PROVIDER();
+			if (!account || !isConnected) return [];
 			return Promise.all(
 				[tokens[Field.INPUT], tokens[Field.OUTPUT]].map(async (t) => {
 					if (!t) return undefined;
 					console;
-					const res = await provider.callContract({
+					const res = await library.callContract({
 						contractAddress: t.address,
 						entrypoint: "balanceOf",
-						calldata: [address],
+						calldata: [account],
 					});
 					return new TokenAmount(t, num.hexToDecimalString(res.result[0]));
 				})
@@ -70,7 +69,7 @@ export default function SwapForm() {
 
 	const { data: trade, isLoading: isLoadingTrade } = useSWR(
 		[
-			account,
+			library,
 			tokens[Field.INPUT],
 			tokens[Field.OUTPUT],
 			typedValue,
@@ -79,10 +78,10 @@ export default function SwapForm() {
 			web3State.txHash,
 		],
 		() =>
-			!account
+			!library
 				? undefined
 				: useDerivedSwapInfo({
-						library: account!,
+						library: library!,
 						independentField,
 						typedValue,
 						tokens,
@@ -131,7 +130,7 @@ export default function SwapForm() {
 	const onSwapCallback = useCallback(async () => {
 		try {
 			setSubmitting(true);
-			const tx = await swapCallback(account, address, trade, +slippage);
+			const tx = await swapCallback(library, account, trade, +slippage);
 			useWeb3Store.setState({ ...web3State, txHash: tx?.transaction_hash });
 			setSubmitting(false);
 			setTypedValue("");
@@ -139,7 +138,7 @@ export default function SwapForm() {
 			console.error(error);
 			setSubmitting(false);
 		}
-	}, [account, address, trade, slippage]);
+	}, [account, library, trade, slippage]);
 
 	// const onApproveTokens = useCallback(async () => {
 	// 	try {

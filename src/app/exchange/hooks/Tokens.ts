@@ -1,8 +1,8 @@
 import { Token } from "l0k_swap-sdk";
-// import { SN_RPC_PROVIDER } from "../configs/networks";
+// import { StarknetRpcProvider } from "../configs/networks";
 
 export const useTokenBalances = async (tokens: (Token | undefined)[]) => {
-	// const provider = SN_RPC_PROVIDER();
+	// const provider = StarknetRpcProvider();
 	// console.log(tokens);
 	// return Promise.all(
 	// 			[tokens[Field.INPUT], tokens[Field.OUTPUT]].map(async (t) => {

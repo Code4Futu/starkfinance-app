@@ -1,9 +1,6 @@
 "use client";
-import {
-	BASE_API,
-	LAUNCHPAD_STATUS,
-	StarknetRpcProvider,
-} from "@/app/constants";
+import { BASE_API, LAUNCHPAD_STATUS } from "@/app/constants";
+import { StarknetRpcProvider } from "@/app/configs/networks";
 import { numberWithCommas, statusToText, timeDiff } from "@/app/utils";
 import { ethers } from "ethers";
 import Image from "next/image";

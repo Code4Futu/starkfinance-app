@@ -19,17 +19,15 @@ export default function TokenIcon({
 }) {
 	const src = useMemo(() => getTokenIcon(address), [address]);
 
-	console.log(
-		"address, src, tokenList",
-		address,
-		src,
-		TOKEN_ICON_LIST[APP_CHAIN_ID],
-		address && TOKEN_ICON_LIST[APP_CHAIN_ID][validateAndParseAddress(address)]
-	);
-
 	return (
-		<div className={`w-[${w}px] h-[${h}px] relative`}>
-			<Image src={src} alt="tokenRaise" fill sizes="any" />
+		<div
+			className={`relative`}
+			style={{
+				width: `${w}px`,
+				height: `${h}px`,
+			}}
+		>
+			<Image src={src} alt="token-icon" fill sizes="any" />
 		</div>
 	);
 }
