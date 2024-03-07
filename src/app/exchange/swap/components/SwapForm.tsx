@@ -2,9 +2,14 @@
 
 import { Input } from "antd";
 import { twMerge } from "tailwind-merge";
-import { ArrowDown, ChartIcon, SettingIcon, SwapIcon } from "./icons";
+import {
+	ArrowDown,
+	ChartIcon,
+	SettingIcon,
+	SwapIcon,
+} from "@/app/exchange/add-liquidity/components/icons";
 import { Divider } from "@/app/components/Divider";
-import { SwitchButton } from "./SwitchButton";
+import { SwitchButton } from "@/app/exchange/add-liquidity/components/SwitchButton";
 import { useCallback, useMemo, useState } from "react";
 import { BIPS_BASE, Field } from "@/app/exchange/configs/networks";
 import {
@@ -16,7 +21,6 @@ import {
 } from "@/app/configs/networks";
 import { JSBI, Percent, Token, TokenAmount, Trade } from "l0k_swap-sdk";
 import useSWR from "swr";
-import { useAccount } from "@starknet-react/core";
 import { num } from "starknet";
 import { numberWithCommas } from "@/app/utils";
 import { parseUnits } from "ethers";
@@ -25,7 +29,7 @@ import { SwapButton } from "@/app/exchange/components/buttons";
 import SettingChartModal from "@/app/exchange/components/modals/settings-modal/SettingModalChart";
 import SelectTokenModal from "@/app/exchange/components/modals/select-token-modal/SelectTokenModal";
 import { useWeb3Store } from "@/app/store";
-import ChartModal from "@/app/exchange/components/modals/chart-modal/ModalChart";
+// import ChartModal from "@/app/exchange/components/modals/chart-modal/ModalChart";
 import { useWeb3 } from "@/app/hooks";
 
 export default function SwapForm() {
@@ -180,6 +184,8 @@ export default function SwapForm() {
 	// 	}
 	// };
 
+	const [typeModal, setTypeModal] = useState<Field>(Field.INPUT);
+
 	return (
 		<div
 			className={twMerge(
@@ -233,8 +239,8 @@ export default function SwapForm() {
 						<div
 							className="flex p-[6px] justify-center items-center gap-1 rounded-xl border-[1px] border-[#2D313E] bg-[#1A1C24] h-9 cursor-pointer"
 							onClick={() => {
-								// setTypeModal(1);
-								// setIsShowTokenModal(true);
+								setTypeModal(Field.INPUT);
+								setIsShowTokenModal(true);
 							}}
 						>
 							<img
@@ -284,8 +290,8 @@ export default function SwapForm() {
 						<div
 							className="flex items-center justify-center gap-1 rounded-xl border-[1px] border-[#2D313E] bg-[#1A1C24] p-[6px] h-9 cursor-pointer"
 							onClick={() => {
-								// setTypeModal(2);
-								// setIsShowTokenModal(true);
+								setTypeModal(Field.INPUT);
+								setIsShowTokenModal(true);
 							}}
 						>
 							{/* {token1.name !== "" ? ( */}
@@ -415,18 +421,21 @@ export default function SwapForm() {
 					setIsShow={setIsShowSetting}
 				/>
 			)}
-			{/* {isShowTokenModal && (
-    <SelectTokenModal
-      isShowing={isShowTokenModal}
-      hide={setIsShowTokenModal}
-      token0={token0}
-      token1={token1}
-      setToken0={setToken0}
-      setToken1={setToken1}
-      mockDataTokenTest={mockDataTokenTest}
-      typeModal={typeModal}
-    />
-  )} */}
+			{isShowTokenModal && (
+				<SelectTokenModal
+					isShowing={isShowTokenModal}
+					hide={setIsShowTokenModal}
+					token0={tokens[Field.INPUT]}
+					token1={tokens[Field.OUTPUT]}
+					setToken0={(token0: Token) =>
+						setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+					}
+					setToken1={(token1: Token) =>
+						setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+					}
+					typeModal={typeModal}
+				/>
+			)}
 			{/* <ChartModal
 				htmlFor="swap_chart_modal"
 				// isShowing={false}

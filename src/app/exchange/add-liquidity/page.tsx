@@ -1,43 +1,24 @@
 "use client";
 
 // @ts-nocheck
-import { useEffect, useMemo, useRef, useState } from "react";
 import axios from "axios";
-import {
-	ArrowDown,
-	ChartIcon,
-	SettingIcon,
-	SwapIcon,
-} from "./components/icons";
-import { Divider } from "../components/Divider";
-import { SwitchButton } from "./components/SwitchButton";
-import Input from "antd/es/input/Input";
+import { useEffect, useState } from "react";
 import icons from "../assets/icons";
-import ChartModal from "../components/modals/chart-modal/ModalChart";
-import SettingChartModal from "../components/modals/settings-modal/SettingModalChart";
-import SelectTokenModal from "../components/modals/select-token-modal/SelectTokenModal";
-import { SwapButton } from "../components/buttons";
-import { Transaction } from "./components/Transaction";
+import { Divider } from "../components/Divider";
+// import ChartModal from "../components/modals/chart-modal/ModalChart";
+// import SettingChartModal from "../components/modals/settings-modal/SettingModalChart";
 import { Pagination, Skeleton } from "antd";
 import { ChartDesktop } from "./components/Chart";
+import { Transaction } from "./components/Transaction";
 import { TransactionDesktop } from "./components/TransactionDesktop";
 // import { SwapPageEVM } from "../evm/pages/swap/SwapPageEVM.jsx";
-import BigInt from "big-integer";
-import BigNumber from "bignumber.js";
 // import { BigNumber as BigNumberEthers } from "ethers";
-import { Contract, RpcProvider, uint256 } from "starknet";
-import factoryAbi from "../assets/abi/factory";
-import pairAbi from "../assets/abi/pair";
-import router from "../assets/abi/router.js";
 import useCurrentAccount from "../hooks/useCurrentAccount";
 // import { useActiveWeb3React } from "../evm/hooks/useActiveWeb3React.js";
-import { sortsTokenBefore } from "../utils/dex.js";
-import { erc20abi } from "./erc20abi.js";
-import DetailBridgeModal from "../components/modals/detail-bridge/DetailBridgeModal.jsx";
+import { APP_CHAIN_ID, TOKEN_LIST, WETH } from "@/app/configs/networks";
 import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
 import AddLiquidityForm from "./components/AddLiquidityForm";
-import { APP_CHAIN_ID, WETH } from "@/app/configs/networks";
 
 const mockDataTokenTest = [
 	{
@@ -88,125 +69,6 @@ const mockDataTokenTest = [
 	},
 ];
 
-// @ts-expect-error
-function getTokenAmountInWei(amount, decimals) {
-	const base = new BigNumber(10).exponentiatedBy(decimals);
-	const tokenAmountInWei = new BigNumber(amount).multipliedBy(base);
-	const tokenAmountInWeiString = BigInt(tokenAmountInWei.toString()).toString();
-	return tokenAmountInWeiString;
-}
-
-// @ts-expect-error
-function getTokenAmountInEther(amount, decimals) {
-	const tokenAmountInWei = new BigNumber(amount);
-	const etherAmount = tokenAmountInWei.dividedBy(new BigNumber(10 ** decimals));
-	return etherAmount.toFixed(6);
-}
-
-function getDeadlineTime() {
-	const unixTimeSeconds = Math.floor(new Date().getTime() / 1000); // current Unix time in seconds
-	const fiveMinutesInSeconds = 20 * 60; // convert 20 minutes to seconds
-	const newUnixTimeSeconds = unixTimeSeconds + fiveMinutesInSeconds; // add 20 minutes to the current Unix time
-	return newUnixTimeSeconds;
-}
-
-const FormSwap = ({
-	historicalPrices,
-	setHistoricalPrices,
-	setVol,
-	token0,
-	token1,
-	setToken0,
-	setToken1,
-	token0InputAmount,
-	setToken0InputAmount,
-	token1OutputAmount,
-	setToken1OutputAmount,
-	token1OutputDisplayAmount,
-	setToken1OutputDisplayAmount,
-	handleChangeToken,
-	setIsModalChartOpen,
-}: any) => {
-	const { account, address, status } = useCurrentAccount();
-	const [isShowSetting, setIsShowSetting] = useState(false);
-	const [isShowTokenModal, setIsShowTokenModal] = useState(false);
-	// const [percent, setPercent] = useState(100);
-	// const navigate = useNavigate();
-
-	const inputToken0Ref = useRef(null);
-
-	// Token Picker
-	// const [token0, setToken0] = useState(mockDataTokenTest[1]);
-	// const [token1, setToken1] = useState(mockDataTokenTest[2]);
-	const [typeModal, setTypeModal] = useState(1);
-	// Token 0 Input Amount
-	const initialRender = useRef(true);
-
-	const handleToken0InputAmountChange = (event: any) => {
-		if (event.target.value === "") {
-			setToken0InputAmount(0);
-			setToken1OutputAmount(0);
-			setToken1OutputDisplayAmount(0);
-		} else {
-			setToken0InputAmount(
-				getTokenAmountInWei(event.target.value, token0.decimals)
-			);
-		}
-	};
-
-	// Token 0 Balance
-	const [token0BalanceAmount, setToken0BalanceAmount] = useState(0);
-
-	// Token 1 Balance
-	const [token1BalanceAmount, setToken1BalanceAmount] = useState(0);
-
-	const [priceImpact, setPriceImpact] = useState();
-
-	const [submitting, setSubmitting] = useState(false);
-
-	const getHistoricalPrices = async () => {
-		try {
-			const response = await axios.get(
-				`https://api.starksport.finance/api/historical-prices?tokenInAddress=${token0.address}&tokenOutAddress=${token1.address}` // Fix to server query
-			);
-			setHistoricalPrices(response.data);
-		} catch (error) {
-			console.error("Error fetching historical prices:", error);
-		}
-	};
-
-	// Reset token 0 input amount when change another token
-	useEffect(() => {
-		setToken0InputAmount(0);
-		setToken1OutputAmount(0);
-		setToken1OutputDisplayAmount(0);
-		setPriceImpact(undefined);
-		// inputToken0Ref.current.value = "";
-		if (token0.address && token1.address) {
-			getHistoricalPrices();
-		}
-	}, [token0, token1]);
-
-	useEffect(() => {
-		// async function getPairId(token0Address, token1Address) {
-		// 	let res = await axios.get(
-		// 		`https://api.starksport.finance/api/token-pairs/${token0Address}/${token1Address}`
-		// 	);
-		// 	// setRowsData(res.data);
-		// 	// console.log("🚀 ~ file: index.js:560 ~ getPairId ~ res:", res.data)
-		// 	let vol = parseFloat(res.data).toLocaleString(undefined, {
-		// 		minimumFractionDigits: 2,
-		// 		maximumFractionDigits: 2,
-		// 	});
-		// 	// console.log('🚀 ~ file: index.js:571 ~ getPairId ~ vol:', vol);
-		// 	setVol(vol);
-		// }
-		// getPairId(token0.address, token1.address);
-	}, [token0, token1]);
-
-	return <AddLiquidityForm />;
-};
-
 const AddLiquidityPage = () => {
 	const { account, address, status } = useCurrentAccount();
 	const [vol, setVol] = useState(0);
@@ -216,8 +78,8 @@ const AddLiquidityPage = () => {
 	const [filterTypeTx, setFilterTypeTx] = useState("All");
 
 	// Token Picker
-	const [token0, setToken0] = useState(mockDataTokenTest[1]);
-	const [token1, setToken1] = useState(mockDataTokenTest[2]);
+	const [token0, setToken0] = useState(WETH[APP_CHAIN_ID]);
+	const [token1, setToken1] = useState(TOKEN_LIST[APP_CHAIN_ID][1]);
 
 	// const { isModalOpen, toggleModalChart } = useModalChart();
 	const [isModalChartOpen, setIsModalChartOpen] = useState(false);
@@ -316,12 +178,12 @@ const AddLiquidityPage = () => {
 	const [token1OutputDisplayAmount, setToken1OutputDisplayAmount] = useState(0);
 
 	const handleChangeToken = async () => {
-		const tempToken = token0;
-		setToken0(token1);
-		setToken1(tempToken);
-		setToken0InputAmount(0);
-		setToken1OutputAmount(0);
-		setToken1OutputDisplayAmount(0);
+		// const tempToken = token0;
+		// setToken0(token1);
+		// setToken1(tempToken);
+		// setToken0InputAmount(0);
+		// setToken1OutputAmount(0);
+		// setToken1OutputDisplayAmount(0);
 	};
 
 	return (
@@ -337,29 +199,14 @@ const AddLiquidityPage = () => {
 					currentPath === "/bridge" && "flex-col"
 				)}
 			>
-				<FormSwap
-					setVol={setVol}
-					setHistoricalPrices={setHistoricalPrices}
-					token0={token0}
-					token1={token1}
-					setToken0={setToken0}
-					setToken1={setToken1}
-					token0InputAmount={token0InputAmount}
-					setToken0InputAmount={setToken0InputAmount}
-					token1OutputAmount={token1OutputAmount}
-					setToken1OutputAmount={setToken1OutputAmount}
-					token1OutputDisplayAmount={token1OutputDisplayAmount}
-					setToken1OutputDisplayAmount={setToken1OutputDisplayAmount}
-					handleChangeToken={handleChangeToken}
-					setIsModalChartOpen={setIsModalChartOpen}
-				/>
+				<AddLiquidityForm />
 				{/* {currentPath === "/exchange/swap" && ( */}
 				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
 						vol={isNaN(vol) ? "0" : vol}
-						dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
+						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={handleChangeToken}
 					/>
 				</div>
@@ -376,27 +223,12 @@ const AddLiquidityPage = () => {
 						token0={token0}
 						token1={token1}
 						vol={isNaN(vol) ? "1.2" : vol}
-						dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
+						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={handleChangeToken}
 					/>
 				</div>
 
-				<FormSwap
-					setVol={setVol}
-					setHistoricalPrices={setHistoricalPrices}
-					token0={token0}
-					token1={token1}
-					setToken0={setToken0}
-					setToken1={setToken1}
-					token0InputAmount={token0InputAmount}
-					setToken0InputAmount={setToken0InputAmount}
-					token1OutputAmount={token1OutputAmount}
-					setToken1OutputAmount={setToken1OutputAmount}
-					token1OutputDisplayAmount={token1OutputDisplayAmount}
-					setToken1OutputDisplayAmount={setToken1OutputDisplayAmount}
-					handleChangeToken={handleChangeToken}
-					setIsModalChartOpen={setIsModalChartOpen}
-				/>
+				<AddLiquidityForm />
 			</div>
 			{/* Table */}
 			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">

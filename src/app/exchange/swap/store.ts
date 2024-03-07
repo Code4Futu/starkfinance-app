@@ -1,6 +1,7 @@
 import { Token } from "l0k_swap-sdk";
 import { create } from "zustand";
-import { APP_CHAIN_ID, TOKEN_LIST, WETH, Field } from "../configs/networks";
+import { Field } from "../configs/networks";
+import { APP_CHAIN_ID, WETH, TOKEN_LIST } from "@/app/configs/networks";
 
 export const useStore = create<{
 	txHash: string | undefined;

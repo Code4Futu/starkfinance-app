@@ -1,55 +1,43 @@
-"use client";
-
 import { useState } from "react";
 import icons from "@/app/exchange/assets/icons";
 import { Divider } from "@/app/exchange/components/Divider";
 import { SwapParallel } from "../icons/SwapParallel";
 import { ExampleChart } from "./ExampleChart";
 import { twMerge } from "tailwind-merge";
+import TokenIcon from "@/app/components/TokenIcon";
+import { Token } from "l0k_swap-sdk";
+import dayjs from "dayjs";
+import utc from "dayjs/plugin/utc";
+
 // import { ChartBar } from "../../../../components/modals/chart-bar-modal/components/Chart";
 
-export const ChartDesktop = () => {
+dayjs.extend(utc);
+
+export const ChartDesktop = ({
+	vol,
+	token0,
+	token1,
+	handleChangeToken,
+}: {
+	vol: number | string;
+	token0: Token;
+	token1: Token;
+	handleChangeToken: any;
+}) => {
 	const [time, setTime] = useState("24h");
 
-	const checkIcon = (name: string) => {
-		switch (name) {
-			case "ETH":
-				return icons.v2.eth_logo.src;
-			case "WBTC":
-				return icons.v2.btc.src;
-			case "DAI":
-				return icons.v2.dai.src;
-			case "USDC":
-				return icons.v2.usdc.src;
-			case "USDT":
-				return icons.v2.usdt.src;
-			case "ADA":
-				return icons.v2.ada.src;
-			case "SFN":
-				return icons.v2.logo_noname.src;
-			default:
-				return;
-		}
-	};
 	return (
 		<>
 			<div className="flex items-end justify-between self-stretch">
 				<div className="flex items-center gap-[6px]">
-					<img
-						// src={checkIcon(token0.name)}
-						alt="Starknet Logo"
-						className="h-6 w-6"
-					/>
-					<img
-						// src={checkIcon(token1.name)}
-						alt="Starknet Logo"
-						className="h-6 w-6"
-					/>
+					<TokenIcon address={token0?.address} w={24} h={24} />
+					<TokenIcon address={token1?.address} w={24} h={24} />
+
 					<div className="flex items-center gap-1">
 						<span className="text-xl font-bold text-[#F1F1F1]">
-							{/* {token0.name} / {token1.name} */}
+							{token0?.symbol} / {token1?.symbol}
 						</span>
-						{/* <SwapParallel handleChangeToken={handleChangeToken} /> */}
+						<SwapParallel handleChangeToken={handleChangeToken} />
 					</div>
 				</div>
 				<span className="text-xl font-bold leading-[28px] text-[#F1F1F1]">
@@ -61,17 +49,17 @@ export const ChartDesktop = () => {
 				<div className="flex flex-col items-start gap-1">
 					<div className="flex items-end gap-1">
 						<span className="text-2xl font-bold text-[#F1F1F1] leading-[28px]">
-							{/* {vol} */}0
+							{vol}
 						</span>
 						<span className="text-base font-bold text-[#F1F1F1] leading-[19px]">
-							{/* {token0.name}/{token1.name} */}
+							{token0?.name}/{token1?.name}
 						</span>
 						<span className="text-base font-bold text-[#6CFF7B] leading-[19px]">
 							+6.86%
 						</span>
 					</div>
 					<span className="text-sm font-normal text-[#C6C6C6] leading-[16px]">
-						{/* {dateCurrent} (UTC) */}
+						{dayjs.utc(Date.now()).format("MMM DD YYYY HH:mm")} (UTC)
 					</span>
 				</div>
 				<div className="flex items-start gap-2 rounded-md	border-[1px] border-[#2D313E] bg-[#0D0E12]">

@@ -1,7 +1,7 @@
 import icons from "../../../../assets/icons";
 import { CloseIcon } from "../../components";
 import { Token } from "l0k_swap-sdk";
-import { getTokenIcon } from "@/app/exchange/configs/networks";
+import { getTokenIcon } from "@/app/configs/networks";
 
 export const ModalHeader = ({
 	token0,

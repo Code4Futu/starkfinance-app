@@ -103,7 +103,10 @@ export const TOKEN_ICON_LIST = {
 	[StarknetChainId.MAINNET]: {
 		[WETH[StarknetChainId.MAINNET].address]: "/tokens/eth.svg",
 		[TOKEN_LIST[StarknetChainId.MAINNET][1].address]: "/tokens/usdc.png",
+		[TOKEN_LIST[StarknetChainId.MAINNET][2].address]: "/tokens/usdt.webp",
 		[TOKEN_LIST[StarknetChainId.MAINNET][3].address]: "/tokens/strk.png",
+		[TOKEN_LIST[StarknetChainId.MAINNET][4].address]: "/tokens/wbtc.svg",
+		[TOKEN_LIST[StarknetChainId.MAINNET][5].address]: "/tokens/dai.png",
 	},
 	[StarknetChainId.TESTNET]: {
 		[WETH[StarknetChainId.TESTNET].address]: "/tokens/eth.svg",
