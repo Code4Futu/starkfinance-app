@@ -167,7 +167,7 @@ const SwapPage = () => {
 				</div>
 				<SwapForm />
 			</div>
-			{/* Table */}
+			{/* Transactions table */}
 			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
 				<div className="flex flex-col items-start gap-3 self-stretch">
 					<div className="flex items-end justify-between self-stretch max-[480px]:flex-wrap">
@@ -200,7 +200,7 @@ const SwapPage = () => {
 						</div>
 					</div>
 					<Divider />
-					<div className="hidden w-full md:flex">
+					{/* <div className="hidden w-full md:flex">
 						<TransactionDesktop
 							loading={loading}
 							currentPage={currentPage}
@@ -276,9 +276,9 @@ const SwapPage = () => {
 								)}
 							</>
 						)}
-					</div>
+					</div> */}
 				</div>
-				<div className="flex w-full items-center justify-center">
+				{/* <div className="flex w-full items-center justify-center">
 					{filterTx === "All" && totalItems > 0 && (
 						<Pagination
 							current={currentPage}
@@ -295,7 +295,7 @@ const SwapPage = () => {
 							onChange={handleChange}
 						/>
 					)}
-				</div>
+				</div> */}
 			</div>
 			{/* {isShowBridgeModal && (
 				<DetailBridgeModal

@@ -411,72 +411,74 @@ export default function AddLiquidityForm() {
 				</div>
 				{/* Price */}
 				<div className="flex flex-col items-center gap-1 self-stretch">
-					<div className="relative flex items-start justify-between self-stretch px-1 max-[320px]:flex-wrap">
-						{feeTierError && (
-							<div className="absolute inline-flex py-1 px-3 justify-end items-center rounded-xl bg-[#2D313E] top-[20px] left-[105px]">
-								<span className="text-xs font-medium text-[#c6c6c6]">
-									You can only fill from 0.01 to 1!
+					{!!data?.poolInfo?.noLiquidity && (
+						<div className="relative flex items-start justify-between self-stretch px-1 max-[320px]:flex-wrap">
+							{feeTierError && (
+								<div className="absolute inline-flex py-1 px-3 justify-end items-center rounded-xl bg-[#2D313E] top-[20px] left-[105px]">
+									<span className="text-xs font-medium text-[#c6c6c6]">
+										You can only fill from 0.01 to 1!
+									</span>
+								</div>
+							)}
+							<span className="text-sm font-normal text-[#C6C6C6] leading-4 whitespace-nowrap">
+								Fee tier
+							</span>
+							<div className="flex w-full justify-end items-center gap-3 min-[380px]:w-[235px]">
+								<div className="flex h-4 justify-end items-center gap-1">
+									{feeTier === 0.3 || feeTier === 0.04 ? (
+										<OutsideClickHandler onOutsideClick={handleClickOutside}>
+											<div className="flex h-4 w-full">
+												<input
+													type="number"
+													className="h-full border-[1px] border-[#3C3D4D] rounded-md bg-transparent max-w-[75px] input-style-1 text-xs text-right mr-[2px]"
+													placeholder="0.01 - 1"
+													onChange={handleCustomFeeChange}
+													onKeyDown={onKeyDown}
+												/>
+												<span className="text-sm font-bold leading-[16px] text-[#F1F1F1]">
+													%
+												</span>
+											</div>
+										</OutsideClickHandler>
+									) : (
+										<span className="text-sm font-bold leading-[16px] text-linear">
+											{feeTier}%
+										</span>
+									)}
+								</div>
+								<div className="w-[1px] h-4 bg-[#f1f1f1]"></div>
+								<span
+									className={twMerge(
+										"text-sm font-bold leading-[16px] text-[#F1F1F1] cursor-pointer",
+										feeTier === 0.3 && "text-linear"
+									)}
+									onClick={() => {
+										setFeeTier(0.3);
+										setFeeTierCustom(0);
+									}}
+								>
+									0.3%
+								</span>
+								<div className="w-[1px] h-4 bg-[#f1f1f1]"></div>
+								<span
+									className={twMerge(
+										"text-sm font-bold leading-[16px] text-[#F1F1F1] cursor-pointer",
+										feeTier === 0.04 && "text-linear"
+									)}
+									onClick={() => {
+										setFeeTier(0.04);
+										setFeeTierCustom(0);
+									}}
+								>
+									0.04%
 								</span>
 							</div>
-						)}
-						<span className="text-sm font-normal text-[#C6C6C6] leading-4 whitespace-nowrap">
-							Fee tier
-						</span>
-						<div className="flex w-full justify-end items-center gap-3 min-[380px]:w-[235px]">
-							<div className="flex h-4 justify-end items-center gap-1">
-								{feeTier === 0.3 || feeTier === 0.04 ? (
-									<OutsideClickHandler onOutsideClick={handleClickOutside}>
-										<div className="flex h-4 w-full">
-											<input
-												type="number"
-												className="h-full border-[1px] border-[#3C3D4D] rounded-md bg-transparent max-w-[75px] input-style-1 text-xs text-right mr-[2px]"
-												placeholder="0.01 - 1"
-												onChange={handleCustomFeeChange}
-												onKeyDown={onKeyDown}
-											/>
-											<span className="text-sm font-bold leading-[16px] text-[#F1F1F1]">
-												%
-											</span>
-										</div>
-									</OutsideClickHandler>
-								) : (
-									<span className="text-sm font-bold leading-[16px] text-linear">
-										{feeTier}%
-									</span>
-								)}
-							</div>
-							<div className="w-[1px] h-4 bg-[#f1f1f1]"></div>
-							<span
-								className={twMerge(
-									"text-sm font-bold leading-[16px] text-[#F1F1F1] cursor-pointer",
-									feeTier === 0.3 && "text-linear"
-								)}
-								onClick={() => {
-									setFeeTier(0.3);
-									setFeeTierCustom(0);
-								}}
-							>
-								0.3%
-							</span>
-							<div className="w-[1px] h-4 bg-[#f1f1f1]"></div>
-							<span
-								className={twMerge(
-									"text-sm font-bold leading-[16px] text-[#F1F1F1] cursor-pointer",
-									feeTier === 0.04 && "text-linear"
-								)}
-								onClick={() => {
-									setFeeTier(0.04);
-									setFeeTierCustom(0);
-								}}
-							>
-								0.04%
-							</span>
 						</div>
-					</div>
+					)}
 					{/* TODO */}
 					<div className="flex items-start justify-between self-stretch px-1">
 						<span className="text-sm font-normal text-[#C6C6C6] leading-4">
-							{tokens[Field.INPUT]?.name} per {tokens[Field.OUTPUT]?.name}
+							{tokens[Field.INPUT]?.symbol} per {tokens[Field.OUTPUT]?.symbol}
 						</span>
 						<span className="text-sm font-bold text-[#F1F1F1] leading-4">
 							{data?.poolInfo?.prices[Field.INPUT]?.toSignificant(4) ?? "--"}
@@ -485,7 +487,7 @@ export default function AddLiquidityForm() {
 					{/* TODO */}
 					<div className="flex items-start justify-between self-stretch px-1">
 						<span className="text-sm font-normal text-[#C6C6C6] leading-4">
-							{tokens[Field.OUTPUT]?.name} per {tokens[Field.INPUT]?.name}
+							{tokens[Field.OUTPUT]?.symbol} per {tokens[Field.INPUT]?.symbol}
 						</span>
 						<span className="text-sm font-bold text-[#F1F1F1] leading-4">
 							{data?.poolInfo?.prices[Field.OUTPUT]?.toSignificant(4) ?? "--"}
@@ -497,7 +499,7 @@ export default function AddLiquidityForm() {
 							Share of pool
 						</span>
 						<span className="text-sm font-bold text-[#F1F1F1] leading-4">
-							{data?.poolInfo?.shareOfPool?.toSignificant(2) ?? "--"}%
+							{data?.poolInfo?.shareOfPool?.toSignificant(2) ?? "0"}%
 						</span>
 					</div>
 				</div>

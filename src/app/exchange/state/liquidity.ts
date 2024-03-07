@@ -67,14 +67,14 @@ export const getPoolInfo = async (
 		const price01 = new Price(
 			isTokenA0 ? tokenA : tokenB,
 			isTokenA0 ? tokenB : tokenA,
-			reserve0,
-			reserve1
+			reserve1,
+			reserve0
 		);
 		const price10 = new Price(
 			isTokenA0 ? tokenB : tokenA,
 			isTokenA0 ? tokenA : tokenB,
-			reserve1,
-			reserve0
+			reserve0,
+			reserve1
 		);
 		const prices = {
 			[Field.INPUT]: price01,

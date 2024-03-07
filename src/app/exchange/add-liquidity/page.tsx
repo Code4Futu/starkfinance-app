@@ -19,61 +19,11 @@ import { APP_CHAIN_ID, TOKEN_LIST, WETH } from "@/app/configs/networks";
 import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
 import AddLiquidityForm from "./components/AddLiquidityForm";
-
-const mockDataTokenTest = [
-	{
-		name: "WBTC",
-		icon: icons.v2.btc,
-		address:
-			"0x3fe2b97c1fd336e750087d68b9b867997fd64a2661ff3ca5a7c771641e8e7ac",
-		decimals: 8,
-		freeToken: 1,
-	},
-	{
-		name: "ETH",
-		icon: icons.v2.eth_logo,
-		address:
-			"0x49d36570d4e46f48e99674bd3fcc84644ddd6b96f7c741b1562b82f9e004dc7",
-		decimals: 18,
-		freeToken: 10000,
-	},
-	{
-		name: "USDC",
-		icon: icons.v2.usdc,
-		address:
-			"0x53c91253bc9682c04929ca02ed00b3e423f6710d2ee7e0d5ebb06f3ecf368a8",
-		decimals: 6,
-		freeToken: 5000,
-	},
-	{
-		name: "USDT",
-		icon: icons.v2.tether_logo,
-		address:
-			"0x68f5c6a61780768455de69077e07e89787839bf8166decfbf92b645209c0fb8",
-		decimals: 6,
-		freeToken: 10000,
-	},
-	{
-		name: "DAI",
-		icon: icons.v2.dai,
-		address: "0xda114221cb83fa859dbdb4c44beeaa0bb37c7537ad5ae66fe5e0efd20e6eb3",
-		decimals: 18,
-		freeToken: 10000,
-	},
-	{
-		name: "SFN",
-		icon: icons.v2.logo_noname,
-		address: "0x482c9ba8eac039eba45c875eeac660eb91768ca4a32cf3c5ae804cc62dccd2",
-		decimals: 18,
-		freeToken: 10000,
-	},
-];
+import { useWeb3 } from "@/app/hooks";
 
 const AddLiquidityPage = () => {
-	const { account, address, status } = useCurrentAccount();
-	const [vol, setVol] = useState(0);
-	const [historicalPrices, setHistoricalPrices] = useState<any[]>([]);
-	const [loading, setLoading] = useState(true);
+	const { account } = useWeb3();
+	// const [loading, setLoading] = useState(true);
 	const [filterTx, setFilterTx] = useState("All");
 	const [filterTypeTx, setFilterTypeTx] = useState("All");
 
@@ -83,120 +33,67 @@ const AddLiquidityPage = () => {
 
 	// const { isModalOpen, toggleModalChart } = useModalChart();
 	const [isModalChartOpen, setIsModalChartOpen] = useState(false);
-	const [isShowBridgeModal, setIsShowBridgeModal] = useState(false);
 
-	const currentPath = useLocationPath();
+	// useEffect(() => {
+	// 	async function getSwapTx() {
+	// 		try {
+	// 			let res = await axios.get(
+	// 				`https://api.starksport.finance/api/swap-transactions/latest`
+	// 			);
+	// 			setRowsData(res.data);
+	// 			setLoading(false);
+	// 			setTotalItems(res.data.length);
+	// 		} catch (error) {}
+	// 	}
+	// 	getSwapTx();
+	// }, []);
 
-	function formatTimestamp(timestamp: number) {
-		const date = new Date();
-		const options = {
-			year: "numeric",
-			month: "short",
-			day: "2-digit",
-			hour: "2-digit",
-			minute: "2-digit",
-			hour12: false,
-			timeZone: "Africa/Abidjan",
-		};
+	// useEffect(() => {
+	// 	if (filterTx === "All") return;
+	// 	if (filterTx === "Wallet") {
+	// 		let tempArr: any[] = [];
+	// 		rowsData.map((item: any, idx) => {
+	// 			if (item.sender_address === address) {
+	// 				tempArr.push(item);
+	// 			}
+	// 		});
+	// 		setWalletData(tempArr as any);
+	// 	}
+	// }, [filterTx]);
 
-		const formattedDate = new Intl.DateTimeFormat(
-			"en-US",
-			options as any
-		).format(date);
-		return formattedDate;
-	}
+	// const [currentPage, setCurrentPage] = useState(1);
+	// const [pageSize, setPageSize] = useState(10);
+	// const [totalItems, setTotalItems] = useState(0);
 
-	function formatPrice2(price: number | string) {
-		const formattedPrice = Number(price).toFixed(6);
-		return formattedPrice;
-	}
+	// const handleChange = (newCurrentPage: number, newPageSize: number) => {
+	// 	setCurrentPage(newCurrentPage);
+	// 	setPageSize(newPageSize);
+	// };
 
-	const [priceSrt, setPriceSrt] = useState<string | undefined>();
-	const [dateCurrent, setDateCurrent] = useState<string | undefined>();
-	// const [activeIndex, setActiveIndex] = useState(0);
-	const [rowsData, setRowsData] = useState([]); // TODO
-	const [walletData, setWalletData] = useState([]);
+	// const [token0InputAmount, setToken0InputAmount] = useState(0);
+	// const [token1OutputAmount, setToken1OutputAmount] = useState(0);
+	// const [token1OutputDisplayAmount, setToken1OutputDisplayAmount] = useState(0);
 
-	useEffect(() => {
-		if (historicalPrices && historicalPrices.length > 0) {
-			setPriceSrt(
-				formatPrice2(historicalPrices[historicalPrices.length - 1]?.price)
-			);
-			setDateCurrent(
-				formatTimestamp(
-					historicalPrices[historicalPrices.length - 1]?.timestamp as any
-				)
-			);
-
-			// You can use the formatTimestamp() function here, assuming it's defined in your code
-			// if (firstTimestamp) {
-			//     setDateCurrent(formatTimestamp(firstTimestamp));
-			// }
-		}
-		// setPriceSrt(formatPrice(historicalPrices[0].price));
-		// setDateCurrent(formatTimestamp(historicalPrices[0].timestamp));
-	}, [historicalPrices]);
-
-	useEffect(() => {
-		async function getSwapTx() {
-			try {
-				let res = await axios.get(
-					`https://api.starksport.finance/api/swap-transactions/latest`
-				);
-				setRowsData(res.data);
-				setLoading(false);
-				setTotalItems(res.data.length);
-			} catch (error) {}
-		}
-		getSwapTx();
-	}, []);
-
-	useEffect(() => {
-		if (filterTx === "All") return;
-		if (filterTx === "Wallet") {
-			let tempArr: any[] = [];
-			rowsData.map((item: any, idx) => {
-				if (item.sender_address === address) {
-					tempArr.push(item);
-				}
-			});
-			setWalletData(tempArr as any);
-		}
-	}, [filterTx]);
-
-	const [currentPage, setCurrentPage] = useState(1);
-	const [pageSize, setPageSize] = useState(10);
-	const [totalItems, setTotalItems] = useState(0);
-
-	const handleChange = (newCurrentPage: number, newPageSize: number) => {
-		setCurrentPage(newCurrentPage);
-		setPageSize(newPageSize);
-	};
-
-	const [token0InputAmount, setToken0InputAmount] = useState(0);
-	const [token1OutputAmount, setToken1OutputAmount] = useState(0);
-	const [token1OutputDisplayAmount, setToken1OutputDisplayAmount] = useState(0);
-
-	const handleChangeToken = async () => {
-		// const tempToken = token0;
-		// setToken0(token1);
-		// setToken1(tempToken);
-		// setToken0InputAmount(0);
-		// setToken1OutputAmount(0);
-		// setToken1OutputDisplayAmount(0);
-	};
+	// const handleChangeToken = async () => {
+	// 	// const tempToken = token0;
+	// 	// setToken0(token1);
+	// 	// setToken1(tempToken);
+	// 	// setToken0InputAmount(0);
+	// 	// setToken1OutputAmount(0);
+	// 	// setToken1OutputDisplayAmount(0);
+	// };
 
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6 text-white mb-[80px] max-[480px]:items-center md:items-center",
-				currentPath === "/bridge" && "lg:pt-[222px]"
+				"flex w-full flex-col gap-6 text-white mb-[80px] max-[480px]:items-center md:items-center"
+				// currentPath === "/bridge" && "lg:pt-[222px]"
 			)}
 		>
 			<div
 				className={twMerge(
-					"flex flex-row justify-center items-center gap-6 xl:max-h-[514px] xl:flex-col xl:hidden",
-					currentPath === "/bridge" && "flex-col"
+					"flex flex-row justify-center items-center gap-6 xl:max-h-[514px] xl:flex-col xl:hidden"
+					// currentPath === "/bridge" && "flex-col"
 				)}
 			>
 				<AddLiquidityForm />
@@ -205,9 +102,9 @@ const AddLiquidityPage = () => {
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
-						vol={isNaN(vol) ? "0" : vol}
+						vol={"0"}
 						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
-						handleChangeToken={handleChangeToken}
+						handleChangeToken={() => true}
 					/>
 				</div>
 				{/* )} */}
@@ -222,9 +119,9 @@ const AddLiquidityPage = () => {
 					<ChartDesktop
 						token0={token0}
 						token1={token1}
-						vol={isNaN(vol) ? "1.2" : vol}
+						vol={"0"}
 						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
-						handleChangeToken={handleChangeToken}
+						handleChangeToken={() => true}
 					/>
 				</div>
 
@@ -243,7 +140,7 @@ const AddLiquidityPage = () => {
 									"flex items-center justify-center gap-[10px] rounded-md px-3 py-[6px] cursor-pointer w-[69.58px]",
 									filterTx === "All" && "bg-[#2D313E]"
 								)}
-								onClick={() => setFilterTx("All")}
+								// onClick={() => setFilterTx("All")}
 							>
 								<span className="text-xs font-medium text-[#F1F1F1] leading-[14px]">
 									All
@@ -254,7 +151,7 @@ const AddLiquidityPage = () => {
 									"flex items-center justify-center gap-[10px] rounded-md px-3 py-[6px] cursor-pointer",
 									filterTx === "Wallet" && "bg-[#2D313E]"
 								)}
-								onClick={() => setFilterTx("Wallet")}
+								// onClick={() => setFilterTx("Wallet")}
 							>
 								<span className="text-xs font-medium text-[#F1F1F1] leading-[14px]">
 									Wallet tx
@@ -264,7 +161,7 @@ const AddLiquidityPage = () => {
 					</div>
 					<Divider />
 					<div className="hidden w-full md:flex">
-						<TransactionDesktop
+						{/* <TransactionDesktop
 							loading={loading}
 							currentPage={currentPage}
 							pageSize={pageSize}
@@ -274,10 +171,10 @@ const AddLiquidityPage = () => {
 							walletData={walletData}
 							filterTypeTx={filterTypeTx}
 							setFilterTypeTx={setFilterTypeTx}
-						/>
+						/> */}
 					</div>
 					<div className="flex flex-col items-start gap-3 self-stretch md:hidden">
-						{filterTx === "All" && (
+						{/* {filterTx === "All" && (
 							<>
 								{loading ? (
 									<div className="flex flex-col gap-2 w-full">
@@ -338,11 +235,11 @@ const AddLiquidityPage = () => {
 									</div>
 								)}
 							</>
-						)}
+						)} */}
 					</div>
 				</div>
 				<div className="flex w-full items-center justify-center">
-					{filterTx === "All" && totalItems > 0 && (
+					{/* {filterTx === "All" && totalItems > 0 && (
 						<Pagination
 							current={currentPage}
 							pageSize={pageSize}
@@ -357,7 +254,7 @@ const AddLiquidityPage = () => {
 							total={walletData.length}
 							onChange={handleChange}
 						/>
-					)}
+					)} */}
 				</div>
 			</div>
 			{/* {isShowBridgeModal && (
