@@ -1,6 +1,12 @@
 import { Pair, Percent, Price, Token, TokenAmount } from "l0k_swap-sdk";
 import { FACTORY_ADDRESS, Field, ROUTER_ADDRESS } from "../configs/networks";
-import { AccountInterface, Contract, RpcProvider, num } from "starknet";
+import {
+	AccountInterface,
+	Contract,
+	RpcProvider,
+	num,
+	validateAndParseAddress,
+} from "starknet";
 import PairAbi from "@/app/exchange/abis/starknet/Pair.json";
 import RouterAbi from "@/app/exchange/abis/starknet/Router.json";
 import { APP_CHAIN_ID } from "@/app/configs/networks";
@@ -58,27 +64,29 @@ export const getPoolInfo = async (
 
 		const reserve0 = num.hexToDecimalString(num.toHex(reserves[0]));
 		const reserve1 = num.hexToDecimalString(num.toHex(reserves[1]));
-
-		const isTokenA0 = tokenA.address.includes(num.toHex(token0));
+		const isTokenA0 = validateAndParseAddress(tokenA.address).includes(
+			validateAndParseAddress(num.toHex(token0))
+		);
 		const pair = new Pair(
 			new TokenAmount(isTokenA0 ? tokenA : tokenB, reserve0),
 			new TokenAmount(isTokenA0 ? tokenB : tokenA, reserve1)
 		);
-		const price01 = new Price(
-			isTokenA0 ? tokenA : tokenB,
-			isTokenA0 ? tokenB : tokenA,
-			reserve1,
-			reserve0
+		const inputPrice = new Price(
+			tokenB,
+			tokenA,
+			isTokenA0 ? reserve1 : reserve0,
+			isTokenA0 ? reserve0 : reserve1
 		);
-		const price10 = new Price(
-			isTokenA0 ? tokenB : tokenA,
-			isTokenA0 ? tokenA : tokenB,
-			reserve0,
-			reserve1
+		const outputPrice = new Price(
+			tokenA,
+			tokenB,
+			isTokenA0 ? reserve0 : reserve1,
+			isTokenA0 ? reserve1 : reserve0
 		);
+
 		const prices = {
-			[Field.INPUT]: price01,
-			[Field.OUTPUT]: price10,
+			[Field.INPUT]: inputPrice,
+			[Field.OUTPUT]: outputPrice,
 		};
 
 		return {

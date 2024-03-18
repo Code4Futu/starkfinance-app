@@ -52,7 +52,7 @@ export function numberWithCommas(x: number | string | undefined) {
 	// 			.replace(/\.0$/, "");
 	return !x
 		? "0"
-		: new Intl.NumberFormat().format(
+		: new Intl.NumberFormat("en-US", { maximumSignificantDigits: 9 }).format(
 				+formatSmartNumber(parseFloat(x.toString()).toFixed(7)).toString()
 		  );
 }

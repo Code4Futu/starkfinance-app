@@ -14,14 +14,12 @@ import utc from "dayjs/plugin/utc";
 dayjs.extend(utc);
 
 export const ChartDesktop = ({
-	vol,
 	token0,
 	token1,
 	handleChangeToken,
 }: {
-	vol: number | string;
-	token0: Token;
-	token1: Token;
+	token0: Token | undefined;
+	token1: Token | undefined;
 	handleChangeToken: any;
 }) => {
 	const [time, setTime] = useState("24h");
@@ -49,13 +47,13 @@ export const ChartDesktop = ({
 				<div className="flex flex-col items-start gap-1">
 					<div className="flex items-end gap-1">
 						<span className="text-2xl font-bold text-[#F1F1F1] leading-[28px]">
-							{vol}
+							{/* {vol} */}
 						</span>
 						<span className="text-base font-bold text-[#F1F1F1] leading-[19px]">
 							{token0?.name}/{token1?.name}
 						</span>
 						<span className="text-base font-bold text-[#6CFF7B] leading-[19px]">
-							+6.86%
+							{/* +6.86% */}
 						</span>
 					</div>
 					<span className="text-sm font-normal text-[#C6C6C6] leading-[16px]">

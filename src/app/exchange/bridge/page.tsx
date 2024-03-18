@@ -19,8 +19,8 @@ export default function BridgePage() {
 	return (
 		<div
 			className={twMerge(
-				"flex w-full flex-col gap-6 px-6 py-6 text-white mb-[80px] max-[480px]:items-center md:items-center lg:mb-0 lg:py-[72px]",
-				currentPath === "/exchange/bridge" && "lg:pt-[120px]"
+				"flex w-full flex-col gap-6 text-white mb-[80px] max-[480px]:items-center md:items-center"
+				// currentPath === "/exchange/bridge" && "lg:pt-[120px]"
 			)}
 		>
 			<div

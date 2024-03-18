@@ -18,7 +18,7 @@ export default function LayerswapForm() {
 			<iframe
 				title="layerswap"
 				name="layerswap"
-				src={`https://www.layerswap.io/?sourceExchangeName=STARKNET_MAINNET`}
+				src={`https://www.layerswap.io/app`}
 				width="464"
 				className="min-h-[658px]"
 			/>

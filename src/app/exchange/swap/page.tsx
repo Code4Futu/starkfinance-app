@@ -18,8 +18,14 @@ import { twMerge } from "tailwind-merge";
 import { useLocationPath } from "../hooks/useLocationPath.js";
 import SwapForm from "./components/SwapForm";
 import { APP_CHAIN_ID, TOKEN_LIST, WETH } from "@/app/configs/networks";
+import { Transactions } from "../components/Transactions";
+import { Field } from "../configs/networks";
+import { useExchangeStore } from "../store";
 
 const SwapPage = () => {
+	// Token Picker
+	const tokens = useExchangeStore((s) => s.tokens);
+
 	const { account, address, status } = useCurrentAccount();
 	const [vol, setVol] = useState(0);
 	const [historicalPrices, setHistoricalPrices] = useState<any[]>([]);
@@ -140,10 +146,10 @@ const SwapPage = () => {
 				{/* {currentPath === "/exchange/swap" && ( */}
 				<div className="hidden h-[514px] w-[722px] flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
-						token0={WETH[APP_CHAIN_ID]}
-						token1={TOKEN_LIST[APP_CHAIN_ID][1]}
+						token0={tokens[Field.INPUT]}
+						token1={tokens[Field.OUTPUT]}
 						// token1={token1}
-						vol={isNaN(vol) ? "0" : vol}
+						// vol={isNaN(vol) ? "0" : vol}
 						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={() => true}
 					/>
@@ -158,9 +164,9 @@ const SwapPage = () => {
 			>
 				<div className="hidden h-[514px] flex-1 flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6 xl:flex">
 					<ChartDesktop
-						token0={WETH[APP_CHAIN_ID]}
-						token1={TOKEN_LIST[APP_CHAIN_ID][1]}
-						vol={isNaN(vol) ? "0" : vol}
+						token0={tokens[Field.INPUT]}
+						token1={tokens[Field.OUTPUT]}
+						// vol={isNaN(vol) ? "0" : vol}
 						// dateCurrent={dateCurrent ? dateCurrent : "Jan 1, 2023 (UTC)"}
 						handleChangeToken={() => true}
 					/>
@@ -168,135 +174,10 @@ const SwapPage = () => {
 				<SwapForm />
 			</div>
 			{/* Transactions table */}
-			<div className="flex w-full flex-col items-start gap-3 rounded-3xl bg-[#1A1C24] p-6">
-				<div className="flex flex-col items-start gap-3 self-stretch">
-					<div className="flex items-end justify-between self-stretch max-[480px]:flex-wrap">
-						<span className="text-xl xl:text-2xl font-bold text-[#F1F1F1] leading-[28px]">
-							Transactions
-						</span>
-						<div className="flex items-start rounded-lg border-[1px] border-[#2D313E] bg-[#0D0E12]">
-							<div
-								className={twMerge(
-									"flex items-center justify-center gap-[10px] rounded-md px-3 py-[6px] cursor-pointer w-[69.58px]",
-									filterTx === "All" && "bg-[#2D313E]"
-								)}
-								onClick={() => setFilterTx("All")}
-							>
-								<span className="text-xs font-medium text-[#F1F1F1] leading-[14px]">
-									All
-								</span>
-							</div>
-							<div
-								className={twMerge(
-									"flex items-center justify-center gap-[10px] rounded-md px-3 py-[6px] cursor-pointer",
-									filterTx === "Wallet" && "bg-[#2D313E]"
-								)}
-								onClick={() => setFilterTx("Wallet")}
-							>
-								<span className="text-xs font-medium text-[#F1F1F1] leading-[14px]">
-									Wallet tx
-								</span>
-							</div>
-						</div>
-					</div>
-					<Divider />
-					{/* <div className="hidden w-full md:flex">
-						<TransactionDesktop
-							loading={loading}
-							currentPage={currentPage}
-							pageSize={pageSize}
-							rowsData={rowsData}
-							filterTx={filterTx}
-							address={address}
-							walletData={walletData}
-							filterTypeTx={filterTypeTx}
-							setFilterTypeTx={setFilterTypeTx}
-						/>
-					</div>
-					<div className="flex flex-col items-start gap-3 self-stretch md:hidden">
-						{filterTx === "All" && (
-							<>
-								{loading ? (
-									<div className="flex flex-col gap-2 w-full">
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-									</div>
-								) : rowsData.length > 0 ? (
-									currentPage === 1 ? (
-										rowsData
-											.slice(0, currentPage * pageSize)
-											.map((item, idx) => <Transaction key={idx} item={item} />)
-									) : (
-										rowsData
-											.slice(
-												(currentPage - 1) * pageSize,
-												currentPage * pageSize
-											)
-											.map((item, idx) => <Transaction key={idx} item={item} />)
-									)
-								) : (
-									<div className="w-full flex items-center justify-center text-base text-[#c6c6c6] font-normal">
-										No Liquidity Transaction!
-									</div>
-								)}
-							</>
-						)}
-						{filterTx === "Wallet" && (
-							<>
-								{loading ? (
-									<div className="flex flex-col gap-2 w-full">
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-										<Skeleton active avatar paragraph={{ rows: 1 }} />
-									</div>
-								) : walletData.length > 0 ? (
-									currentPage === 1 ? (
-										walletData
-											.slice(0, currentPage * pageSize)
-											.map((item, idx) => {
-												return <Transaction key={idx} item={item} />;
-											})
-									) : (
-										walletData
-											.slice(
-												(currentPage - 1) * pageSize,
-												currentPage * pageSize
-											)
-											.map((item, idx) => {
-												return <Transaction key={idx} item={item} />;
-											})
-									)
-								) : (
-									<div className="w-full flex items-center justify-center text-base text-[#c6c6c6] font-normal">
-										No Liquidity Transaction!
-									</div>
-								)}
-							</>
-						)}
-					</div> */}
-				</div>
-				{/* <div className="flex w-full items-center justify-center">
-					{filterTx === "All" && totalItems > 0 && (
-						<Pagination
-							current={currentPage}
-							pageSize={pageSize}
-							total={totalItems}
-							onChange={handleChange}
-						/>
-					)}
-					{filterTx === "Wallet" && walletData.length > 0 && (
-						<Pagination
-							current={currentPage}
-							pageSize={pageSize}
-							total={walletData.length}
-							onChange={handleChange}
-						/>
-					)}
-				</div> */}
-			</div>
+			<Transactions
+				token0={tokens[Field.INPUT]}
+				token1={tokens[Field.OUTPUT]}
+			/>
 			{/* {isShowBridgeModal && (
 				<DetailBridgeModal
 					isShowing={isShowBridgeModal}

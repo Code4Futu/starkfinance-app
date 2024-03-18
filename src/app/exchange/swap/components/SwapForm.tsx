@@ -31,15 +31,18 @@ import SelectTokenModal from "@/app/exchange/components/modals/select-token-moda
 import { useWeb3Store } from "@/app/store";
 // import ChartModal from "@/app/exchange/components/modals/chart-modal/ModalChart";
 import { useWeb3 } from "@/app/hooks";
+import { useExchangeStore } from "../../store";
 
 export default function SwapForm() {
 	const { account, isConnected, library } = useWeb3();
 	const web3State = useWeb3Store();
 
-	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
-		[Field.INPUT]: WETH[APP_CHAIN_ID],
-		[Field.OUTPUT]: TOKEN_LIST[APP_CHAIN_ID][1],
-	});
+	// const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
+	// 	[Field.INPUT]: WETH[APP_CHAIN_ID],
+	// 	[Field.OUTPUT]: TOKEN_LIST[APP_CHAIN_ID][1],
+	// });
+
+	const [tokens, setToken] = useExchangeStore((s) => [s.tokens, s.setToken]);
 
 	const [typedValue, setTypedValue] = useState("");
 	const [independentField, setIndependentField] = useState<Field>(Field.INPUT);
@@ -52,8 +55,16 @@ export default function SwapForm() {
 	const [isShowSetting, setIsShowSetting] = useState(false);
 	const [isShowTokenModal, setIsShowTokenModal] = useState(false);
 
-	const { data: balances } = useSWR<(TokenAmount | undefined)[]>(
-		[account, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
+	const { data: balances, isLoading: isLoadingBalances } = useSWR<
+		(TokenAmount | undefined)[]
+	>(
+		[
+			"swap",
+			account,
+			tokens[Field.INPUT],
+			tokens[Field.OUTPUT],
+			web3State.txHash,
+		],
 		async () => {
 			if (!account || !isConnected) return [];
 			return Promise.all(
@@ -107,7 +118,8 @@ export default function SwapForm() {
 				else _tokens[Field.INPUT] = undefined;
 			}
 		}
-		setTokens(_tokens);
+		useExchangeStore.setState({ tokens: _tokens });
+		// setTokens(_tokens);
 		// onClose();
 	};
 
@@ -268,8 +280,13 @@ export default function SwapForm() {
 						/>
 					</div>
 					<div className="flex items-start justify-between self-stretch">
-						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
-							Balance: {numberWithCommas(balances?.[0]?.toSignificant(3))}
+						<span className="flex gap-1 text-xs leading-[14px] font-normal text-[#C6C6C6]">
+							<span>Balance: </span>
+							{isLoadingBalances ? (
+								<span className="skeleton min-w-[40px] min-h-[14px] bg-[#2D313E]"></span>
+							) : (
+								<span>{numberWithCommas(balances?.[0]?.toSignificant(3))}</span>
+							)}
 						</span>
 						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
 							{/* 0.00 USD */}--
@@ -278,9 +295,15 @@ export default function SwapForm() {
 				</div>
 				<SwapIcon
 					handleChangeToken={() => {
-						setTokens({
-							[Field.INPUT]: tokens[Field.OUTPUT],
-							[Field.OUTPUT]: tokens[Field.INPUT],
+						// setTokens({
+						// 	[Field.INPUT]: tokens[Field.OUTPUT],
+						// 	[Field.OUTPUT]: tokens[Field.INPUT],
+						// });
+						useExchangeStore.setState({
+							tokens: {
+								[Field.INPUT]: tokens[Field.OUTPUT],
+								[Field.OUTPUT]: tokens[Field.INPUT],
+							},
 						});
 					}}
 				/>
@@ -327,9 +350,13 @@ export default function SwapForm() {
 						/>
 					</div>
 					<div className="flex items-start justify-between self-stretch">
-						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
-							{/* Balance: {token1BalanceAmount} */}
-							Balance: {numberWithCommas(balances?.[1]?.toSignificant(3))}
+						<span className="flex gap-1 text-xs leading-[14px] font-normal text-[#C6C6C6]">
+							<span>Balance: </span>
+							{isLoadingBalances ? (
+								<span className="skeleton min-w-[40px] min-h-[14px] bg-[#2D313E]"></span>
+							) : (
+								<span>{numberWithCommas(balances?.[1]?.toSignificant(3))}</span>
+							)}
 						</span>
 						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
 							{/* 0.00 USD */}--
@@ -428,10 +455,12 @@ export default function SwapForm() {
 					token0={tokens[Field.INPUT]}
 					token1={tokens[Field.OUTPUT]}
 					setToken0={(token0: Token) =>
-						setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+						// setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+						setToken(Field.INPUT, token0)
 					}
 					setToken1={(token1: Token) =>
-						setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+						// setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+						setToken(Field.OUTPUT, token1)
 					}
 					typeModal={typeModal}
 				/>

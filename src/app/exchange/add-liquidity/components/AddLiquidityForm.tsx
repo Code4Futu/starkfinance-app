@@ -37,15 +37,18 @@ import {
 import { PoolState, EmptyPool } from "@/app/exchange/state/liquidity";
 import { useWeb3Store } from "@/app/store";
 import { useWeb3 } from "@/app/hooks";
+import { useExchangeStore } from "../../store";
 
 export default function AddLiquidityForm() {
 	const { account, library } = useWeb3();
 	const web3State = useWeb3Store();
 
-	const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
-		[Field.INPUT]: WETH[APP_CHAIN_ID],
-		[Field.OUTPUT]: TOKEN_LIST[APP_CHAIN_ID][1],
-	});
+	// const [tokens, setTokens] = useState<{ [key in Field]: Token | undefined }>({
+	// 	[Field.INPUT]: WETH[APP_CHAIN_ID],
+	// 	[Field.OUTPUT]: TOKEN_LIST[APP_CHAIN_ID][1],
+	// });
+
+	const [tokens, setToken] = useExchangeStore((s) => [s.tokens, s.setToken]);
 
 	const [independentField, setIndependentField] = useState<Field>(Field.INPUT);
 	// const [poolInfo, setPoolInfo] = useState<PoolState>(EmptyPool);
@@ -73,7 +76,13 @@ export default function AddLiquidityForm() {
 		balances: (TokenAmount | undefined)[];
 		poolInfo: PoolState | undefined;
 	}>(
-		[account, tokens[Field.INPUT], tokens[Field.OUTPUT], web3State.txHash],
+		[
+			"add-lp",
+			account,
+			tokens[Field.INPUT],
+			tokens[Field.OUTPUT],
+			web3State.txHash,
+		],
 		async () => {
 			// if (!address || !isConnected)
 			// 	return {
@@ -115,7 +124,8 @@ export default function AddLiquidityForm() {
 				else _tokens[Field.INPUT] = undefined;
 			}
 		}
-		setTokens(_tokens);
+		// setTokens(_tokens);
+		useExchangeStore.setState({ tokens: _tokens });
 		// onClose();
 	};
 
@@ -345,8 +355,15 @@ export default function AddLiquidityForm() {
 						/>
 					</div>
 					<div className="flex items-start justify-between self-stretch">
-						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
-							Balance: {numberWithCommas(data?.balances?.[0]?.toSignificant(3))}
+						<span className="flex gap-1 text-xs leading-[14px] font-normal text-[#C6C6C6]">
+							<span>Balance: </span>
+							{isLoadingPool ? (
+								<span className="skeleton min-w-[40px] min-h-[14px] bg-[#2D313E]"></span>
+							) : (
+								<span>
+									{numberWithCommas(data?.balances?.[0]?.toSignificant(3))}
+								</span>
+							)}
 						</span>
 						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
 							{/* 0.00 USD */}--
@@ -355,9 +372,15 @@ export default function AddLiquidityForm() {
 				</div>
 				<SwapIcon
 					handleChangeToken={() => {
-						setTokens({
-							[Field.INPUT]: tokens[Field.OUTPUT],
-							[Field.OUTPUT]: tokens[Field.INPUT],
+						// setTokens({
+						// 	[Field.INPUT]: tokens[Field.OUTPUT],
+						// 	[Field.OUTPUT]: tokens[Field.INPUT],
+						// });
+						useExchangeStore.setState({
+							tokens: {
+								[Field.INPUT]: tokens[Field.OUTPUT],
+								[Field.OUTPUT]: tokens[Field.INPUT],
+							},
 						});
 					}}
 				/>
@@ -400,9 +423,15 @@ export default function AddLiquidityForm() {
 						/>
 					</div>
 					<div className="flex items-start justify-between self-stretch">
-						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
-							{/* Balance: {token1BalanceAmount} */}
-							Balance: {numberWithCommas(data?.balances?.[1]?.toSignificant(3))}
+						<span className="flex gap-1 text-xs leading-[14px] font-normal text-[#C6C6C6]">
+							<span>Balance: </span>
+							{isLoadingPool ? (
+								<span className="skeleton min-w-[40px] min-h-[14px] bg-[#2D313E]"></span>
+							) : (
+								<span>
+									{numberWithCommas(data?.balances?.[1]?.toSignificant(3))}
+								</span>
+							)}
 						</span>
 						<span className="text-xs leading-[14px] font-normal text-[#C6C6C6]">
 							{/* 0.00 USD */}--
@@ -524,10 +553,12 @@ export default function AddLiquidityForm() {
 					token0={tokens[Field.INPUT]}
 					token1={tokens[Field.OUTPUT]}
 					setToken0={(token0: Token) =>
-						setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+						// setTokens((pre) => ({ ...pre, [Field.INPUT]: token0 }))
+						setToken(Field.INPUT, token0)
 					}
 					setToken1={(token1: Token) =>
-						setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+						// setTokens((pre) => ({ ...pre, [Field.OUTPUT]: token1 }))
+						setToken(Field.OUTPUT, token1)
 					}
 					typeModal={typeModal}
 				/>

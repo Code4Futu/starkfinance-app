@@ -25,6 +25,7 @@
 		"dayjs": "^1.11.10",
 		"ethers": "^6.9.0",
 		"get-starknet-core": "^3.2.0",
+		"graphql-request": "^6.1.0",
 		"l0k_swap-sdk": "github:10k-swap/10k_swap-sdk#main",
 		"lodash": "^4.17.21",
 		"moment": "^2.30.1",

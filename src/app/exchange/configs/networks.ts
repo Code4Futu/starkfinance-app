@@ -51,3 +51,6 @@ export const FIVE_PERCENT = new Percent(JSBI.BigInt(5), JSBI.BigInt(100));
 export const SWAP_FEE_PERCENT = new Percent(JSBI.BigInt(97), JSBI.BigInt(100));
 
 export const BIPS_BASE = JSBI.BigInt(10000);
+
+export const EXCHANGE_GRAPHQL_URL =
+	"https://exchange-api.starkfinance.co/graphql";
